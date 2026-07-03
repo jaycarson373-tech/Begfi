@@ -27,7 +27,7 @@ export function HeroSection() {
       <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(3,0,5,0.96)_0%,rgba(3,0,5,0.82)_38%,rgba(3,0,5,0.42)_68%,rgba(3,0,5,0.86)_100%)]" />
       <div className="absolute inset-x-0 bottom-0 -z-10 h-44 bg-gradient-to-t from-beg-black to-transparent" />
       <div className="noise-mask" />
-      <span className="scanline left-[4%] top-[28%] animate-pulse-line" />
+      <span className="scanline left-[4%] top-[14%] animate-pulse-line" />
       <span className="scanline bottom-[24%] right-[10%] animate-pulse-line [animation-delay:1.4s]" />
 
       <div className="section-shell relative z-10 grid items-center gap-10 pb-16 lg:grid-cols-[1.05fr_0.95fr]">
@@ -85,31 +85,33 @@ export function HeroSection() {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.12, ease: "easeOut" }}
-          className="hidden justify-end lg:flex"
-          aria-hidden="true"
+          className="flex justify-center lg:justify-end"
         >
-          <div className="glass-surface animate-float-slow rounded-lg p-4">
-            <div className="grid w-[360px] gap-3">
-              <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <span className="text-xs font-bold uppercase tracking-[0.16em] text-white/[0.45]">
-                  Fee split
-                </span>
-                <span className="text-xs font-bold text-beg-lime">50 / 50</span>
+          <div className="glass-surface animate-float-slow w-full max-w-[380px] rounded-lg p-4">
+            <div className="relative overflow-hidden rounded-lg border border-white/10 bg-black/45 p-5">
+              <div className="absolute inset-x-8 top-8 h-24 bg-beg-purple/25 blur-3xl" />
+              <div className="relative mx-auto aspect-square w-full max-w-[250px]">
+                <Image
+                  src="/assets/begfi-raccoon-mascot.png"
+                  alt="BegFi raccoon mascot"
+                  fill
+                  sizes="(min-width: 1024px) 250px, 70vw"
+                  className="object-contain"
+                  priority
+                />
               </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-lg border border-white/10 bg-white/[0.045] p-4">
-                  <p className="text-xs text-white/[0.45]">Beg Pool</p>
-                  <p className="mt-2 text-2xl font-black">50%</p>
-                </div>
-                <div className="rounded-lg border border-white/10 bg-white/[0.045] p-4">
-                  <p className="text-xs text-white/[0.45]">Holder Rewards</p>
-                  <p className="mt-2 text-2xl font-black">50%</p>
-                </div>
+              <div className="relative mt-2 h-20 w-full">
+                <Image
+                  src="/assets/begfi-wordmark.png"
+                  alt="BegFi wordmark"
+                  fill
+                  sizes="(min-width: 1024px) 300px, 82vw"
+                  className="object-cover object-center"
+                />
               </div>
-              <div className="rounded-lg border border-beg-purple/[0.25] bg-beg-purple/10 p-4 text-sm leading-6 text-white/70">
-                Post the beg. Hold enough $BEG. Let the community decide who
-                gets the next hourly payout.
-              </div>
+              <p className="relative mt-3 rounded-lg border border-beg-purple/[0.25] bg-beg-purple/10 p-4 text-center text-sm font-bold leading-6 text-white/[0.78]">
+                CT begged. Ansem airdropped. BegFi was born.
+              </p>
             </div>
           </div>
         </motion.div>

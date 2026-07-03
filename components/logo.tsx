@@ -1,10 +1,18 @@
-import { Coins } from "lucide-react";
+import Image from "next/image";
 
 export function Logo() {
   return (
     <a href="#top" className="flex items-center gap-2" aria-label="BegFi home">
-      <span className="grid h-9 w-9 place-items-center rounded-lg border border-white/[0.15] bg-white/[0.08] shadow-glow">
-        <Coins className="h-4 w-4 text-beg-lime" aria-hidden="true" />
+      <span className="relative grid h-10 w-10 overflow-hidden rounded-lg border border-white/[0.15] bg-black shadow-glow">
+        <Image
+          src="/assets/begfi-raccoon-logo.png"
+          alt="BegFi raccoon mascot"
+          width={40}
+          height={40}
+          sizes="40px"
+          className="h-full w-full object-cover object-center"
+          priority
+        />
       </span>
       <span className="flex flex-col leading-none">
         <span className="text-base font-black text-white">BegFi</span>
