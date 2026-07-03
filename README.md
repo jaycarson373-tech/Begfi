@@ -17,7 +17,7 @@ The feed and dashboard are ready for the X scanner, wallet verification, and vot
 
 ## Rewards Worker
 
-The worker can claim Pump creator fees, send 50% of each claim to the Beg Pool wallet, snapshot eligible holders, swap the remaining 50% through Jupiter, and airdrop the reward token pro-rata to holders.
+The worker can claim Pump creator fees, send 50% of each claim to the Beg Pool wallet, snapshot eligible $BEG holders, and airdrop the remaining 50% as SOL pro-rata to holders.
 
 It is preview-only by default.
 
@@ -27,15 +27,17 @@ pnpm rewards:execute
 pnpm rewards:daemon
 ```
 
+`pnpm rewards:airdrop` can manually distribute `AIRDROP_ONLY_SOL` from the fee wallet to the current holder snapshot.
+
 For Railway, deploy the same repo as a separate worker service with:
 
 ```bash
 pnpm rewards:daemon
 ```
 
-Set `REWARDS_DAEMON_EXECUTE=true` only when the fee wallet, Beg Pool wallet, mints, RPC, and claim cap are configured. Required envs are listed in `.env.example`.
+Set `REWARDS_DAEMON_EXECUTE=true` only when the fee wallet, Beg Pool wallet, $BEG mint, RPC, and claim cap are configured. Required envs are listed in `.env.example`.
 
-`SOURCE_TOKEN_MINT` is the mint used for the holder snapshot. `REWARD_TOKEN_MINT` is the token bought with the holder-reward half and airdropped. Set both to the $BEG mint if holders should receive $BEG.
+`SOURCE_TOKEN_MINT` is the $BEG mint used for the holder snapshot. Holder rewards are paid in SOL.
 
 ## Commands
 

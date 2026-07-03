@@ -9,17 +9,12 @@ import {
   PublicKey,
   SystemProgram,
   Transaction,
-  VersionedTransaction,
   type TransactionInstruction,
 } from "@solana/web3.js";
 import {
-  ASSOCIATED_TOKEN_PROGRAM_ID,
   NATIVE_MINT,
   TOKEN_2022_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
-  createAssociatedTokenAccountIdempotentInstruction,
-  createTransferCheckedInstruction,
-  getAssociatedTokenAddressSync,
   getMint,
 } from "@solana/spl-token";
 import {
@@ -50,14 +45,13 @@ type EpochRecord = {
   completedAt?: string;
   status: "running" | "completed" | "failed";
   sourceMint: string;
-  rewardMint: string;
+  payoutAsset: "SOL";
   beggarFundWallet?: string;
   claimLamports?: string;
   beggarFundLamports?: string;
   holderRewardLamports?: string;
   claimSignature?: string | null;
   beggarFundSignature?: string | null;
-  swapSignature?: string | null;
   airdropSignatures: string[];
   error?: string;
 };
@@ -69,19 +63,18 @@ const { OnlinePumpSdk } = require("@pump-fun/pump-sdk") as {
 
 const execute = process.argv.includes("--execute");
 const airdropOnly = process.argv.includes("--airdrop-only");
-const claimSwapOnly = process.argv.includes("--claim-swap-only");
-const swapOnlySol = numberArg("--swap-sol=");
+const claimSplitOnly =
+  process.argv.includes("--claim-only") || process.argv.includes("--claim-swap-only");
 
 const rpcUrl = requiredEnv("SOLANA_RPC_URL");
 const sourceMintText = requiredEnv("SOURCE_TOKEN_MINT");
-const rewardMintText = requiredEnv("REWARD_TOKEN_MINT");
 const maxClaimSol = numberEnv("MAX_CREATOR_FEE_CLAIM_SOL", numberEnv("MAX_SWAP_SOL", 0.02));
 const maxRecipients = integerEnv("MAX_AIRDROP_RECIPIENTS", 50);
 const minHolderTokens = numberEnv("MIN_HOLDER_TOKEN_BALANCE", 100_000);
-const slippageBps = integerEnv("SWAP_SLIPPAGE_BPS", 300);
 const reserveSol = numberEnv("SOL_FEE_RESERVE", 0.02);
 const beggarFundBps = integerEnv("BEGGAR_FUND_BPS", 5_000);
 const maxHolderSupplyBps = integerEnv("MAX_HOLDER_SUPPLY_BPS", 0);
+const airdropOnlySol = numberEnv("AIRDROP_ONLY_SOL", 0);
 const stateDirectory = path.resolve(process.env.REWARDS_STATE_DIR?.trim() || "work/rewards-state");
 const lockPath = path.join(stateDirectory, "epoch.lock");
 
@@ -94,9 +87,6 @@ if (maxRecipients < 1 || maxRecipients > 50) {
 if (!Number.isFinite(minHolderTokens) || minHolderTokens < 0) {
   throw new Error("MIN_HOLDER_TOKEN_BALANCE must be a non-negative number");
 }
-if (slippageBps < 1 || slippageBps > 5_000) {
-  throw new Error("SWAP_SLIPPAGE_BPS must be an integer from 1 to 5000");
-}
 if (!Number.isFinite(reserveSol) || reserveSol < 0) {
   throw new Error("SOL_FEE_RESERVE must be a non-negative number");
 }
@@ -106,11 +96,13 @@ if (beggarFundBps < 0 || beggarFundBps > 10_000) {
 if (maxHolderSupplyBps < 0 || maxHolderSupplyBps > 10_000) {
   throw new Error("MAX_HOLDER_SUPPLY_BPS must be an integer from 0 to 10000");
 }
+if (!Number.isFinite(airdropOnlySol) || airdropOnlySol < 0) {
+  throw new Error("AIRDROP_ONLY_SOL must be a non-negative number");
+}
 
 const connection = new Connection(rpcUrl, "confirmed");
 const wallet = keypairFromEnv("FEE_WALLET_PRIVATE_KEY");
 const sourceMint = new PublicKey(sourceMintText);
-const rewardMint = new PublicKey(rewardMintText);
 const beggarFundWallet = process.env.BEGGAR_FUND_WALLET?.trim()
   ? new PublicKey(process.env.BEGGAR_FUND_WALLET.trim())
   : null;
@@ -119,7 +111,7 @@ const epochRecord: EpochRecord = {
   startedAt: new Date().toISOString(),
   status: "running",
   sourceMint: sourceMint.toBase58(),
-  rewardMint: rewardMint.toBase58(),
+  payoutAsset: "SOL",
   beggarFundWallet: beggarFundWallet?.toBase58(),
   airdropSignatures: [],
 };
@@ -141,16 +133,6 @@ function numberEnv(name: string, fallback: number) {
 function integerEnv(name: string, fallback: number) {
   const parsed = numberEnv(name, fallback);
   if (!Number.isInteger(parsed)) throw new Error(`${name} must be an integer`);
-  return parsed;
-}
-
-function numberArg(prefix: string) {
-  const arg = process.argv.find((value) => value.startsWith(prefix));
-  if (!arg) return null;
-  const parsed = Number(arg.slice(prefix.length));
-  if (!Number.isFinite(parsed) || parsed <= 0) {
-    throw new Error(`${prefix.slice(0, -1)} must be a positive number`);
-  }
   return parsed;
 }
 
@@ -176,6 +158,10 @@ function publicKeyOrNull(value: string) {
   } catch {
     return null;
   }
+}
+
+function solToLamports(sol: number) {
+  return BigInt(Math.round(sol * LAMPORTS_PER_SOL));
 }
 
 function rawTokenAmount(tokens: number, decimals: number) {
@@ -377,137 +363,53 @@ async function getSnapshot(
     .slice(0, maxRecipients);
 }
 
-async function getJupiterSwap(amountLamports: number) {
-  const query = new URLSearchParams({
-    inputMint: NATIVE_MINT.toBase58(),
-    outputMint: rewardMint.toBase58(),
-    amount: String(amountLamports),
-    slippageBps: String(slippageBps),
-    restrictIntermediateTokens: "true",
-  });
-
-  const quoteResponse = await fetch(`https://lite-api.jup.ag/swap/v1/quote?${query}`);
-  if (!quoteResponse.ok) {
-    throw new Error(`Jupiter quote failed: ${await quoteResponse.text()}`);
+function buildSolTransfer(toPubkey: PublicKey, lamports: bigint) {
+  if (lamports <= 0n) throw new Error("SOL transfer amount must be positive");
+  if (lamports > BigInt(Number.MAX_SAFE_INTEGER)) {
+    throw new Error("SOL transfer is too large for a single SystemProgram transfer");
   }
 
-  const quote = (await quoteResponse.json()) as { outAmount: string };
-  const swapResponse = await fetch("https://lite-api.jup.ag/swap/v1/swap", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({
-      quoteResponse: quote,
-      userPublicKey: wallet.publicKey.toBase58(),
-      wrapAndUnwrapSol: true,
-      dynamicComputeUnitLimit: true,
-      dynamicSlippage: false,
-    }),
+  return SystemProgram.transfer({
+    fromPubkey: wallet.publicKey,
+    toPubkey,
+    lamports: Number(lamports),
   });
-
-  if (!swapResponse.ok) {
-    throw new Error(`Jupiter swap build failed: ${await swapResponse.text()}`);
-  }
-
-  return {
-    quote,
-    swap: (await swapResponse.json()) as { swapTransaction: string },
-  };
 }
 
-async function sendSwap(base64: string) {
-  const tx = VersionedTransaction.deserialize(Buffer.from(base64, "base64"));
-  tx.sign([wallet]);
-
-  const simulation = await connection.simulateTransaction(tx, {
-    replaceRecentBlockhash: true,
-    sigVerify: false,
-  });
-
-  if (simulation.value.err) {
-    console.error(simulation.value.logs?.join("\n"));
-    throw new Error(`Swap simulation failed: ${JSON.stringify(simulation.value.err)}`);
-  }
-
-  console.log("Swap: simulation passed");
-  const signature = await connection.sendRawTransaction(tx.serialize(), {
-    maxRetries: 3,
-    skipPreflight: false,
-  });
-  await connection.confirmTransaction(signature, "confirmed");
-  console.log(`Swap: ${signature}`);
-  return signature;
-}
-
-async function distribute(
-  tokenProgram: PublicKey,
-  decimals: number,
-  recipients: HolderEntry[],
-  totalReward: bigint,
-) {
+async function distributeSol(recipients: HolderEntry[], totalLamports: bigint) {
   if (!recipients.length) throw new Error("No eligible recipients in snapshot");
+  if (totalLamports <= 0n) throw new Error("SOL airdrop amount must be positive");
 
   const totalWeight = recipients.reduce((sum, [, amount]) => sum + amount, 0n);
-  const sourceAta = getAssociatedTokenAddressSync(
-    rewardMint,
-    wallet.publicKey,
-    false,
-    tokenProgram,
-    ASSOCIATED_TOKEN_PROGRAM_ID,
-  );
-  console.log(`Airdrop source account: ${sourceAta.toBase58()}`);
-
   const allocations = recipients
-    .map(([owner, weight]) => [owner, (totalReward * weight) / totalWeight] as const)
+    .map(([owner, weight]) => [owner, (totalLamports * weight) / totalWeight] as const)
     .filter(([, amount]) => amount > 0n);
+  const allocatedLamports = allocations.reduce((sum, [, amount]) => sum + amount, 0n);
+  const dustLamports = totalLamports - allocatedLamports;
 
-  console.log("Projected weighted recipients:");
+  console.log(`Projected SOL holder rewards: ${formatLamports(allocatedLamports)}`);
+  if (dustLamports > 0n) {
+    console.log(`Rounding dust retained in fee wallet: ${formatLamports(dustLamports)}`);
+  }
   for (const [owner, amount] of allocations) {
-    console.log(`  ${owner}: ${formatRawAmount(amount, decimals)}`);
+    console.log(`  ${owner}: ${formatLamports(amount)}`);
   }
 
   if (!execute) {
-    console.log("Airdrop batches: projected only. No transactions were broadcast.");
+    console.log("SOL airdrop batches: projected only. No transactions were broadcast.");
     return;
   }
 
-  for (let index = 0; index < allocations.length; index += 4) {
+  for (let index = 0; index < allocations.length; index += 8) {
     const tx = new Transaction();
-    const batchNumber = index / 4 + 1;
+    const batchNumber = index / 8 + 1;
 
-    for (const [ownerText, amount] of allocations.slice(index, index + 4)) {
-      const owner = new PublicKey(ownerText);
-      const destinationAta = getAssociatedTokenAddressSync(
-        rewardMint,
-        owner,
-        true,
-        tokenProgram,
-        ASSOCIATED_TOKEN_PROGRAM_ID,
-      );
-
-      tx.add(
-        createAssociatedTokenAccountIdempotentInstruction(
-          wallet.publicKey,
-          destinationAta,
-          owner,
-          rewardMint,
-          tokenProgram,
-          ASSOCIATED_TOKEN_PROGRAM_ID,
-        ),
-        createTransferCheckedInstruction(
-          sourceAta,
-          rewardMint,
-          destinationAta,
-          wallet.publicKey,
-          amount,
-          decimals,
-          [],
-          tokenProgram,
-        ),
-      );
+    for (const [ownerText, amount] of allocations.slice(index, index + 8)) {
+      tx.add(buildSolTransfer(new PublicKey(ownerText), amount));
     }
 
-    console.log(`Airdrop batch ${batchNumber}: ${tx.instructions.length} instructions`);
-    const signature = await sendLegacy(tx, `Airdrop batch ${batchNumber}`);
+    console.log(`SOL airdrop batch ${batchNumber}: ${tx.instructions.length} transfers`);
+    const signature = await sendLegacy(tx, `SOL airdrop batch ${batchNumber}`);
     if (signature) epochRecord.airdropSignatures.push(signature);
   }
 }
@@ -517,95 +419,59 @@ async function sendBeggarFundTransfer(amountLamports: bigint) {
   if (!beggarFundWallet) {
     throw new Error("BEGGAR_FUND_WALLET is required when BEGGAR_FUND_BPS is greater than zero");
   }
-  if (amountLamports > BigInt(Number.MAX_SAFE_INTEGER)) {
-    throw new Error("Beggar fund transfer is too large for a single SystemProgram transfer");
-  }
 
-  const tx = new Transaction().add(
-    SystemProgram.transfer({
-      fromPubkey: wallet.publicKey,
-      toPubkey: beggarFundWallet,
-      lamports: Number(amountLamports),
-    }),
-  );
-
+  const tx = new Transaction().add(buildSolTransfer(beggarFundWallet, amountLamports));
   return sendLegacy(tx, "Beggar fund transfer", { simulateInPreview: false });
-}
-
-async function runSwapOnly(rewardDecimals: number) {
-  if (swapOnlySol === null) return false;
-  if (!execute) throw new Error("--swap-sol requires --execute");
-
-  const walletSol = await connection.getBalance(wallet.publicKey, "confirmed");
-  const swapLamports = Math.round(swapOnlySol * LAMPORTS_PER_SOL);
-  const reserveLamports = Math.round(reserveSol * LAMPORTS_PER_SOL);
-
-  if (walletSol < swapLamports + reserveLamports) {
-    throw new Error("Insufficient SOL for requested swap plus configured reserve");
-  }
-
-  const { quote, swap } = await getJupiterSwap(swapLamports);
-  console.log(
-    `Swap quote: ${formatLamports(swapLamports)} -> ${formatRawAmount(
-      BigInt(quote.outAmount),
-      rewardDecimals,
-    )} tokens`,
-  );
-
-  epochRecord.swapSignature = await sendSwap(swap.swapTransaction);
-  await completeEpoch();
-  return true;
 }
 
 async function runAirdropOnly(
   sourceTokenProgram: PublicKey,
   sourceDecimals: number,
   sourceSupply: bigint,
-  rewardTokenProgram: PublicKey,
-  rewardDecimals: number,
-  walletTokenAta: PublicKey,
-  tokenBalanceBefore: bigint,
 ) {
   if (!airdropOnly) return false;
   if (!execute) throw new Error("--airdrop-only requires --execute");
-  if (tokenBalanceBefore <= 0n) {
-    throw new Error("No reward token balance is available to resume the airdrop");
+  if (airdropOnlySol <= 0) {
+    throw new Error("AIRDROP_ONLY_SOL must be set when using --airdrop-only");
+  }
+
+  const airdropLamports = solToLamports(airdropOnlySol);
+  const reserveLamports = solToLamports(reserveSol);
+  const walletSol = BigInt(await connection.getBalance(wallet.publicKey, "confirmed"));
+  if (walletSol < airdropLamports + reserveLamports) {
+    throw new Error("Insufficient SOL for requested holder airdrop plus configured reserve");
   }
 
   const snapshot = await getSnapshot(sourceTokenProgram, sourceDecimals, sourceSupply);
-  console.log(`Resuming airdrop with ${formatRawAmount(tokenBalanceBefore, rewardDecimals)} tokens`);
+  console.log(`Resuming SOL airdrop with ${formatLamports(airdropLamports)}`);
   console.log(`Eligible snapshot recipients: ${snapshot.length}`);
-  console.log(`Wallet reward ATA: ${walletTokenAta.toBase58()}`);
 
-  await distribute(rewardTokenProgram, rewardDecimals, snapshot, tokenBalanceBefore);
+  epochRecord.holderRewardLamports = airdropLamports.toString();
+  await distributeSol(snapshot, airdropLamports);
   await completeEpoch();
   return true;
 }
 
-async function runClaimSplitSwapAndAirdrop(
+async function runClaimSplitAndAirdrop(
   sourceTokenProgram: PublicKey,
   sourceDecimals: number,
   sourceSupply: bigint,
-  rewardTokenProgram: PublicKey,
-  rewardDecimals: number,
-  walletTokenAta: PublicKey,
-  tokenBalanceBefore: bigint,
 ) {
   if (beggarFundBps > 0 && !beggarFundWallet) {
     throw new Error("BEGGAR_FUND_WALLET is required when BEGGAR_FUND_BPS is greater than zero");
   }
 
-  const walletSol = await connection.getBalance(wallet.publicKey, "confirmed");
+  const walletSol = BigInt(await connection.getBalance(wallet.publicKey, "confirmed"));
   const claimable = BigInt(
     (await sdk.getCreatorVaultBalanceBothPrograms(wallet.publicKey)).toString(),
   );
-  const maxClaimLamports = BigInt(Math.round(maxClaimSol * LAMPORTS_PER_SOL));
+  const maxClaimLamports = solToLamports(maxClaimSol);
 
   console.log(`Mode: ${execute ? "EXECUTE" : "PREVIEW ONLY"}`);
   console.log(`Fee wallet: ${wallet.publicKey.toBase58()}`);
   console.log(`Beggar fund wallet: ${beggarFundWallet?.toBase58() || "not configured"}`);
-  console.log(`Source holder mint: ${sourceMint.toBase58()}`);
-  console.log(`Reward mint: ${rewardMint.toBase58()}`);
+  console.log(`Holder snapshot mint: ${sourceMint.toBase58()}`);
+  console.log("Holder payout asset: SOL");
   console.log(`Wallet SOL: ${formatLamports(walletSol)}`);
   console.log(`Claimable creator fees: ${formatLamports(claimable)}`);
 
@@ -622,14 +488,11 @@ async function runClaimSplitSwapAndAirdrop(
     await completeEpoch();
     return;
   }
-  if (claimable > BigInt(Number.MAX_SAFE_INTEGER)) {
-    throw new Error("Claimable fee amount is too large for the current transaction builder");
-  }
 
   const beggarFundLamports = (claimable * BigInt(beggarFundBps)) / 10_000n;
   const holderRewardLamports = claimable - beggarFundLamports;
-  const reserveLamports = BigInt(Math.round(reserveSol * LAMPORTS_PER_SOL));
-  const projectedAfterClaim = BigInt(walletSol) + claimable;
+  const reserveLamports = solToLamports(reserveSol);
+  const projectedAfterClaim = walletSol + claimable;
 
   epochRecord.claimLamports = claimable.toString();
   epochRecord.beggarFundLamports = beggarFundLamports.toString();
@@ -638,13 +501,13 @@ async function runClaimSplitSwapAndAirdrop(
   console.log(
     `Split: ${formatBps(beggarFundBps)} to Beg Pool (${formatLamports(
       beggarFundLamports,
-    )}), ${formatBps(10_000 - beggarFundBps)} to holder rewards (${formatLamports(
+    )}), ${formatBps(10_000 - beggarFundBps)} to SOL holder rewards (${formatLamports(
       holderRewardLamports,
     )})`,
   );
 
   if (projectedAfterClaim < claimable + reserveLamports) {
-    throw new Error("Insufficient SOL after projected claim for split, swap, and reserve");
+    throw new Error("Insufficient SOL after projected claim for split, holder payout, and reserve");
   }
 
   const claimInstructions = await sdk.collectCoinCreatorFeeV2Instructions(
@@ -659,47 +522,21 @@ async function runClaimSplitSwapAndAirdrop(
   epochRecord.beggarFundSignature = await sendBeggarFundTransfer(beggarFundLamports);
 
   if (holderRewardLamports <= 0n) {
-    console.log("Holder reward split is zero for this epoch; skipping swap and airdrop.");
+    console.log("Holder reward split is zero for this epoch; skipping holder airdrop.");
     await completeEpoch();
     return;
   }
 
-  const { quote, swap } = await getJupiterSwap(Number(holderRewardLamports));
-  console.log(
-    `Swap quote: ${formatLamports(holderRewardLamports)} -> ${formatRawAmount(
-      BigInt(quote.outAmount),
-      rewardDecimals,
-    )} tokens`,
-  );
-
-  if (execute) {
-    epochRecord.swapSignature = await sendSwap(swap.swapTransaction);
-  } else {
-    console.log("Swap: quote built. Transaction was not simulated because preview does not broadcast the claim first.");
-  }
-
-  if (claimSwapOnly) {
+  if (claimSplitOnly) {
+    console.log("Claim/split only mode enabled; skipping holder SOL airdrop.");
     await completeEpoch();
     return;
-  }
-
-  if (execute) {
-    await new Promise((resolve) => setTimeout(resolve, 2_500));
   }
 
   const snapshot = await getSnapshot(sourceTokenProgram, sourceDecimals, sourceSupply);
   console.log(`Eligible snapshot recipients: ${snapshot.length}`);
 
-  const rewardAmount = execute
-    ? BigInt((await connection.getTokenAccountBalance(walletTokenAta, "confirmed")).value.amount) -
-      tokenBalanceBefore
-    : BigInt(quote.outAmount);
-
-  if (rewardAmount <= 0n) {
-    throw new Error("Swap did not increase the wallet reward token balance");
-  }
-
-  await distribute(rewardTokenProgram, rewardDecimals, snapshot, rewardAmount);
+  await distributeSol(snapshot, holderRewardLamports);
 
   if (!execute) {
     console.log("Preview complete. No transactions were broadcast.");
@@ -726,44 +563,22 @@ async function main() {
     await writeEpochRecord();
 
     const sourceTokenProgram = await getTokenProgram(sourceMint);
-    const rewardTokenProgram = await getTokenProgram(rewardMint);
     const sourceMintInfo = await getMint(connection, sourceMint, "confirmed", sourceTokenProgram);
-    const rewardMintInfo = await getMint(connection, rewardMint, "confirmed", rewardTokenProgram);
-    const walletTokenAta = getAssociatedTokenAddressSync(
-      rewardMint,
-      wallet.publicKey,
-      false,
-      rewardTokenProgram,
-      ASSOCIATED_TOKEN_PROGRAM_ID,
-    );
-    const tokenAccountBefore = await connection.getAccountInfo(walletTokenAta);
-    const tokenBalanceBefore = tokenAccountBefore
-      ? BigInt((await connection.getTokenAccountBalance(walletTokenAta, "confirmed")).value.amount)
-      : 0n;
 
-    if (await runSwapOnly(rewardMintInfo.decimals)) return;
     if (
       await runAirdropOnly(
         sourceTokenProgram,
         sourceMintInfo.decimals,
         sourceMintInfo.supply,
-        rewardTokenProgram,
-        rewardMintInfo.decimals,
-        walletTokenAta,
-        tokenBalanceBefore,
       )
     ) {
       return;
     }
 
-    await runClaimSplitSwapAndAirdrop(
+    await runClaimSplitAndAirdrop(
       sourceTokenProgram,
       sourceMintInfo.decimals,
       sourceMintInfo.supply,
-      rewardTokenProgram,
-      rewardMintInfo.decimals,
-      walletTokenAta,
-      tokenBalanceBefore,
     );
   } catch (error) {
     epochRecord.status = "failed";
