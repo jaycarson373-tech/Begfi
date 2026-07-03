@@ -3,14 +3,28 @@
   "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@11.7.0",
+  "engines": {
+    "node": ">=22.13"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "rewards:preview": "tsx scripts/rewards-run.ts",
+    "rewards:execute": "tsx scripts/rewards-run.ts --execute",
+    "rewards:airdrop": "tsx scripts/rewards-run.ts --execute --airdrop-only",
+    "rewards:daemon": "tsx scripts/rewards-daemon.ts"
   },
   "dependencies": {
+    "@coral-xyz/anchor": "^0.32.1",
+    "@pump-fun/pump-sdk": "^1.36.0",
+    "@pump-fun/pump-swap-sdk": "^1.18.0",
+    "@solana/spl-token": "^0.4.14",
+    "@solana/web3.js": "^1.98.4",
+    "bs58": "^6.0.0",
     "clsx": "^2.1.1",
+    "dotenv": "^17.4.2",
     "framer-motion": "^11.18.2",
     "lucide-react": "^0.468.0",
     "next": "^14.2.30",
@@ -24,6 +38,7 @@
     "autoprefixer": "^10.4.20",
     "postcss": "^8.5.1",
     "tailwindcss": "^3.4.17",
+    "tsx": "^4.22.5",
     "typescript": "^5.7.3"
   }
 }
