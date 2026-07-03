@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   description:
     "BegFi turns CT's airdrop begging meta into an hourly community payout system on Solana.",
   metadataBase: new URL("https://begfi.vercel.app"),
+  icons: {
+    icon: "/favicon.png",
+    apple: "/apple-icon.png"
+  },
   openGraph: {
     title: "BegFi | Begging is the meta",
     description:
