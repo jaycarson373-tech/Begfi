@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, BarChart3, ShieldCheck } from "lucide-react";
 
 const statlets = [
-  "Hourly Beg Pool",
-  "Holder Rewards",
-  "Signed Vote Ready"
+  "Beg-To-Earn on Solana",
+  "100% fees to community",
+  "100K+ $BEG eligible"
 ];
 
 export function HeroSection() {
@@ -39,13 +39,17 @@ export function HeroSection() {
         >
           <div className="eyebrow">
             <ShieldCheck className="h-3.5 w-3.5 text-beg-lime" aria-hidden="true" />
-            Creator fees redistributed hourly
+            CT begging, systematized
           </div>
           <h1 className="mt-6 max-w-3xl text-5xl font-black leading-[0.95] text-white sm:text-6xl md:text-7xl">
-            Beg Harder.
+            Begging is the meta.
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-white/[0.72] sm:text-xl">
-            The first creator-fee protocol that rewards the best beggars.
+            Ansem airdropped 10M. CT started begging for more. BegFi turns the
+            airdrop chase into an hourly community payout system.
+          </p>
+          <p className="mt-4 text-sm font-black uppercase tracking-[0.14em] text-beg-lime">
+            The first Beg-To-Earn protocol on Solana.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
@@ -103,8 +107,8 @@ export function HeroSection() {
                 </div>
               </div>
               <div className="rounded-lg border border-beg-purple/[0.25] bg-beg-purple/10 p-4 text-sm leading-6 text-white/70">
-                Submit the loss. Tell the story. Let holders decide who gets
-                the next hourly airdrop.
+                Post the beg. Hold enough $BEG. Let the community decide who
+                gets the next hourly payout.
               </div>
             </div>
           </div>

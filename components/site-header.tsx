@@ -3,6 +3,7 @@ import { Logo } from "@/components/logo";
 
 const navItems = [
   { label: "Pool", href: "#features" },
+  { label: "Feed", href: "#feed" },
   { label: "Dashboard", href: "#dashboard" },
   { label: "FAQ", href: "#faq" }
 ];

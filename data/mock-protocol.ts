@@ -2,116 +2,64 @@ import type { DashboardSnapshot, FaqItem } from "@/types/protocol";
 
 export const dashboardSnapshot: DashboardSnapshot = {
   round: {
-    id: "Round 042",
-    status: "Mock voting round",
-    pool: "7.41 SOL",
-    holderRewardPool: "7.41 SOL",
-    votingWindow: "Hourly window"
+    id: "Launch round",
+    status: "Live dashboard coming after launch",
+    pool: "50%",
+    holderRewardPool: "50%",
+    votingWindow: "Hourly rounds"
   },
   metrics: [
     {
       key: "creator-fees",
-      label: "Live Creator Fees",
-      value: "14.82 SOL",
-      helper: "Static mock snapshot. Connect this to a fee indexer later.",
+      label: "Creator Fees",
+      value: "Coming soon",
+      helper: "100% routes back to the BegFi community after launch.",
       tone: "purple"
     },
     {
       key: "current-pool",
-      label: "Current Beg Pool",
-      value: "7.41 SOL",
-      helper: "50% of mock creator fees assigned to this round.",
+      label: "Beg Pool",
+      value: "50%",
+      helper: "Half of fees fund the hourly payout for the best beg.",
       tone: "magenta"
     },
     {
       key: "countdown",
-      label: "Countdown Timer",
-      value: "Top of hour",
-      helper: "Client clock only until a round API is wired.",
+      label: "Round Timer",
+      value: "After launch",
+      helper: "Hourly rounds begin once $BEG is live.",
       tone: "lime"
     },
     {
       key: "current-round",
-      label: "Current Voting Round",
-      value: "Round 042",
-      helper: "Replace mock round state with signed vote data.",
+      label: "Eligibility",
+      value: "100K+ $BEG",
+      helper: "Hold enough $BEG to submit, vote, and stay in the game.",
       tone: "steel"
     }
   ],
-  submissions: [
-    {
-      rank: 1,
-      wallet: "7egF...9rQ2",
-      losses: "$18,420",
-      story:
-        "Round-tripped a top blast, sold the bottom, then bought the screenshot.",
-      votes: 1284
-    },
-    {
-      rank: 2,
-      wallet: "A1rD...pLs7",
-      losses: "$12,060",
-      story:
-        "Held through three influencers, two spaces, and one very sincere roadmap.",
-      votes: 1017
-    },
-    {
-      rank: 3,
-      wallet: "SoLB...eg44",
-      losses: "$8,777",
-      story:
-        "Bridged in late, clicked every claim button, and still paid gas for hope.",
-      votes: 876
-    },
-    {
-      rank: 4,
-      wallet: "Meme...0x69",
-      losses: "$5,505",
-      story:
-        "Posted a thread, got engagement, forgot to take profit like a professional.",
-      votes: 544
-    }
-  ],
-  previousWinners: [
-    {
-      round: "041",
-      wallet: "NoBid...aE11",
-      payout: "6.92 SOL",
-      reason: "Best documented realized-loss arc."
-    },
-    {
-      round: "040",
-      wallet: "Exit...LiQ9",
-      payout: "5.88 SOL",
-      reason: "Most votes from eligible holders."
-    },
-    {
-      round: "039",
-      wallet: "Pain...DCA2",
-      payout: "4.73 SOL",
-      reason: "Clear wallet, clean loss proof, elite begging."
-    }
-  ],
+  submissions: [],
+  previousWinners: [],
   totals: [
     {
       key: "total-begged",
       label: "Total Begged",
-      value: "69.4 SOL",
-      helper: "Aggregate mock winner payouts.",
+      value: "Coming soon",
+      helper: "The beg ledger starts when the first round closes.",
       tone: "magenta"
     },
     {
       key: "total-fees",
       label: "Total Creator Fees Distributed",
-      value: "138.8 SOL",
-      helper: "Mock distribution ledger total.",
+      value: "Coming soon",
+      helper: "Every creator-fee payout belongs back on CT.",
       tone: "purple"
     },
     {
       key: "holder-rewards",
       label: "Total Holder Rewards",
-      value: "69.4 SOL",
-      helper: "Mock pro-rata holder side.",
+      value: "Coming soon",
+      helper: "Eligible holders share the other half of fees.",
       tone: "lime"
     }
   ]
@@ -121,7 +69,7 @@ export const faqs: FaqItem[] = [
   {
     question: "How do I submit?",
     answer:
-      "Hold the minimum amount of $BEG, connect a wallet, submit the wallet that took the loss, add realized-loss proof, and write the short beg story. The current build uses mock data only."
+      "Hold 100K+ $BEG, post the official beg format, and include the wallet you want checked."
   },
   {
     question: "How are winners chosen?",
@@ -131,16 +79,16 @@ export const faqs: FaqItem[] = [
   {
     question: "Minimum holdings?",
     answer:
-      "The interface is designed for a configurable threshold. A production integration should read the current minimum from the token-gating API or governance config."
+      "Hold 100K+ $BEG to be eligible."
   },
   {
     question: "When are rewards sent?",
     answer:
-      "The target cadence is hourly: one Beg Pool winner payout and one pro-rata holder reward distribution after the voting window closes."
+      "After launch, the target cadence is hourly: one Beg Pool winner payout and one holder reward distribution."
   },
   {
     question: "Is voting on-chain or signed?",
     answer:
-      "The UI supports either path. Signed votes are the lighter default for speed; on-chain votes can be integrated later if the protocol wants stronger settlement guarantees."
+      "Signed voting keeps the beg machine fast. If the community wants heavier rails later, voting can move on-chain."
   }
 ];

@@ -26,8 +26,8 @@ export function SiteFooter() {
         <div>
           <Logo />
           <p className="mt-3 max-w-xl text-sm leading-6 text-white/[0.45]">
-            BegFi is presented with mock data only. Production integrations can
-            connect fee distribution, voting, and wallet verification APIs.
+            BegFi is not affiliated with Ansem. It just saw CT begging and put
+            the meta in a suit.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">

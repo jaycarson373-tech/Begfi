@@ -6,22 +6,22 @@ import { SectionHeading } from "@/components/section-heading";
 
 const features = [
   {
-    title: "Community Beg Pool",
+    title: "Beg Pool",
     body:
-      "Every hour, holders can submit a wallet, their realized losses, and a short explanation for why they deserve the next airdrop.",
+      "50% of fees fund an hourly pool for the best beggar.",
     icon: Trophy
   },
   {
-    title: "Community Vote",
+    title: "Holder Rewards",
     body:
-      "Holders vote on submissions during the hour. The highest-voted submission wins the Beg Pool.",
-    icon: Vote
+      "50% of fees are distributed to eligible $BEG holders.",
+    icon: Coins
   },
   {
-    title: "Automatic Rewards",
+    title: "Community Decides",
     body:
-      "50% of creator fees fund the hourly Beg Pool. 50% is automatically airdropped pro-rata to eligible $BEG holders.",
-    icon: Coins
+      "Holders vote on who deserves the next payout.",
+    icon: Vote
   }
 ];
 
@@ -30,9 +30,9 @@ export function FeaturesSection() {
     <section id="features" className="relative py-16 sm:py-20">
       <div className="section-shell">
         <SectionHeading
-          eyebrow="Begging as protocol design"
-          title="A cleaner loop for CT airdrop culture."
-          description="BegFi turns creator fees into an hourly community ritual: public submissions, holder voting, one winner, and automatic holder-side rewards."
+          eyebrow="From meme to protocol"
+          title="From meme to protocol."
+          description="Ansem sparked the airdrop begging meta by giving away 10M of his own token. Now everyone wants the next drop. BegFi takes that energy and makes it systematic: 100% of creator fees go back to the community."
         />
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           {features.map((feature, index) => {
@@ -55,6 +55,9 @@ export function FeaturesSection() {
               </motion.article>
             );
           })}
+        </div>
+        <div className="mt-4 rounded-lg border border-beg-purple/[0.28] bg-beg-purple/[0.1] px-4 py-3 text-sm font-black uppercase tracking-[0.12em] text-beg-lime">
+          Hold 100K+ $BEG to be eligible.
         </div>
       </div>
     </section>

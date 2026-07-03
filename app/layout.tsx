@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "BegFi | Beg Harder",
+  title: "BegFi | Begging is the meta",
   description:
-    "BegFi is a creator-fee protocol concept that redistributes hourly rewards to the best beggars and eligible holders.",
+    "BegFi turns CT's airdrop begging meta into an hourly community payout system on Solana.",
   metadataBase: new URL("https://begfi.vercel.app"),
   openGraph: {
-    title: "BegFi | Beg Harder",
+    title: "BegFi | Begging is the meta",
     description:
-      "The first creator-fee protocol that rewards the best beggars.",
+      "The first Beg-To-Earn protocol on Solana.",
     images: ["/images/begfi-hero.png"]
   }
 };
