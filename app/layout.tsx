@@ -2,18 +2,18 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "BegFi | Begging is the meta",
+  title: "Begwork | It's not bagworking",
   description:
-    "BegFi turns CT's airdrop begging meta into an hourly community payout system on Solana.",
-  metadataBase: new URL("https://begfi.vercel.app"),
+    "Begwork turns CT's Ansem-era begging meta into $ANSEM rewards for eligible $BEG holders.",
+  metadataBase: new URL("https://begwork.vercel.app"),
   icons: {
     icon: "/favicon.png",
     apple: "/apple-icon.png"
   },
   openGraph: {
-    title: "BegFi | Begging is the meta",
+    title: "Begwork | It's not bagworking",
     description:
-      "The first Beg-To-Earn protocol on Solana.",
+      "Hold $BEG, do the begwork, and stay eligible for $ANSEM rewards.",
     images: ["/images/begfi-hero.png"]
   }
 };

@@ -6,35 +6,35 @@ export const dashboardSnapshot: DashboardSnapshot = {
     status: "Live dashboard coming after launch",
     pool: "50%",
     holderRewardPool: "50%",
-    votingWindow: "Hourly rounds"
+    votingWindow: "10-minute holder drops"
   },
   metrics: [
     {
       key: "creator-fees",
       label: "Creator Fees",
       value: "Coming soon",
-      helper: "100% routes back to the BegFi community after launch.",
+      helper: "Creator-fee routing starts after launch. No fake live rewards.",
       tone: "purple"
     },
     {
       key: "current-pool",
-      label: "Beg Pool",
+      label: "$ANSEM Holder Rewards",
       value: "50%",
-      helper: "Half of fees fund the hourly payout for the best beg.",
+      helper: "Half of creator fees are reserved for eligible $BEG holders.",
       tone: "magenta"
     },
     {
       key: "countdown",
-      label: "Round Timer",
+      label: "Drop Cadence",
       value: "After launch",
-      helper: "Hourly rounds begin once $BEG is live.",
+      helper: "$ANSEM holder rewards target 10-minute rounds after launch.",
       tone: "lime"
     },
     {
       key: "current-round",
       label: "Eligibility",
-      value: "100K+ $BEG",
-      helper: "Hold enough $BEG to submit, vote, and stay in the game.",
+      value: "Hold $BEG",
+      helper: "Holding $BEG is on-chain begging.",
       tone: "steel"
     }
   ],
@@ -43,23 +43,23 @@ export const dashboardSnapshot: DashboardSnapshot = {
   totals: [
     {
       key: "total-begged",
-      label: "Total Begged",
+      label: "Verified Begwork",
       value: "Coming soon",
-      helper: "The beg ledger starts when the first round closes.",
+      helper: "The begwork ledger starts after the first verified payout.",
       tone: "magenta"
     },
     {
       key: "total-fees",
       label: "Total Creator Fees Distributed",
       value: "Coming soon",
-      helper: "Every creator-fee payout belongs back on CT.",
+      helper: "Fees split between $ANSEM rewards and the reward wallet.",
       tone: "purple"
     },
     {
       key: "holder-rewards",
-      label: "Total Holder Rewards",
+      label: "Total $ANSEM Rewards",
       value: "Coming soon",
-      helper: "Eligible holders share the other half of fees.",
+      helper: "Eligible $BEG holders receive the $ANSEM side of the split.",
       tone: "lime"
     }
   ]
@@ -69,26 +69,26 @@ export const faqs: FaqItem[] = [
   {
     question: "How do I submit?",
     answer:
-      "Hold 100K+ $BEG, post the official beg format, and include the wallet you want checked."
+      "Hold $BEG, post the official Begwork format, and include the wallet you want checked."
   },
   {
-    question: "How are winners chosen?",
+    question: "How do $ANSEM rewards work?",
     answer:
-      "Eligible holders vote during the hourly round. The highest-voted valid submission wins the Beg Pool when the round closes."
+      "After launch, 50% of creator fees are reserved for $ANSEM rewards to eligible $BEG holders."
   },
   {
     question: "Minimum holdings?",
     answer:
-      "Hold 100K+ $BEG to be eligible."
+      "The public site says hold $BEG to be eligible. The exact minimum can be locked before live claims start."
   },
   {
     question: "When are rewards sent?",
     answer:
-      "After launch, the target cadence is hourly: one Beg Pool winner payout and one holder reward distribution."
+      "The target cadence for $ANSEM holder rewards is every 10 minutes after launch."
   },
   {
-    question: "Is voting on-chain or signed?",
+    question: "What is the reward wallet?",
     answer:
-      "Signed voting keeps the beg machine fast. If the community wants heavier rails later, voting can move on-chain."
+      "The other 50% of creator fees goes to a reward wallet for manual verified beggar payouts and bounties."
   }
 ];

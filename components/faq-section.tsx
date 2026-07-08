@@ -11,7 +11,7 @@ export function FaqSection() {
         <SectionHeading
           eyebrow="FAQ"
           title="Questions from the beg desk."
-          description="No official Ansem connection. Just CT begging turned into a cleaner game."
+          description="No official Ansem connection. Just CT begging turned into cleaner begwork."
           icon={<CircleHelp className="h-3.5 w-3.5 text-beg-lime" aria-hidden="true" />}
         />
         <div className="mt-8 grid gap-3">

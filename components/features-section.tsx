@@ -1,27 +1,27 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Coins, Trophy, Vote } from "lucide-react";
+import { BadgeCheck, Coins, Trophy } from "lucide-react";
 import { SectionHeading } from "@/components/section-heading";
 
 const features = [
   {
-    title: "Beg Pool",
+    title: "On-Chain Begging",
     body:
-      "50% of fees fund an hourly pool for the best beggar.",
+      "Hold $BEG and you are begworking on-chain. Eligibility starts with the wallet, not the resume.",
     icon: Trophy
   },
   {
-    title: "Holder Rewards",
+    title: "$ANSEM Rewards",
     body:
-      "50% of fees are distributed to eligible $BEG holders.",
+      "50% of creator fees are used for $ANSEM rewards to eligible $BEG holders.",
     icon: Coins
   },
   {
-    title: "Community Decides",
+    title: "Verified Begworkers",
     body:
-      "Holders vote on who deserves the next payout.",
-    icon: Vote
+      "50% goes to a reward wallet for manual payouts to verified beggars and bounties.",
+    icon: BadgeCheck
   }
 ];
 
@@ -30,9 +30,9 @@ export function FeaturesSection() {
     <section id="features" className="relative py-16 sm:py-20">
       <div className="section-shell">
         <SectionHeading
-          eyebrow="From meme to protocol"
-          title="From meme to protocol."
-          description="Ansem sparked the airdrop begging meta by giving away 10M of his own token. Now everyone wants the next drop. BegFi takes that energy and makes it systematic: 100% of creator fees go back to the community."
+          eyebrow="From bagworking to begworking"
+          title="The new work meta is begging."
+          description="Ansem sparked the airdrop begging meta. Begwork is not affiliated with him; it turns the meme into a clean 50/50 loop: $ANSEM rewards for eligible $BEG holders and a reward wallet for verified beggars."
         />
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           {features.map((feature, index) => {
@@ -57,7 +57,7 @@ export function FeaturesSection() {
           })}
         </div>
         <div className="mt-4 rounded-lg border border-beg-purple/[0.28] bg-beg-purple/[0.1] px-4 py-3 text-sm font-black uppercase tracking-[0.12em] text-beg-lime">
-          Hold 100K+ $BEG to be eligible.
+          Hold $BEG to be an on-chain beggar.
         </div>
       </div>
     </section>

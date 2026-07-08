@@ -18,7 +18,7 @@ export function DashboardSection() {
           <SectionHeading
             eyebrow="Dashboard"
             title="Live dashboard coming after launch."
-            description="The scoreboard turns on when the first BegFi rounds begin: fees, votes, winners, holder rewards, all of it."
+            description="The scoreboard turns on after launch: creator fees, $ANSEM holder rewards, reward-wallet funding, and verified begworker payouts."
             icon={<BarChart3 className="h-3.5 w-3.5 text-beg-lime" aria-hidden="true" />}
           />
           <div className="glass-subtle rounded-lg px-4 py-3 text-sm text-white/[0.62]">
@@ -48,7 +48,7 @@ export function DashboardSection() {
               <div>
                 <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.14em] text-white/[0.45]">
                   <ListChecks className="h-4 w-4 text-beg-lime" aria-hidden="true" />
-                  Official Beggar Queue
+                  Verified Begworker Queue
                 </div>
                 <p className="mt-2 text-sm text-white/[0.55]">
                   Verified entries appear here once the feed opens.
@@ -63,9 +63,9 @@ export function DashboardSection() {
               <div className="hidden grid-cols-[0.45fr_1fr_0.75fr_2.4fr_0.7fr] border-b border-white/10 bg-white/[0.045] px-4 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white/[0.45] md:grid">
                 <span>Rank</span>
                 <span>Wallet</span>
-                <span>Losses</span>
-                <span>Beg Story</span>
-                <span className="text-right">Votes</span>
+                <span>Lane</span>
+                <span>Begwork Proof</span>
+                <span className="text-right">Status</span>
               </div>
               <div className="divide-y divide-white/10">
                 {snapshot.submissions.length > 0 ? (
@@ -93,8 +93,8 @@ export function DashboardSection() {
                   ))
                 ) : (
                   <div className="bg-white/[0.02] px-4 py-8 text-sm leading-7 text-white/[0.62]">
-                    No official beggars yet. After launch, posts with the
-                    official format will show here once eligibility is checked.
+                    No verified begworkers yet. After launch, wallet posts with
+                    the official format will show here once eligibility is checked.
                   </div>
                 )}
               </div>
@@ -109,11 +109,11 @@ export function DashboardSection() {
               </div>
               <div className="mt-5 grid grid-cols-2 gap-3">
                 <div className="rounded-lg border border-white/10 bg-white/[0.045] p-4">
-                  <p className="text-xs text-white/[0.45]">Beg Pool</p>
+                  <p className="text-xs text-white/[0.45]">$ANSEM Drops</p>
                   <p className="mt-2 text-2xl font-black">{snapshot.round.pool}</p>
                 </div>
                 <div className="rounded-lg border border-white/10 bg-white/[0.045] p-4">
-                  <p className="text-xs text-white/[0.45]">Holder Rewards</p>
+                  <p className="text-xs text-white/[0.45]">Reward Wallet</p>
                   <p className="mt-2 text-2xl font-black">
                     {snapshot.round.holderRewardPool}
                   </p>
@@ -124,7 +124,7 @@ export function DashboardSection() {
             <section className="glass-surface rounded-lg p-5">
               <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.14em] text-white/[0.45]">
                 <History className="h-4 w-4 text-beg-lime" aria-hidden="true" />
-                Previous Winners
+                Verified Payouts
               </div>
               <div className="mt-5 space-y-3">
                 {snapshot.previousWinners.length > 0 ? (
@@ -151,7 +151,7 @@ export function DashboardSection() {
                   ))
                 ) : (
                   <div className="rounded-lg border border-white/10 bg-white/[0.035] p-4 text-sm leading-7 text-white/[0.58]">
-                    First winner gets immortalized here. Beg responsibly.
+                    First verified begworker payout gets immortalized here.
                   </div>
                 )}
               </div>

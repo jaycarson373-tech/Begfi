@@ -26,8 +26,8 @@ export function SiteFooter() {
         <div>
           <Logo />
           <p className="mt-3 max-w-xl text-sm leading-6 text-white/[0.45]">
-            BegFi is not affiliated with Ansem. It just saw CT begging and put
-            the meta in a suit.
+            Begwork is not affiliated with Ansem. It just saw CT stop
+            bagworking and start begworking.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">

@@ -1,5 +1,5 @@
-import { BegFiHome } from "@/components/begfi-home";
+import { BegworkHome } from "@/components/begwork-home";
 
 export default function Page() {
-  return <BegFiHome />;
+  return <BegworkHome />;
 }

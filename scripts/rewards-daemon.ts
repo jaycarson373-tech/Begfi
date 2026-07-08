@@ -41,7 +41,7 @@ function runEpoch() {
 }
 
 console.log(
-  `BegFi rewards daemon started; epochs run every ${Math.round(
+  `Begwork rewards daemon started; epochs run every ${Math.round(
     intervalMs / 1000,
   )}s in ${execute ? "EXECUTE" : "PREVIEW"} mode.`,
 );
@@ -53,7 +53,7 @@ function stop() {
   stopping = true;
   clearInterval(timer);
   if (activeChild) activeChild.kill("SIGTERM");
-  console.log("BegFi rewards daemon stopped.");
+  console.log("Begwork rewards daemon stopped.");
 }
 
 process.once("SIGINT", stop);
