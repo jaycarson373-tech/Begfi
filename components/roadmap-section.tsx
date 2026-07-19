@@ -7,7 +7,7 @@ const phases = [
   {
     phase: "Phase 1",
     title: "Native $POW Campaign",
-    points: ["Verified Proof of Workers", "Social and on-chain scoring", "Live leaderboard", "SOL rewards funded by protocol fees"],
+    points: ["Verified Proof of Workers", "Social and on-chain scoring", "Wallet-free public leaderboard", "$POW rewards funded by protocol fees"],
     status: "Live",
     href: "/campaigns/pow",
     cta: "View Campaign"
@@ -15,7 +15,7 @@ const phases = [
   {
     phase: "Phase 2",
     title: "Open Campaign Platform",
-    points: ["External project campaigns", "Project-funded SOL pools", "Custom campaign settings", "Individual campaign leaderboards", "Automated reward distribution"],
+    points: ["SOL or SPL-token campaign funding", "Project-funded pools", "Custom campaign settings", "Individual campaign leaderboards", "$POW reward distribution"],
     status: "In Progress",
     href: "/campaigns/create",
     cta: "Launch Preview"

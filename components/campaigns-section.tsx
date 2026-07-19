@@ -54,7 +54,7 @@ export function CampaignsSection() {
         campaign.native
           ? {
               ...campaign,
-              rewardPool: metricValue(snapshot, "creator-fees") || campaign.rewardPool,
+              rewardPool: metricValue(snapshot, "reward-pool") || campaign.rewardPool,
               workers: activeWorkers(snapshot),
               posts: trackedPosts(snapshot)
             }
@@ -119,7 +119,7 @@ export function CampaignsSection() {
                   </div>
                   <p className="mt-6 max-w-2xl text-base leading-7 text-white/50">{campaign.description}</p>
                   <div className="mt-6 flex flex-wrap items-center gap-3 text-xs font-bold text-white/40">
-                    <span className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5">{campaign.fundingSource}</span>
+                    <span className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5">{campaign.fundingSource} · {campaign.fundingAsset}</span>
                     {!campaign.native && <span>Projects fund their own campaigns.</span>}
                   </div>
                 </div>
@@ -127,7 +127,7 @@ export function CampaignsSection() {
                 <div>
                   <div className={`grid gap-3 ${campaign.native ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2"}`}>
                     <div className="rounded-lg border border-white/[0.08] bg-white/[0.03] p-4">
-                      <p className="text-xs text-white/30">Reward pool</p>
+                      <p className="text-xs text-white/30">Funding pool</p>
                       <p className="mt-2 text-xl font-black text-white">{campaign.rewardPool}</p>
                     </div>
                     <div className="rounded-lg border border-white/[0.08] bg-white/[0.03] p-4">
@@ -143,8 +143,8 @@ export function CampaignsSection() {
                       <p className="mt-2 text-xl font-black text-white">{campaign.timeRemaining}</p>
                     </div>
                     <div className={`rounded-lg border border-white/[0.08] bg-white/[0.03] p-4 ${campaign.native ? "" : "col-span-2"}`}>
-                      <p className="text-xs text-white/30">Estimated rewards</p>
-                      <p className="mt-2 text-xl font-black text-white">Calculated at payout</p>
+                      <p className="text-xs text-white/30">Worker rewards</p>
+                      <p className="mt-2 text-xl font-black text-white">Paid in {campaign.payoutAsset}</p>
                     </div>
                   </div>
                   <a href={`/campaigns/${campaign.slug}`} className="button-primary mt-5 w-full">
@@ -158,7 +158,7 @@ export function CampaignsSection() {
         </div>
 
         <p className="mt-5 text-sm leading-6 text-white/[0.35]">
-          External campaigns shown here are product previews. Each outside project must deposit and fund its own SOL reward pool.
+          External campaigns shown here are product previews. Projects may fund in SOL or SPL tokens; verified worker rewards are paid in $POW.
         </p>
       </div>
     </section>

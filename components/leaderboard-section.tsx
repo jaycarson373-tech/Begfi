@@ -6,8 +6,8 @@ import { ArrowUpRight, Trophy } from "lucide-react";
 import { getDashboardSnapshot } from "@/lib/protocol-data";
 import type { DashboardSnapshot } from "@/types/protocol";
 
-function payoutFor(snapshot: DashboardSnapshot, wallet: string) {
-  return snapshot.previousWinners.find((winner) => winner.wallet === wallet)?.payout || "—";
+function payoutFor(snapshot: DashboardSnapshot, identity: string) {
+  return snapshot.previousWinners.find((winner) => winner.identity === identity)?.payout || "—";
 }
 
 export function LeaderboardSection() {
@@ -71,16 +71,16 @@ export function LeaderboardSection() {
           <div className="hidden grid-cols-[72px_1.1fr_1fr_0.7fr_0.7fr] border-b border-white/[0.08] px-6 py-5 text-xs font-bold uppercase text-white/[0.35] md:grid">
             <span>Rank</span>
             <span>X account</span>
-            <span>Wallet</span>
+            <span>Minimum</span>
             <span className="text-right">Points</span>
-            <span className="text-right">SOL earned</span>
+            <span className="text-right">$POW earned</span>
           </div>
 
           <div className="divide-y divide-white/[0.07]">
             {rows.length ? (
               rows.map((row, index) => (
                 <motion.article
-                  key={`${row.wallet}-${row.rank}`}
+                  key={row.id}
                   initial={{ opacity: 0, x: -16 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
@@ -96,16 +96,18 @@ export function LeaderboardSection() {
                     <span className="font-bold text-white">{row.lane}</span>
                   </div>
                   <div>
-                    <span className="mb-1 block text-xs font-semibold text-white/30 md:hidden">Wallet</span>
-                    <span className="font-mono text-sm text-white/[0.48]">{row.wallet}</span>
+                    <span className="mb-1 block text-xs font-semibold text-white/30 md:hidden">Minimum</span>
+                    <span className={`text-sm font-bold ${row.eligible ? "text-[#8db3ff]" : "text-white/35"}`}>
+                      {row.eligibility}
+                    </span>
                   </div>
                   <div className="md:text-right">
                     <span className="mb-1 block text-xs font-semibold text-white/30 md:hidden">Points</span>
                     <span className="font-extrabold text-white">{row.score || row.status}</span>
                   </div>
                   <div className="md:text-right">
-                    <span className="mb-1 block text-xs font-semibold text-white/30 md:hidden">SOL earned</span>
-                    <span className="font-extrabold text-[#8db3ff]">{payoutFor(snapshot, row.wallet)}</span>
+                    <span className="mb-1 block text-xs font-semibold text-white/30 md:hidden">$POW earned</span>
+                    <span className="font-extrabold text-[#8db3ff]">{payoutFor(snapshot, row.lane)}</span>
                   </div>
                 </motion.article>
               ))

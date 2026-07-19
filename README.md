@@ -1,131 +1,194 @@
-# POW
+# Proof of Work
 
-POW is a polished Next.js/Tailwind campaign platform for CT-native Proof of Work on Solana.
+Proof of Work links an X account to a private Solana wallet, scans public `$POW` posts, ranks verified contribution, and rewards eligible workers in `$POW`.
 
-The native `$POW` campaign rewards verified workers using SOL funded from protocol fees. The existing scanner measures wallet activity and X engagement, and the existing reward worker distributes SOL to top eligible workers.
+## Current Product Boundary
 
-The POW scanner links public X accounts to wallets through an application post. After that, it scans each verified worker profile for `$POW` posts. Better posts earn more reach, more engagement, more score, and a larger share of SOL payroll.
-
-The multi-campaign expansion lets outside projects create separate campaigns using the same scoring infrastructure. Every outside project must fund its own SOL reward pool, campaign rules, leaderboard, and payout cycle. The native `$POW` campaign remains the default campaign.
-
-## Campaign Preview
-
-`/campaigns/create` is a frontend-only campaign funding preview. It does not create a campaign or move SOL.
-
-`/campaigns/[slug]` shows a campaign-specific ruleset, metrics, leaderboard, and estimated reward view. The native `$POW` page reads the existing dashboard API. External campaigns and their metrics are clearly labeled demo data and do not connect to Supabase or the reward worker yet.
-
-## Marketplace Preview
-
-`/marketplace` is an interactive pre-beta product preview with dashboard, worker, project, job, analytics, enterprise, and settings views. All marketplace people, companies, roles, charts, metrics, and waitlist interactions are local demo data. The marketplace does not read from or write to Supabase, scanner, wallet, or rewards services.
-
-The separation is intentional: the protocol homepage continues to use the live dashboard API, while the marketplace can later become its own product surface without changing the reward worker.
-
-## Stack
-
-- Next.js app router
-- Tailwind CSS
-- Framer Motion
-- Lucide icons
-- Launch-ready feed and dashboard placeholders
-- Pump creator-fee rewards worker
-- POW logo/banner assets
-
-## Feed Boundary
-
-The feed and dashboard are ready for the X profile scanner and wallet verification services once those launch.
+- The native `$POW` campaign is live-ready after Supabase and Railway are configured.
+- The scanner checks applications every 5 minutes and refreshes worker scores.
+- The public leaderboard contains X handles, score, post totals, views, and minimum-hold status. It never stores or returns a wallet address.
+- The rewards daemon runs every 15 minutes and pays only pre-funded `$POW` from a dedicated payout wallet.
+- External campaign creation is still a frontend preview. It does not accept deposits or launch a real campaign yet.
+- Campaigns may eventually be funded in SOL or any SPL token, but worker payouts are always `$POW`.
+- No automatic SOL/token-to-`$POW` swap is implemented. Convert and fund the payout wallet manually for now.
 
 ## Supabase
 
-Run `supabase/migrations/001_pow_rewards.sql` in your Supabase SQL editor before enabling live worker writes. If you already ran the first migration, also run `supabase/migrations/002_pow_anti_cheat.sql`.
+Apply these migrations in order:
 
-The dashboard reads live epochs, claims, SOL payroll payouts, scored worker posts, applications, and verified worker rows from Supabase. If Supabase envs are missing, the site falls back to launch placeholders.
+1. `supabase/migrations/001_pow_rewards.sql`
+2. `supabase/migrations/002_pow_anti_cheat.sql`
+3. `supabase/migrations/003_pow_campaigns_privacy_and_token_rewards.sql`
 
-Required for Railway worker writes:
+The third migration is required. It adds campaign funding records, `$POW` payout accounting, the wallet-free public leaderboard, and removes public access to wallet-bearing tables.
 
-```bash
-SUPABASE_URL=<SUPABASE_URL>
-SUPABASE_SERVICE_ROLE_KEY=<SERVICE_ROLE_KEY>
-```
-
-Required for Vercel dashboard reads:
+Supabase recommends applying tracked migrations with the CLI:
 
 ```bash
-SUPABASE_URL=<SUPABASE_URL>
-SUPABASE_SERVICE_ROLE_KEY=<SERVICE_ROLE_KEY>
+npx supabase login
+npx supabase link --project-ref YOUR_PROJECT_REF
+npx supabase db push
 ```
 
-`NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are optional fallbacks for public reads.
+For a first-time prototype, the three SQL files can be run in order in the Supabase SQL Editor. Do not run migration 003 before 001 and 002.
 
-## POW Scanner
+Wallet-free leaderboard check:
 
-The scanner runs every 5 minutes. The application step only links an X account to a Solana wallet. It accepts public X applications when the post includes a wallet and that wallet holds at least 1M `$POW`.
-
-Application format:
-
-```text
-$POW #POW application
-
-Wallet:
+```sql
+select
+  rank,
+  x_handle,
+  score,
+  meets_minimum,
+  worker_status,
+  post_count,
+  impression_count,
+  updated_at
+from pow_public_leaderboard
+where campaign_slug = 'pow'
+order by rank;
 ```
 
-After acceptance, the scanner checks each verified worker's X profile for posts that use the `$POW` cashtag. The automatic score is based on those posts' X engagement, X views, current holdings, hold time, and optional wallet volume.
+## Vercel
 
-Score inputs:
+Import the GitHub repository at `https://vercel.com/new`. The default Next.js build settings are sufficient.
 
-- `$POW` holdings, with a 1M `$POW` minimum.
-- Hold-time multiplier from the worker acceptance timestamp.
-- X engagement on `$POW` posts: likes, reposts, replies, quotes, bookmarks.
-- X views from post public metrics.
-- Current `$POW` balance. Selling down reduces holding score.
-- Wallet volume, when `POW_VOLUME_API_URL` is configured.
+Add these variables to Production and Preview in Project Settings > Environment Variables:
 
-If a worker wallet falls below 1M `$POW`, the worker moves to pending and is excluded from payroll. If it re-qualifies later, the holding-time streak restarts.
+```bash
+SUPABASE_URL=<Supabase project URL>
+SUPABASE_SERVICE_ROLE_KEY=<Supabase service_role key>
+NEXT_PUBLIC_SITE_URL=https://your-domain.example
+NEXT_PUBLIC_BUY_URL=<official $POW buy URL>
+NEXT_PUBLIC_X_URL=<official X profile URL>
+NEXT_PUBLIC_TELEGRAM_URL=<official Telegram URL>
+```
 
-Anti-cheat exclusions are supported through the private `pow_blacklist` Supabase table and quick Railway env lists. Excluded accounts can be filtered from applications, scoring, and SOL payroll.
+`SUPABASE_SERVICE_ROLE_KEY` is server-only. Never rename it with a `NEXT_PUBLIC_` prefix.
+
+## Railway Scanner
+
+Open `https://railway.com/new`, import the same GitHub repository, and create a persistent service named `pow-scanner`.
+
+Build command:
+
+```bash
+pnpm install --frozen-lockfile
+```
+
+Start command:
 
 ```bash
 pnpm pow:scanner
 ```
 
-Required scanner envs:
+Scanner variables:
 
 ```bash
-X_BEARER_TOKEN=<X_API_BEARER_TOKEN>
-SUPABASE_URL=<SUPABASE_URL>
-SUPABASE_SERVICE_ROLE_KEY=<SERVICE_ROLE_KEY>
-SOLANA_RPC_URL=<RPC_URL>
-SOURCE_TOKEN_MINT=<POW_TOKEN_MINT>
+SUPABASE_URL=<Supabase project URL>
+SUPABASE_SERVICE_ROLE_KEY=<Supabase service_role key>
+SOLANA_RPC_URL=<private production Solana RPC URL>
+POW_TOKEN_MINT=<real $POW mint>
+X_BEARER_TOKEN=<X API v2 bearer token>
 MIN_WORKER_POW_BALANCE=1000000
+POW_APPLICATION_QUERY="$POW #POW application -is:retweet"
 POW_WORK_CASHTAG="$POW"
+POW_SCANNER_INTERVAL_MS=300000
 MAX_PROFILE_SCAN_WORKERS=100
 BLACKLISTED_WORKER_WALLETS=
 BLACKLISTED_X_HANDLES=
 BLACKLISTED_X_USER_IDS=
 ```
 
-`POW_VOLUME_API_URL` and `POW_VOLUME_API_KEY` are optional. Without a volume indexer, volume score stays at zero.
-
-## SOL Payroll Worker
-
-The worker can claim Pump creator fees and distribute 100% of each claim as SOL to top verified workers, pro-rata by leaderboard score.
-
-It is preview-only by default.
+Optional wallet-volume inputs:
 
 ```bash
-pnpm rewards:preview
-pnpm rewards:execute
+POW_VOLUME_API_URL=
+POW_VOLUME_API_KEY=
+```
+
+Application format:
+
+```text
+$POW #POW application
+
+Wallet: <wallet address>
+```
+
+A valid application links the X account and wallet. Accounts below 1M `$POW` appear as pending and cannot receive rewards. The private wallet is used for balance checks and payout construction; the public leaderboard only receives the X account and eligibility result.
+
+## Railway Rewards
+
+Create a second persistent Railway service from the same repository named `pow-rewards`. Do not share its private key with the scanner service.
+
+Build command:
+
+```bash
+pnpm install --frozen-lockfile
+```
+
+Start command:
+
+```bash
 pnpm rewards:daemon
 ```
 
-For Railway, deploy the same repo as a separate worker service with:
+Use a dedicated low-balance payout wallet, not the main fee wallet or treasury. Fund it manually with the intended `$POW` allocation and enough SOL for associated-token-account rent and transaction fees.
+
+Rewards variables:
 
 ```bash
-pnpm rewards:daemon
+SUPABASE_URL=<Supabase project URL>
+SUPABASE_SERVICE_ROLE_KEY=<Supabase service_role key>
+SOLANA_RPC_URL=<private production Solana RPC URL>
+POW_TOKEN_MINT=<real $POW mint>
+POW_PAYOUT_WALLET_PRIVATE_KEY=<base58 secret or JSON byte array>
+MIN_WORKER_POW_BALANCE=1000000
+MIN_WORKER_SCORE=1
+MAX_PAYOUT_WORKERS=100
+SOL_FEE_RESERVE=0.25
+REWARDS_EPOCH_MS=900000
+POW_PAYOUT_BALANCE_BPS=1
+MAX_POW_PAYOUT_TOKENS_PER_EPOCH=10000
+POW_TOKEN_RESERVE=1000000
+MIN_POW_PAYOUT_TOKENS=100
+MAX_TOKEN_TRANSFERS_PER_TX=4
+REWARDS_DAEMON_EXECUTE=false
+ENABLE_POW_PAYOUTS=false
+POW_PAYOUT_EXECUTION_ACK=
 ```
 
-Set `REWARDS_DAEMON_EXECUTE=true` only when the fee wallet, `$POW` mint, RPC, Supabase, and claim cap are configured. Required envs are listed in `.env.example`.
+`POW_PAYOUT_BALANCE_BPS=1` means 0.01% of the spendable payout-wallet balance per 15-minute cycle, before the absolute epoch cap and reserve. If every cycle executes, that is at most roughly 0.96% per day before those additional limits.
 
-`SOURCE_TOKEN_MINT` is the `$POW` mint used for worker eligibility checks. `MIN_WORKER_SCORE`, `MAX_PAYOUT_WORKERS`, and `MIN_PAYOUT_LAMPORTS` control who gets paid from each SOL payroll epoch.
+### Safe Activation
+
+1. Apply migration 003.
+2. Run both Railway services with rewards in preview mode.
+3. Confirm scanner rows appear in `pow_public_leaderboard` without wallets.
+4. Confirm preview epochs and `dry_run` payouts in Supabase.
+5. Verify the real `$POW` mint, payout-wallet address, token balance, and SOL reserve.
+6. Set an intentionally small balance cap and absolute per-epoch cap.
+7. Enable live execution only after a manual preview review:
+
+```bash
+REWARDS_DAEMON_EXECUTE=true
+ENABLE_POW_PAYOUTS=true
+POW_PAYOUT_EXECUTION_ACK=I_UNDERSTAND_POW_PAYOUTS_ARE_LIVE
+```
+
+The worker also uses one database epoch ID per 15-minute window, so a duplicate Railway process cannot intentionally settle the same time bucket twice. Set `REWARDS_DAEMON_EXECUTE=false` and redeploy to stop live payouts.
+
+## Campaign Payments For Now
+
+Until the campaign funding API and swap/settlement layer are built:
+
+1. Receive outside-project SOL or SPL-token funding into a treasury or multisig.
+2. Verify the deposit manually.
+3. Convert the agreed campaign allocation into `$POW` manually.
+4. Transfer only the campaign's capped `$POW` budget to the dedicated payout wallet.
+5. Keep the campaign in `awaiting_conversion` until the `$POW` balance is ready.
+
+Do not let the Railway worker custody arbitrary campaign tokens or perform automatic swaps yet. A production swap path needs slippage limits, price validation, liquidity checks, transaction simulation, and a separate approval policy.
 
 ## Commands
 
@@ -134,5 +197,9 @@ Requires Node 22.13+.
 ```bash
 pnpm install
 pnpm dev
+pnpm typecheck
 pnpm build
+pnpm pow:scanner
+pnpm rewards:preview
+pnpm rewards:daemon
 ```

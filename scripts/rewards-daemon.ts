@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { spawn, type ChildProcess } from "child_process";
 
-const defaultIntervalMs = 60 * 60 * 1000;
+const defaultIntervalMs = 15 * 60 * 1000;
 const intervalMs = Number(process.env.REWARDS_EPOCH_MS || defaultIntervalMs);
 const execute =
   process.env.REWARDS_DAEMON_EXECUTE === "true" || process.argv.includes("--execute");

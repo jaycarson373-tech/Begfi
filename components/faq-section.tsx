@@ -7,7 +7,7 @@ import { Plus } from "lucide-react";
 const questions = [
   {
     question: "What is a Proof of Work campaign?",
-    answer: "A project-defined competition where verified workers contribute, receive a campaign-specific score, and earn SOL from that campaign's reward pool."
+    answer: "A project-defined competition where verified workers contribute, receive a campaign-specific score, and earn $POW from that campaign's payout allocation."
   },
   {
     question: "Who funds the native $POW campaign?",
@@ -15,7 +15,7 @@ const questions = [
   },
   {
     question: "Who funds external campaigns?",
-    answer: "The project launching the campaign deposits its own SOL reward pool upfront. Proof of Work does not fund external project campaigns."
+    answer: "The project deposits its own SOL or SPL-token funding upfront. Proof of Work does not fund external campaigns, and non-$POW deposits must be converted before $POW payouts begin."
   },
   {
     question: "Can I join more than one campaign?",
@@ -27,7 +27,7 @@ const questions = [
   },
   {
     question: "How are rewards distributed?",
-    answer: "Each campaign defines its winner count and reward rules. At payout, eligible workers receive SOL from that campaign's funded reward pool according to the final leaderboard."
+    answer: "Each campaign defines its winner count and reward rules. Eligible workers receive $POW according to that campaign's leaderboard and available payout allocation."
   },
   {
     question: "Can people game the leaderboard?",

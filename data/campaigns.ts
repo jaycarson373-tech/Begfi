@@ -1,7 +1,7 @@
 export type CampaignLeaderboardRow = {
   rank: number;
   xAccount: string;
-  wallet: string;
+  eligibility: string;
   score: string;
   estimatedReward: string;
 };
@@ -19,6 +19,8 @@ export type Campaign = {
   timeRemaining: string;
   status: string;
   fundingSource: "Protocol Fees" | "Funded by Project";
+  fundingAsset: string;
+  payoutAsset: "$POW";
   keyword: string;
   schedule: string;
   eligibility: string[];
@@ -45,6 +47,8 @@ export const campaigns: Campaign[] = [
     timeRemaining: "Ongoing",
     status: "Live",
     fundingSource: "Protocol Fees",
+    fundingAsset: "Protocol fees",
+    payoutAsset: "$POW",
     keyword: "$POW",
     schedule: "Continuous campaign",
     eligibility: [
@@ -73,6 +77,8 @@ export const campaigns: Campaign[] = [
     timeRemaining: "12 days",
     status: "Preview",
     fundingSource: "Funded by Project",
+    fundingAsset: "SOL",
+    payoutAsset: "$POW",
     keyword: "$VCTR",
     schedule: "August 1 – August 21",
     eligibility: [
@@ -87,10 +93,10 @@ export const campaigns: Campaign[] = [
     native: false,
     demo: true,
     leaderboard: [
-      { rank: 1, xAccount: "@alexbuilds", wallet: "9vJ4...m2Pq", score: "9,840", estimatedReward: "4.20 SOL" },
-      { rank: 2, xAccount: "@mayamakes", wallet: "7dKe...x91L", score: "8,960", estimatedReward: "3.65 SOL" },
-      { rank: 3, xAccount: "@ravilabs", wallet: "3Qsw...7aVn", score: "8,220", estimatedReward: "3.10 SOL" },
-      { rank: 4, xAccount: "@sofiaonchain", wallet: "B8tr...p4Kx", score: "7,740", estimatedReward: "2.70 SOL" }
+      { rank: 1, xAccount: "@alexbuilds", eligibility: "Minimum met", score: "9,840", estimatedReward: "420K $POW" },
+      { rank: 2, xAccount: "@mayamakes", eligibility: "Minimum met", score: "8,960", estimatedReward: "365K $POW" },
+      { rank: 3, xAccount: "@ravilabs", eligibility: "Minimum met", score: "8,220", estimatedReward: "310K $POW" },
+      { rank: 4, xAccount: "@sofiaonchain", eligibility: "Minimum met", score: "7,740", estimatedReward: "270K $POW" }
     ]
   },
   {
@@ -100,12 +106,14 @@ export const campaigns: Campaign[] = [
     mark: "A",
     description:
       "A fictional launch campaign rewarding useful threads, replies, and original community content.",
-    rewardPool: "25 SOL",
+    rewardPool: "2M $ARC",
     workers: "94",
     posts: "680",
     timeRemaining: "18 days",
     status: "Preview",
     fundingSource: "Funded by Project",
+    fundingAsset: "$ARC",
+    payoutAsset: "$POW",
     keyword: "$ARC",
     schedule: "August 8 – September 1",
     eligibility: [
@@ -120,10 +128,10 @@ export const campaigns: Campaign[] = [
     native: false,
     demo: true,
     leaderboard: [
-      { rank: 1, xAccount: "@drewcuts", wallet: "5Lmk...c2Rz", score: "7,410", estimatedReward: "3.40 SOL" },
-      { rank: 2, xAccount: "@zanegrows", wallet: "Ee71...w9Sa", score: "6,980", estimatedReward: "3.05 SOL" },
-      { rank: 3, xAccount: "@mayamakes", wallet: "7dKe...x91L", score: "6,250", estimatedReward: "2.60 SOL" },
-      { rank: 4, xAccount: "@sofiaonchain", wallet: "B8tr...p4Kx", score: "5,890", estimatedReward: "2.25 SOL" }
+      { rank: 1, xAccount: "@drewcuts", eligibility: "Minimum met", score: "7,410", estimatedReward: "340K $POW" },
+      { rank: 2, xAccount: "@zanegrows", eligibility: "Minimum met", score: "6,980", estimatedReward: "305K $POW" },
+      { rank: 3, xAccount: "@mayamakes", eligibility: "Minimum met", score: "6,250", estimatedReward: "260K $POW" },
+      { rank: 4, xAccount: "@sofiaonchain", eligibility: "Below minimum", score: "5,890", estimatedReward: "Ineligible" }
     ]
   }
 ];

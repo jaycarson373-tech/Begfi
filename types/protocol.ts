@@ -9,11 +9,13 @@ export type ProtocolMetric = {
 };
 
 export type Submission = {
+  id: string;
   rank: number;
-  wallet: string;
   lane: string;
   proof: string;
   status: string;
+  eligible: boolean;
+  eligibility: string;
   score?: string;
   holdings?: string;
   holdTime?: string;
@@ -24,7 +26,7 @@ export type Submission = {
 
 export type PreviousWinner = {
   round: string;
-  wallet: string;
+  identity: string;
   payout: string;
   reason: string;
 };

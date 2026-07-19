@@ -6,7 +6,7 @@ const stages = [
   { label: "Social", detail: "Posts and engagement" },
   { label: "On-chain", detail: "Holdings, buys, volume, selling" },
   { label: "Campaign Score", detail: "Ranked separately in every campaign" },
-  { label: "SOL", detail: "Strongest workers earn" }
+  { label: "$POW", detail: "Strongest workers earn" }
 ];
 
 export function ProofFlow() {

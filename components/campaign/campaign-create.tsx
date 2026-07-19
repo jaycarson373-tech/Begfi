@@ -14,6 +14,9 @@ type FormState = {
   website: string;
   description: string;
   keyword: string;
+  fundingAsset: "SOL" | "SPL token";
+  fundingSymbol: string;
+  fundingMint: string;
   reward: string;
   startDate: string;
   endDate: string;
@@ -29,6 +32,9 @@ const initialState: FormState = {
   website: "",
   description: "",
   keyword: "",
+  fundingAsset: "SOL",
+  fundingSymbol: "",
+  fundingMint: "",
   reward: "",
   startDate: "",
   endDate: "",
@@ -49,13 +55,14 @@ export function CampaignCreate() {
   const [logoName, setLogoName] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
+  const fundingSymbol = form.fundingAsset === "SOL" ? "SOL" : form.fundingSymbol.trim().toUpperCase() || "TOKEN";
   const summary = useMemo(
     () => ({
-      reward: form.reward ? `${Number(form.reward).toLocaleString()} SOL` : "0 SOL",
+      reward: form.reward ? `${Number(form.reward).toLocaleString()} ${fundingSymbol}` : `0 ${fundingSymbol}`,
       duration: duration(form.startDate, form.endDate),
       winners: form.winners || "0"
     }),
-    [form.endDate, form.reward, form.startDate, form.winners]
+    [form.endDate, form.reward, form.startDate, form.winners, fundingSymbol]
   );
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
@@ -79,10 +86,10 @@ export function CampaignCreate() {
           <div className="mt-10 max-w-4xl">
             <div className="flex flex-wrap items-center gap-3">
               <span className="rounded-full border border-[#5f95ff]/25 bg-[#1e5eff]/10 px-3 py-1.5 text-[0.65rem] font-black uppercase text-[#a8c4ff]">Frontend Demo</span>
-              <span className="text-xs font-bold text-white/[0.35]">No SOL will move</span>
+              <span className="text-xs font-bold text-white/[0.35]">No funds will move</span>
             </div>
             <h1 className="mt-7 text-5xl font-black leading-[0.96] text-white sm:text-7xl">Launch a Proof of Work Campaign</h1>
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-white/50 sm:text-xl">Create a SOL reward pool and reward the people generating the most value for your project.</p>
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-white/50 sm:text-xl">Fund a campaign in SOL or an SPL token. Eligible workers receive rewards in $POW.</p>
           </div>
 
           <form onSubmit={submit} className="mt-14 grid gap-5 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
@@ -109,7 +116,12 @@ export function CampaignCreate() {
                 <legend className="mb-1 text-lg font-black text-white">Campaign</legend>
                 <div className="grid gap-5 sm:grid-cols-2">
                   <Field label="Coin tag or keyword"><input required value={form.keyword} onChange={(event) => update("keyword", event.target.value)} placeholder="$TOKEN or #campaign" className="form-input" /></Field>
-                  <Field label="SOL reward amount"><div className="relative"><input required min="1" step="0.01" type="number" value={form.reward} onChange={(event) => update("reward", event.target.value)} placeholder="25" className="form-input pr-14" /><span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-black text-[#8db3ff]">SOL</span></div></Field>
+                  <Field label="Funding asset"><select value={form.fundingAsset} onChange={(event) => update("fundingAsset", event.target.value as FormState["fundingAsset"])} className="form-input"><option>SOL</option><option>SPL token</option></select></Field>
+                  <Field label="Funding amount"><div className="relative"><input required min="0.000001" step="any" type="number" value={form.reward} onChange={(event) => update("reward", event.target.value)} placeholder="25" className="form-input pr-20" /><span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-black text-[#8db3ff]">{fundingSymbol}</span></div></Field>
+                  {form.fundingAsset === "SPL token" && <>
+                    <Field label="Funding token symbol"><input required value={form.fundingSymbol} onChange={(event) => update("fundingSymbol", event.target.value)} placeholder="TOKEN" className="form-input" /></Field>
+                    <Field label="Funding token mint"><input required value={form.fundingMint} onChange={(event) => update("fundingMint", event.target.value)} placeholder="Solana mint address" className="form-input" /></Field>
+                  </>}
                   <Field label="Start date"><input required type="date" value={form.startDate} onChange={(event) => update("startDate", event.target.value)} className="form-input" /></Field>
                   <Field label="End date"><input required type="date" min={form.startDate} value={form.endDate} onChange={(event) => update("endDate", event.target.value)} className="form-input" /></Field>
                   <Field label="Number of winners"><input required min="1" max="1000" type="number" value={form.winners} onChange={(event) => update("winners", event.target.value)} className="form-input" /></Field>
@@ -122,14 +134,15 @@ export function CampaignCreate() {
             <aside className="premium-card p-6 sm:p-7 lg:sticky lg:top-28">
               <div className="flex items-center justify-between gap-3"><p className="text-lg font-black text-white">Campaign Summary</p><ShieldCheck className="h-5 w-5 text-[#7fa8ff]" /></div>
               <dl className="mt-7 divide-y divide-white/[0.08]">
-                <SummaryRow label="Reward Pool" value={summary.reward} icon={<Coins className="h-4 w-4" />} />
+                <SummaryRow label="Funding Pool" value={summary.reward} icon={<Coins className="h-4 w-4" />} />
+                <SummaryRow label="Worker Payout" value="$POW" icon={<Coins className="h-4 w-4" />} />
                 <SummaryRow label="Platform Fee" value="Shown before funding" icon={<Info className="h-4 w-4" />} />
-                <SummaryRow label="Total Required" value={form.reward ? `${summary.reward} + fee` : "0 SOL + fee"} icon={<Coins className="h-4 w-4" />} />
+                <SummaryRow label="Total Required" value={`${summary.reward} + fee`} icon={<Coins className="h-4 w-4" />} />
                 <SummaryRow label="Campaign Duration" value={summary.duration} icon={<CalendarDays className="h-4 w-4" />} />
                 <SummaryRow label="Estimated Winners" value={summary.winners} icon={<ShieldCheck className="h-4 w-4" />} />
               </dl>
               <div className="mt-7 rounded-lg border border-[#5f95ff]/20 bg-[#1e5eff]/10 p-4 text-sm leading-6 text-[#b4ccff]">
-                Your project funds this campaign. Proof of Work does not supply the external SOL reward pool.
+                Your project funds the campaign. Before launch, non-$POW deposits must be converted into a pre-funded $POW payout balance; the demo does not swap assets.
               </div>
               <button type="submit" className="button-primary mt-5 w-full">Fund and Launch Campaign<ArrowUpRight className="h-4 w-4" /></button>
               <p className="mt-3 text-center text-xs leading-5 text-white/30">Demo only. No wallet transaction will occur.</p>

@@ -52,7 +52,7 @@ export function HeroSection() {
           transition={{ duration: 0.7, delay: 0.22 }}
           className="mt-7 max-w-3xl text-lg leading-8 text-white/[0.58] sm:text-xl sm:leading-9"
         >
-          Proof of Work ranks contributors by social performance and on-chain activity, then rewards the strongest workers with SOL.
+          Proof of Work ranks contributors by social performance and on-chain activity, then rewards the strongest workers with $POW.
         </motion.p>
 
         <motion.p
@@ -61,7 +61,7 @@ export function HeroSection() {
           transition={{ duration: 0.7, delay: 0.3 }}
           className="mt-5 max-w-3xl text-sm font-semibold leading-7 text-[#9fbdff] sm:text-base"
         >
-          The native $POW campaign is funded by protocol fees. Any project can launch its own campaign by creating a SOL reward pool.
+          The native campaign is funded by protocol fees. Any project can fund a campaign in SOL or an SPL token; verified worker payouts are made in $POW.
         </motion.p>
 
         <motion.div

@@ -45,6 +45,16 @@ type VerifiedWorker = {
   created_at: string | null;
 };
 
+type PublicWorker = {
+  x_user_id: string;
+  x_handle: string;
+  status: string | null;
+  holding_tokens: string | number | null;
+  score: string | number | null;
+  post_count: number | null;
+  impression_count: number | null;
+};
+
 type BlacklistRow = {
   wallet: string | null;
   x_user_id: string | null;
@@ -87,7 +97,7 @@ const db = createClient(requiredEnv("SUPABASE_URL"), requiredEnv("SUPABASE_SERVI
 });
 const connection = new Connection(requiredEnv("SOLANA_RPC_URL"), "confirmed");
 const xBearerToken = requiredEnv("X_BEARER_TOKEN");
-const powMint = new PublicKey(requiredEnv("SOURCE_TOKEN_MINT"));
+const powMint = new PublicKey(process.env.POW_TOKEN_MINT?.trim() || requiredEnv("SOURCE_TOKEN_MINT"));
 const minWorkerPow = numberEnv("MIN_WORKER_POW_BALANCE", 1_000_000);
 const applicationQuery = process.env.POW_APPLICATION_QUERY?.trim() || "$POW #POW application -is:retweet";
 const workCashtag = process.env.POW_WORK_CASHTAG?.trim() || "$POW";
@@ -103,6 +113,7 @@ if (maxProfileScanWorkers < 1 || maxProfileScanWorkers > 500) {
 let running = false;
 let cachedDecimals: number | null = null;
 let blacklistWarningShown = false;
+let publicLeaderboardWarningShown = false;
 
 function userMap(response: XSearchResponse) {
   return new Map((response.includes?.users ?? []).map((user) => [user.id, user]));
@@ -364,11 +375,18 @@ async function scanApplications(blacklist: BlacklistIndex) {
         const balance = await powBalance(wallet);
         holdingRaw = balance.raw;
         holdingTokens = balance.tokens;
-        if (holdingTokens >= minWorkerPow) {
+        const linkedResult = await db
+          .from("pow_verified_workers")
+          .select("x_user_id,x_handle")
+          .eq("wallet", wallet)
+          .maybeSingle();
+        if (linkedResult.error) throw linkedResult.error;
+
+        if (linkedResult.data && linkedResult.data.x_user_id !== tweet.author_id) {
+          rejectionReason = "wallet is already linked to another X account";
+        } else {
           status = "accepted";
           rejectionReason = "";
-        } else {
-          rejectionReason = `below ${minWorkerPow.toLocaleString()} POW minimum`;
         }
       }
     }
@@ -400,7 +418,7 @@ async function scanApplications(blacklist: BlacklistIndex) {
           application_tweet_id: tweet.id,
           application_text: tweet.text,
           category: "verified worker",
-          status: "verified",
+          status: holdingTokens >= minWorkerPow ? "verified" : "pending",
           exclusion_reason: null,
           excluded_at: null,
           holding_raw: holdingRaw,
@@ -410,7 +428,9 @@ async function scanApplications(blacklist: BlacklistIndex) {
         { onConflict: "x_user_id" },
       );
       if (workerResult.error) throw workerResult.error;
-      console.log(`accepted @${user.username}: ${holdingTokens.toLocaleString()} POW`);
+      console.log(
+        `linked @${user.username}: ${holdingTokens.toLocaleString()} POW (${holdingTokens >= minWorkerPow ? "eligible" : "below minimum"})`,
+      );
     } else {
       console.log(`rejected @${user.username}: ${rejectionReason}`);
     }
@@ -570,6 +590,55 @@ async function recalculateWorkerScores(workers: VerifiedWorker[], blacklist: Bla
   }
 }
 
+async function syncPublicLeaderboard() {
+  const [campaignResult, workersResult] = await Promise.all([
+    db.from("pow_campaigns").select("id").eq("slug", "pow").maybeSingle(),
+    db
+      .from("pow_verified_workers")
+      .select("x_user_id,x_handle,status,holding_tokens,score,post_count,impression_count")
+      .in("status", ["verified", "pending", "paid"])
+      .order("score", { ascending: false }),
+  ]);
+
+  if (campaignResult.error || workersResult.error || !campaignResult.data?.id) {
+    if (!publicLeaderboardWarningShown) {
+      const message = campaignResult.error?.message || workersResult.error?.message || "native campaign is missing";
+      console.warn(`Public leaderboard sync disabled until migration 003 is applied: ${message}`);
+      publicLeaderboardWarningShown = true;
+    }
+    return;
+  }
+
+  const campaignId = campaignResult.data.id as string;
+  const workers = (workersResult.data ?? []) as PublicWorker[];
+  const rows = workers.map((worker, index) => ({
+    campaign_id: campaignId,
+    campaign_slug: "pow",
+    x_user_id: worker.x_user_id,
+    x_handle: worker.x_handle,
+    rank: index + 1,
+    score: Number(worker.score ?? 0),
+    meets_minimum: Number(worker.holding_tokens ?? 0) >= minWorkerPow,
+    worker_status: worker.status ?? "pending",
+    post_count: worker.post_count ?? 0,
+    impression_count: worker.impression_count ?? 0,
+    updated_at: new Date().toISOString(),
+  }));
+
+  const deleteResult = await db
+    .from("pow_public_leaderboard")
+    .delete()
+    .eq("campaign_id", campaignId);
+  if (deleteResult.error) throw deleteResult.error;
+
+  if (rows.length) {
+    const insertResult = await db.from("pow_public_leaderboard").insert(rows);
+    if (insertResult.error) throw insertResult.error;
+  }
+
+  console.log(`public leaderboard synced: ${rows.length} workers, no wallets exposed`);
+}
+
 async function runOnce() {
   console.log("POW scanner tick started");
   const blacklist = await loadBlacklist();
@@ -582,6 +651,7 @@ async function runOnce() {
   }));
   await scanWorkerPosts(activeWorkers);
   await recalculateWorkerScores(workers, blacklist);
+  await syncPublicLeaderboard();
   console.log(`POW scanner tick complete: ${activeWorkers.length} active workers`);
 }
 

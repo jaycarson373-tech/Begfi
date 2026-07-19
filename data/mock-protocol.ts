@@ -5,22 +5,22 @@ export const dashboardSnapshot: DashboardSnapshot = {
     id: "Launch round",
     status: "Live dashboard coming after launch",
     pool: "100%",
-    holderRewardPool: "SOL",
-    votingWindow: "5-minute scanner"
+    holderRewardPool: "$POW",
+    votingWindow: "15-minute rewards"
   },
   metrics: [
     {
-      key: "creator-fees",
-      label: "Creator Fees",
+      key: "reward-pool",
+      label: "$POW Reward Wallet",
       value: "Coming soon",
-      helper: "Creator-fee routing starts after launch.",
+      helper: "The live balance appears after the first reward preview.",
       tone: "purple"
     },
     {
-      key: "current-pool",
-      label: "Worker Payroll",
-      value: "100%",
-      helper: "Protocol fees fund the native $POW campaign reward pool.",
+      key: "pow-payout",
+      label: "Latest $POW Reward",
+      value: "Coming soon",
+      helper: "Only a capped share of the payout wallet is used each cycle.",
       tone: "magenta"
     },
     {
@@ -50,9 +50,9 @@ export const dashboardSnapshot: DashboardSnapshot = {
     },
     {
       key: "total-fees",
-      label: "Total SOL Payroll",
+      label: "Total $POW Paid",
       value: "Coming soon",
-      helper: "Settled creator-fee payroll paid to top workers.",
+      helper: "Settled $POW rewards paid to eligible workers.",
       tone: "purple"
     },
     {
@@ -74,17 +74,17 @@ export const faqs: FaqItem[] = [
   {
     question: "How do rewards work?",
     answer:
-      "After launch, 100% of creator fees are paid as SOL payroll to top verified workers by leaderboard score. Better attention can earn more score, and more score can earn a larger payroll share."
+      "Every 15 minutes, a capped share of the funded $POW reward wallet is allocated to eligible workers by leaderboard score. Better verified attention can earn more score and a larger reward share."
   },
   {
     question: "Minimum holdings?",
     answer:
-      "Verified workers need 1M+ $POW. If the linked wallet sells down, its holding score drops. If it falls below the minimum, the worker goes pending and stops qualifying for payroll."
+      "Verified workers need 1M+ $POW. If the private linked wallet falls below the minimum, the public leaderboard marks the account ineligible without exposing the wallet."
   },
   {
     question: "When are rewards sent?",
     answer:
-      "The scanner updates every 5 minutes. Payroll cadence can be set before live claims start."
+      "The scanner updates every 5 minutes. The guarded reward worker runs on a separate 15-minute cycle."
   },
   {
     question: "How does the AI score work?",

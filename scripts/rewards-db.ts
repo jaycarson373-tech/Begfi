@@ -4,16 +4,19 @@ type EpochStatus = "running" | "completed" | "failed" | "skipped";
 
 type StartEpochInput = {
   epochId: string;
+  startedAt: string;
   mode: "preview" | "execute";
+  campaignSlug: string;
   sourceMint: string;
-  rewardAsset: "SOL";
+  rewardMint: string;
+  sourceRewardBalanceRaw: string;
+  sourceRewardBalance: string;
 };
 
 type CompleteEpochInput = {
   eligibleCount: number;
-  claimLamports: string;
-  distributedLamports: string;
-  distributedSol: string;
+  distributedRewardRaw: string;
+  distributedRewardAmount: string;
   status?: EpochStatus;
 };
 
@@ -27,7 +30,7 @@ let warnedMissingConfig = false;
 let client: SupabaseClient | null | undefined;
 
 function supabaseConfig() {
-  const url = process.env.SUPABASE_URL?.trim() || process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  const url = process.env.SUPABASE_URL?.trim();
   const key =
     process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() ||
     process.env.SUPABASE_SERVICE_ROLE?.trim();
@@ -55,113 +58,97 @@ function supabase() {
   return client;
 }
 
-function amountSol(rawLamports: string) {
-  return Number(rawLamports) / 1_000_000_000;
-}
-
-async function assertNoError(result: { error: unknown }, label: string) {
-  if (result.error) {
-    console.warn(`${label}: ${JSON.stringify(result.error)}`);
-  }
+function warnError(error: unknown, label: string) {
+  if (error) console.warn(`${label}: ${JSON.stringify(error)}`);
 }
 
 export async function startEpoch(input: StartEpochInput) {
   const db = supabase();
-  if (!db) return;
+  if (!db) return true;
 
-  await assertNoError(
-    await db.from("pow_epochs").upsert({
-      epoch_id: input.epochId,
-      status: "running",
-      mode: input.mode,
-      source_mint: input.sourceMint,
-      reward_asset: input.rewardAsset,
-      started_at: input.epochId,
-    }),
-    "start POW payroll epoch",
-  );
+  const result = await db.from("pow_epochs").insert({
+    epoch_id: input.epochId,
+    status: "running",
+    mode: input.mode,
+    campaign_slug: input.campaignSlug,
+    source_mint: input.sourceMint,
+    reward_asset: "POW",
+    reward_mint: input.rewardMint,
+    source_reward_balance_raw: input.sourceRewardBalanceRaw,
+    source_reward_balance: input.sourceRewardBalance,
+    started_at: input.startedAt,
+  });
+
+  if (result.error?.code === "23505") return false;
+  if (result.error) throw result.error;
+  return true;
 }
 
 export async function completeEpoch(epochId: string, input: CompleteEpochInput) {
   const db = supabase();
   if (!db) return;
 
-  await assertNoError(
-    await db
-      .from("pow_epochs")
-      .update({
-        status: input.status ?? "completed",
-        eligible_count: input.eligibleCount,
-        claim_lamports: input.claimLamports,
-        distributed_lamports: input.distributedLamports,
-        distributed_sol: input.distributedSol,
-        completed_at: new Date().toISOString(),
-      })
-      .eq("epoch_id", epochId),
-    "complete POW payroll epoch",
-  );
+  const result = await db
+    .from("pow_epochs")
+    .update({
+      status: input.status ?? "completed",
+      eligible_count: input.eligibleCount,
+      distributed_reward_raw: input.distributedRewardRaw,
+      distributed_reward_amount: input.distributedRewardAmount,
+      completed_at: new Date().toISOString(),
+    })
+    .eq("epoch_id", epochId);
+  warnError(result.error, "complete POW reward epoch");
 }
 
 export async function failEpoch(epochId: string, error: unknown) {
   const db = supabase();
   if (!db) return;
 
-  await assertNoError(
-    await db
-      .from("pow_epochs")
-      .update({
-        status: "failed",
-        error: error instanceof Error ? error.message : String(error),
-        completed_at: new Date().toISOString(),
-      })
-      .eq("epoch_id", epochId),
-    "fail POW payroll epoch",
-  );
+  const result = await db
+    .from("pow_epochs")
+    .update({
+      status: "failed",
+      error: error instanceof Error ? error.message : String(error),
+      completed_at: new Date().toISOString(),
+    })
+    .eq("epoch_id", epochId);
+  warnError(result.error, "fail POW reward epoch");
 }
 
-export async function recordClaim(epochId: string, amountLamports: string, txSig: string | null) {
-  const db = supabase();
-  if (!db) return;
-
-  await assertNoError(
-    await db.from("pow_claims").upsert({
-      epoch_id: epochId,
-      amount_lamports: amountLamports,
-      amount_sol: amountSol(amountLamports),
-      tx_sig: txSig,
-    }),
-    "record POW creator-fee claim",
-  );
+export async function planPayouts(epochId: string, rewardMint: string, rows: WorkerPayoutRow[]) {
+  await upsertPayouts(epochId, rewardMint, rows, "planned");
 }
 
-export async function planPayouts(epochId: string, rows: WorkerPayoutRow[]) {
-  await upsertPayouts(epochId, rows, "planned");
+export async function dryRunPayouts(epochId: string, rewardMint: string, rows: WorkerPayoutRow[]) {
+  await upsertPayouts(epochId, rewardMint, rows, "dry_run");
 }
 
-export async function dryRunPayouts(epochId: string, rows: WorkerPayoutRow[]) {
-  await upsertPayouts(epochId, rows, "dry_run");
-}
-
-async function upsertPayouts(epochId: string, rows: WorkerPayoutRow[], status: "dry_run" | "planned") {
+async function upsertPayouts(
+  epochId: string,
+  rewardMint: string,
+  rows: WorkerPayoutRow[],
+  status: "dry_run" | "planned",
+) {
   const db = supabase();
   if (!db || !rows.length) return;
 
-  await assertNoError(
-    await db.from("pow_payouts").upsert(
-      rows.map((row) => ({
-        epoch_id: epochId,
-        wallet: row.wallet,
-        reward_asset: "SOL",
-        reward_amount_raw: row.rewardAmountRaw,
-        reward_amount: row.rewardAmount,
-        idempotency_key: `${epochId}:${row.wallet}:SOL`,
-        status,
-        updated_at: new Date().toISOString(),
-      })),
-      { onConflict: "idempotency_key" },
-    ),
-    `${status} POW SOL payouts`,
+  const result = await db.from("pow_payouts").upsert(
+    rows.map((row) => ({
+      epoch_id: epochId,
+      campaign_slug: "pow",
+      wallet: row.wallet,
+      reward_asset: "POW",
+      reward_mint: rewardMint,
+      reward_amount_raw: row.rewardAmountRaw,
+      reward_amount: row.rewardAmount,
+      idempotency_key: `${epochId}:${row.wallet}:POW`,
+      status,
+      updated_at: new Date().toISOString(),
+    })),
+    { onConflict: "idempotency_key" },
   );
+  warnError(result.error, `${status} POW payouts`);
 }
 
 export async function settlePayouts(epochId: string, rows: WorkerPayoutRow[], txSig: string) {
@@ -169,19 +156,18 @@ export async function settlePayouts(epochId: string, rows: WorkerPayoutRow[], tx
   if (!db || !rows.length) return;
 
   for (const row of rows) {
-    await assertNoError(
-      await db
-        .from("pow_payouts")
-        .update({
-          status: "settled",
-          tx_sig: txSig,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("epoch_id", epochId)
-        .eq("wallet", row.wallet)
-        .eq("reward_asset", "SOL"),
-      "settle POW SOL payout",
-    );
+    const result = await db
+      .from("pow_payouts")
+      .update({
+        status: "settled",
+        tx_sig: txSig,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("epoch_id", epochId)
+      .eq("wallet", row.wallet)
+      .eq("reward_asset", "POW")
+      .eq("status", "planned");
+    warnError(result.error, "settle POW payout");
   }
 }
 
@@ -190,18 +176,17 @@ export async function failPayouts(epochId: string, rows: WorkerPayoutRow[], erro
   if (!db || !rows.length) return;
 
   for (const row of rows) {
-    await assertNoError(
-      await db
-        .from("pow_payouts")
-        .update({
-          status: "failed",
-          error: error instanceof Error ? error.message : String(error),
-          updated_at: new Date().toISOString(),
-        })
-        .eq("epoch_id", epochId)
-        .eq("wallet", row.wallet)
-        .eq("reward_asset", "SOL"),
-      "fail POW SOL payout",
-    );
+    const result = await db
+      .from("pow_payouts")
+      .update({
+        status: "failed",
+        error: error instanceof Error ? error.message : String(error),
+        updated_at: new Date().toISOString(),
+      })
+      .eq("epoch_id", epochId)
+      .eq("wallet", row.wallet)
+      .eq("reward_asset", "POW")
+      .eq("status", "planned");
+    warnError(result.error, "fail POW payout");
   }
 }

@@ -31,7 +31,7 @@ export function WhyPow() {
           className="max-w-xl lg:pb-2"
         >
           <p className="text-xl leading-9 text-white/[0.55]">
-            Join any campaign that fits. Each campaign measures your contribution independently and pays from its own SOL reward pool.
+            Join any campaign that fits. Each campaign measures your contribution independently and rewards eligible workers in $POW.
           </p>
           <p className="mt-5 text-xl leading-9 text-white/[0.55]">
             Your score in one campaign never changes your rank in another.

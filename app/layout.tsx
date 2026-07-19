@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "POW | Proof of Work",
   description:
-    "Launch SOL-funded contributor campaigns. Proof of Work ranks social and on-chain performance, then rewards the strongest workers.",
+    "Launch contributor campaigns funded in SOL or SPL tokens. Proof of Work ranks performance and rewards eligible workers in $POW.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://pow.fun"),
   icons: {
     icon: "/favicon.png",

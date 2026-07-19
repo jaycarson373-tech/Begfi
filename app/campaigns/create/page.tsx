@@ -3,7 +3,7 @@ import { CampaignCreate } from "@/components/campaign/campaign-create";
 
 export const metadata: Metadata = {
   title: "Launch a Campaign | Proof of Work",
-  description: "Create a SOL reward pool and reward the strongest contributors growing your project."
+  description: "Fund a campaign in SOL or an SPL token and reward the strongest contributors in $POW."
 };
 
 export default function CreateCampaignPage() {

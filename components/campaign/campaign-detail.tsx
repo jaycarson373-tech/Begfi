@@ -32,7 +32,7 @@ function nativeRows(snapshot: DashboardSnapshot): CampaignLeaderboardRow[] {
   return snapshot.submissions.map((submission) => ({
     rank: submission.rank,
     xAccount: submission.lane,
-    wallet: submission.wallet,
+    eligibility: submission.eligibility,
     score: submission.score || submission.status,
     estimatedReward: "Calculated at payout"
   }));
@@ -68,7 +68,7 @@ export function CampaignDetail({ campaign }: { campaign: Campaign }) {
       campaign.native
         ? {
             ...campaign,
-            rewardPool: metricValue(snapshot, "creator-fees") || campaign.rewardPool,
+            rewardPool: metricValue(snapshot, "reward-pool") || campaign.rewardPool,
             workers: activeWorkers(snapshot),
             posts: trackedPosts(snapshot),
             engagement: metricValue(snapshot, "x-views") || campaign.engagement,
@@ -81,7 +81,7 @@ export function CampaignDetail({ campaign }: { campaign: Campaign }) {
   const applicationUrl = `https://x.com/intent/post?text=${encodeURIComponent(`${display.keyword} #POW application\n\nWallet:`)}`;
 
   const metrics = [
-    { label: "Reward Pool", value: display.rewardPool, icon: Radio },
+    { label: "Funding Pool", value: display.rewardPool, icon: Radio },
     { label: "Verified Workers", value: display.workers, icon: Users },
     { label: "Posts Tracked", value: display.posts, icon: FileText },
     { label: "Total Engagement", value: display.engagement, icon: BadgeCheck },
@@ -122,13 +122,13 @@ export function CampaignDetail({ campaign }: { campaign: Campaign }) {
               </div>
               <h1 className="mt-8 max-w-4xl text-5xl font-black leading-[0.96] text-white sm:text-7xl">{display.name}</h1>
               <p className="mt-6 max-w-3xl text-lg leading-8 text-white/50">{display.description}</p>
-              {!display.native && <p className="mt-4 text-sm font-bold text-[#9fbdff]">Preview only. This project must fund its own SOL reward pool before launch.</p>}
+              {!display.native && <p className="mt-4 text-sm font-bold text-[#9fbdff]">Preview only. This project funds the campaign in {display.fundingAsset}; worker payouts are settled in $POW.</p>}
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.1 }} className="premium-card p-6">
-              <p className="text-xs font-extrabold uppercase text-[#7fa8ff]">Campaign pool</p>
+              <p className="text-xs font-extrabold uppercase text-[#7fa8ff]">Campaign funding</p>
               <p className="mt-4 text-5xl font-black text-white">{display.rewardPool}</p>
-              <p className="mt-3 text-sm text-white/40">{display.fundingSource}</p>
+              <p className="mt-3 text-sm text-white/40">{display.fundingSource} · Rewards paid in {display.payoutAsset}</p>
               {display.native ? (
                 <a href={applicationUrl} target="_blank" rel="noreferrer" className="button-primary mt-7 w-full">Join Campaign<ArrowUpRight className="h-4 w-4" /></a>
               ) : (
@@ -165,6 +165,7 @@ export function CampaignDetail({ campaign }: { campaign: Campaign }) {
                   <div><dt className="text-white/30">Schedule</dt><dd className="mt-1 font-bold text-white/70">{display.schedule}</dd></div>
                   <div><dt className="text-white/30">Winners</dt><dd className="mt-1 font-bold text-white/70">{display.winners}</dd></div>
                   <div><dt className="text-white/30">Reward split</dt><dd className="mt-1 font-bold text-white/70">{display.rewardSplit}</dd></div>
+                  <div><dt className="text-white/30">Payout asset</dt><dd className="mt-1 font-bold text-white/70">{display.payoutAsset}</dd></div>
                   <div><dt className="text-white/30">Campaign tag</dt><dd className="mt-1 font-bold text-white/70">{display.keyword}</dd></div>
                 </dl>
               </article>
@@ -176,19 +177,19 @@ export function CampaignDetail({ campaign }: { campaign: Campaign }) {
                 {display.demo && <span className="rounded-full border border-white/10 px-3 py-1 text-[0.65rem] font-black uppercase text-white/[0.35]">Preview Data</span>}
               </div>
               <div className="hidden grid-cols-[70px_1fr_1fr_0.7fr_0.8fr] border-b border-white/[0.07] px-6 py-3 text-xs font-bold uppercase text-white/30 md:grid">
-                <span>Rank</span><span>X Account</span><span>Wallet</span><span className="text-right">Score</span><span className="text-right">Estimated SOL</span>
+                <span>Rank</span><span>X Account</span><span>Minimum</span><span className="text-right">Score</span><span className="text-right">Estimated $POW</span>
               </div>
               <div className="divide-y divide-white/[0.07]">
                 {display.leaderboard.length ? display.leaderboard.map((row) => (
-                  <div key={`${row.rank}-${row.wallet}`} className="grid gap-4 px-5 py-5 md:grid-cols-[70px_1fr_1fr_0.7fr_0.8fr] md:items-center md:px-6">
+                  <div key={`${row.rank}-${row.xAccount}`} className="grid gap-4 px-5 py-5 md:grid-cols-[70px_1fr_1fr_0.7fr_0.8fr] md:items-center md:px-6">
                     <span className="font-black text-[#8db3ff]">#{row.rank}</span>
                     <span className="font-bold text-white">{row.xAccount}</span>
-                    <span className="font-mono text-sm text-white/[0.45]">{row.wallet}</span>
+                    <span className="text-sm font-bold text-white/[0.45]">{row.eligibility}</span>
                     <span className="font-black text-white md:text-right">{row.score}</span>
                     <span className="font-black text-[#9fbdff] md:text-right">{row.estimatedReward}</span>
                   </div>
                 )) : (
-                  <div className="px-6 py-16 text-center"><p className="text-lg font-black text-white">Leaderboard opens with the first verified worker.</p><p className="mt-2 text-sm text-white/40">Estimated SOL rewards appear when the campaign pool and final scoring window are available.</p></div>
+                  <div className="px-6 py-16 text-center"><p className="text-lg font-black text-white">Leaderboard opens with the first verified worker.</p><p className="mt-2 text-sm text-white/40">Estimated $POW rewards appear when campaign funding and the scoring window are available.</p></div>
                 )}
               </div>
             </article>

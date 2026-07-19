@@ -7,7 +7,7 @@ const steps = [
   {
     number: "01",
     title: "A project funds a campaign",
-    body: "The project deposits SOL and defines the campaign.",
+    body: "The project deposits SOL or an SPL token and defines the campaign.",
     icon: Building2
   },
   {
@@ -25,7 +25,7 @@ const steps = [
   {
     number: "04",
     title: "The strongest workers earn",
-    body: "SOL is distributed from that campaign's reward pool.",
+    body: "Eligible workers receive $POW from that campaign's funded payout allocation.",
     icon: Coins
   }
 ];
@@ -77,7 +77,7 @@ export function HowItWorks() {
           viewport={{ once: true }}
           className="mt-5 rounded-lg border border-[#5f95ff]/20 bg-[#1e5eff]/10 px-5 py-4 text-sm font-semibold leading-6 text-[#b4ccff]"
         >
-          The native $POW campaign works the same way, except its reward pool is funded automatically by protocol fees.
+          The native campaign is funded by protocol fees. Its 15-minute worker payout uses only a capped share of a pre-funded $POW reward wallet.
         </motion.p>
       </div>
     </section>
