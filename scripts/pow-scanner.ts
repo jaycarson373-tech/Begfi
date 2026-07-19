@@ -39,13 +39,28 @@ type VerifiedWorker = {
   x_user_id: string;
   x_handle: string;
   wallet: string;
+  status: string | null;
   accepted_at: string | null;
   created_at: string | null;
+};
+
+type BlacklistRow = {
+  wallet: string | null;
+  x_user_id: string | null;
+  x_handle: string | null;
+  reason: string | null;
+};
+
+type BlacklistIndex = {
+  wallets: Map<string, string>;
+  userIds: Map<string, string>;
+  handles: Map<string, string>;
 };
 
 const walletPattern = /\b[1-9A-HJ-NP-Za-km-z]{32,44}\b/g;
 const xBaseUrl = "https://api.x.com/2/tweets/search/recent";
 const runningOnce = process.argv.includes("--once");
+const defaultBlacklistReason = "anti-cheat exclusion";
 
 function requiredEnv(name: string) {
   const value = process.env[name]?.trim();
@@ -80,6 +95,7 @@ const volumeApiKey = process.env.POW_VOLUME_API_KEY?.trim();
 
 let running = false;
 let cachedDecimals: number | null = null;
+let blacklistWarningShown = false;
 
 function userMap(response: XSearchResponse) {
   return new Map((response.includes?.users ?? []).map((user) => [user.id, user]));
@@ -102,6 +118,85 @@ function extractWallet(text: string) {
     const wallet = validPublicKey(match[0]);
     if (wallet) return wallet;
   }
+  return null;
+}
+
+function csvEnv(name: string) {
+  return (process.env[name] ?? "")
+    .split(/[,\n]/)
+    .map((value) => value.trim())
+    .filter(Boolean);
+}
+
+function normalizeHandle(value: string | null | undefined) {
+  return (value ?? "").trim().replace(/^@/, "").toLowerCase();
+}
+
+function emptyBlacklist(): BlacklistIndex {
+  return {
+    wallets: new Map(),
+    userIds: new Map(),
+    handles: new Map(),
+  };
+}
+
+function addBlacklistEntry(index: BlacklistIndex, entry: BlacklistRow) {
+  const reason = entry.reason?.trim() || defaultBlacklistReason;
+  const wallet = entry.wallet ? validPublicKey(entry.wallet) : null;
+  const handle = normalizeHandle(entry.x_handle);
+  const userId = entry.x_user_id?.trim();
+
+  if (wallet) index.wallets.set(wallet, reason);
+  if (userId) index.userIds.set(userId, reason);
+  if (handle) index.handles.set(handle, reason);
+}
+
+async function loadBlacklist(): Promise<BlacklistIndex> {
+  const index = emptyBlacklist();
+
+  for (const wallet of csvEnv("BLACKLISTED_WORKER_WALLETS")) {
+    addBlacklistEntry(index, { wallet, x_user_id: null, x_handle: null, reason: "env wallet blacklist" });
+  }
+  for (const handle of csvEnv("BLACKLISTED_X_HANDLES")) {
+    addBlacklistEntry(index, { wallet: null, x_user_id: null, x_handle: handle, reason: "env X handle blacklist" });
+  }
+  for (const userId of csvEnv("BLACKLISTED_X_USER_IDS")) {
+    addBlacklistEntry(index, { wallet: null, x_user_id: userId, x_handle: null, reason: "env X user blacklist" });
+  }
+
+  const result = await db
+    .from("pow_blacklist")
+    .select("wallet,x_user_id,x_handle,reason")
+    .eq("active", true);
+
+  if (result.error) {
+    if (!blacklistWarningShown) {
+      console.warn(`POW blacklist table unavailable: ${result.error.message}`);
+      blacklistWarningShown = true;
+    }
+    return index;
+  }
+
+  for (const entry of (result.data ?? []) as BlacklistRow[]) {
+    addBlacklistEntry(index, entry);
+  }
+
+  return index;
+}
+
+function blacklistReason(
+  index: BlacklistIndex,
+  input: { wallet?: string | null; xUserId?: string | null; handle?: string | null },
+) {
+  const wallet = input.wallet ? validPublicKey(input.wallet) : null;
+  if (wallet && index.wallets.has(wallet)) return index.wallets.get(wallet) ?? defaultBlacklistReason;
+
+  const userId = input.xUserId?.trim();
+  if (userId && index.userIds.has(userId)) return index.userIds.get(userId) ?? defaultBlacklistReason;
+
+  const handle = normalizeHandle(input.handle);
+  if (handle && index.handles.has(handle)) return index.handles.get(handle) ?? defaultBlacklistReason;
+
   return null;
 }
 
@@ -201,7 +296,7 @@ async function walletVolumeUsd(wallet: string) {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
 }
 
-async function scanApplications() {
+async function scanApplications(blacklist: BlacklistIndex) {
   const sinceId = await getState("applications_since_id");
   const response = await searchX(applicationQuery, sinceId);
   const users = userMap(response);
@@ -217,16 +312,31 @@ async function scanApplications() {
     let rejectionReason = "missing wallet";
     let holdingRaw = "0";
     let holdingTokens = 0;
+    const accountExclusion = blacklistReason(blacklist, {
+      xUserId: tweet.author_id,
+      handle: user.username,
+    });
 
-    if (wallet) {
-      const balance = await powBalance(wallet);
-      holdingRaw = balance.raw;
-      holdingTokens = balance.tokens;
-      if (holdingTokens >= minWorkerPow) {
-        status = "accepted";
-        rejectionReason = "";
+    if (accountExclusion) {
+      rejectionReason = accountExclusion;
+    } else if (wallet) {
+      const walletExclusion = blacklistReason(blacklist, {
+        wallet,
+        xUserId: tweet.author_id,
+        handle: user.username,
+      });
+      if (walletExclusion) {
+        rejectionReason = walletExclusion;
       } else {
-        rejectionReason = `below ${minWorkerPow.toLocaleString()} POW minimum`;
+        const balance = await powBalance(wallet);
+        holdingRaw = balance.raw;
+        holdingTokens = balance.tokens;
+        if (holdingTokens >= minWorkerPow) {
+          status = "accepted";
+          rejectionReason = "";
+        } else {
+          rejectionReason = `below ${minWorkerPow.toLocaleString()} POW minimum`;
+        }
       }
     }
 
@@ -258,6 +368,8 @@ async function scanApplications() {
           application_text: tweet.text,
           category: "verified worker",
           status: "verified",
+          exclusion_reason: null,
+          excluded_at: null,
           holding_raw: holdingRaw,
           holding_tokens: holdingTokens,
           updated_at: new Date().toISOString(),
@@ -277,8 +389,8 @@ async function scanApplications() {
 async function verifiedWorkers() {
   const result = await db
     .from("pow_verified_workers")
-    .select("x_user_id,x_handle,wallet,accepted_at,created_at")
-    .in("status", ["verified", "pending"]);
+    .select("x_user_id,x_handle,wallet,status,accepted_at,created_at")
+    .in("status", ["verified", "pending", "paid"]);
 
   if (result.error) throw result.error;
   return (result.data ?? []) as VerifiedWorker[];
@@ -331,8 +443,32 @@ function holdingDays(worker: VerifiedWorker) {
   return Math.max(0, (Date.now() - start) / 86_400_000);
 }
 
-async function recalculateWorkerScores(workers: VerifiedWorker[]) {
+async function recalculateWorkerScores(workers: VerifiedWorker[], blacklist: BlacklistIndex) {
   for (const worker of workers) {
+    const exclusion = blacklistReason(blacklist, {
+      wallet: worker.wallet,
+      xUserId: worker.x_user_id,
+      handle: worker.x_handle,
+    });
+
+    if (exclusion) {
+      const updateResult = await db
+        .from("pow_verified_workers")
+        .update({
+          status: "rejected",
+          score: 0,
+          exclusion_reason: exclusion,
+          excluded_at: new Date().toISOString(),
+          last_scored_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq("x_user_id", worker.x_user_id);
+
+      if (updateResult.error) throw updateResult.error;
+      console.log(`blacklisted @${worker.x_handle}: ${exclusion}`);
+      continue;
+    }
+
     const [postsResult, balance] = await Promise.all([
       db
         .from("pow_worker_posts")
@@ -357,11 +493,18 @@ async function recalculateWorkerScores(workers: VerifiedWorker[]) {
     const holdingScore = Math.max(0, balance.tokens / minWorkerPow) * 100 * holdingMultiplier;
     const volumeScore = Math.sqrt(volumeUsd) * 2;
     const score = engagement * holdingMultiplier + holdingScore + volumeScore;
+    const status = balance.tokens >= minWorkerPow
+      ? worker.status === "paid"
+        ? "paid"
+        : "verified"
+      : "pending";
 
     const updateResult = await db
       .from("pow_verified_workers")
       .update({
-        status: balance.tokens >= minWorkerPow ? "verified" : "pending",
+        status,
+        exclusion_reason: null,
+        excluded_at: null,
         holding_raw: balance.raw,
         holding_tokens: balance.tokens,
         holding_days: daysHeld,
@@ -387,11 +530,17 @@ async function recalculateWorkerScores(workers: VerifiedWorker[]) {
 
 async function runOnce() {
   console.log("POW scanner tick started");
-  await scanApplications();
+  const blacklist = await loadBlacklist();
+  await scanApplications(blacklist);
   const workers = await verifiedWorkers();
-  await scanWorkerPosts(workers);
-  await recalculateWorkerScores(workers);
-  console.log(`POW scanner tick complete: ${workers.length} verified workers`);
+  const activeWorkers = workers.filter((worker) => !blacklistReason(blacklist, {
+    wallet: worker.wallet,
+    xUserId: worker.x_user_id,
+    handle: worker.x_handle,
+  }));
+  await scanWorkerPosts(activeWorkers);
+  await recalculateWorkerScores(workers, blacklist);
+  console.log(`POW scanner tick complete: ${activeWorkers.length} active workers`);
 }
 
 async function loop() {

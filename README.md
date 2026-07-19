@@ -4,6 +4,8 @@ POW is a polished Next.js/Tailwind landing page and dashboard for a CT-native Pr
 
 AI took your job. Come work for this coin. 100% of creator fees are used to distribute SOL to top workers. Post. Shill. Get paid. The one job you actually want to work.
 
+The POW scanner uses an AI-assisted scoring layer for public X outreach. Better posts earn more reach, more engagement, more score, and a larger share of SOL payroll, which creates a positive feedback loop for workers who keep pushing the coin.
+
 ## Stack
 
 - Next.js app router
@@ -19,7 +21,7 @@ The feed and dashboard are ready for the X scanner and wallet verification servi
 
 ## Supabase
 
-Run `supabase/migrations/001_pow_rewards.sql` in your Supabase SQL editor before enabling live worker writes.
+Run `supabase/migrations/001_pow_rewards.sql` in your Supabase SQL editor before enabling live worker writes. If you already ran the first migration, also run `supabase/migrations/002_pow_anti_cheat.sql`.
 
 The dashboard reads live epochs, claims, SOL payroll payouts, scored worker posts, applications, and verified worker rows from Supabase. If Supabase envs are missing, the site falls back to launch placeholders.
 
@@ -53,7 +55,7 @@ Working on:
 Proof of work:
 ```
 
-After acceptance, the scanner scores posts from verified workers that use the `$POW` cashtag. Score is based on X engagement, X views, holdings, hold time, and optional wallet volume.
+After acceptance, the scanner scores posts from verified workers that use the `$POW` cashtag. The AI-assisted score is based on X engagement, X views, holdings, hold time, and optional wallet volume.
 
 Score inputs:
 
@@ -62,6 +64,8 @@ Score inputs:
 - X engagement on `$POW` posts: likes, reposts, replies, quotes, bookmarks.
 - X views from post public metrics.
 - Wallet volume, when `POW_VOLUME_API_URL` is configured.
+
+Anti-cheat exclusions are supported through the private `pow_blacklist` Supabase table and quick Railway env lists. Excluded accounts can be filtered from applications, scoring, and SOL payroll.
 
 ```bash
 pnpm pow:scanner
@@ -76,9 +80,12 @@ SUPABASE_SERVICE_ROLE_KEY=<SERVICE_ROLE_KEY>
 SOLANA_RPC_URL=<RPC_URL>
 SOURCE_TOKEN_MINT=<POW_TOKEN_MINT>
 MIN_WORKER_POW_BALANCE=1000000
+BLACKLISTED_WORKER_WALLETS=
+BLACKLISTED_X_HANDLES=
+BLACKLISTED_X_USER_IDS=
 ```
 
-`POW_VOLUME_API_URL` and `POW_VOLUME_API_KEY` are optional. Without a volume indexer, volume score stays at zero instead of showing fake data.
+`POW_VOLUME_API_URL` and `POW_VOLUME_API_KEY` are optional. Without a volume indexer, volume score stays at zero.
 
 ## SOL Payroll Worker
 

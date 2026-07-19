@@ -11,7 +11,7 @@ export function FaqSection() {
         <SectionHeading
           eyebrow="FAQ"
           title="Questions from HR."
-          description="No official Ansem connection. Just CT output turned into a cleaner Proof of Work payroll."
+          description="No official partnership implied. Just CT output, AI-assisted scoring, blacklist enforcement, and cleaner Proof of Work payroll."
           icon={<CircleHelp className="h-3.5 w-3.5 text-beg-lime" aria-hidden="true" />}
         />
         <div className="mt-8 grid gap-3">

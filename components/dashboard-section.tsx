@@ -41,7 +41,7 @@ export function DashboardSection() {
           <SectionHeading
             eyebrow="Dashboard"
             title="Live POW leaderboard coming after launch."
-            description="The scoreboard turns on after launch: verified workers, $POW application checks, hold-time multipliers, volume, X views, engagement, and SOL payroll."
+            description="The scoreboard turns on after launch: verified workers, AI-scored outreach, hold-time multipliers, volume, X views, engagement, blacklist enforcement, and SOL payroll."
             icon={<BarChart3 className="h-3.5 w-3.5 text-beg-lime" aria-hidden="true" />}
           />
           <div className="glass-subtle rounded-lg px-4 py-3 text-sm text-white/[0.62]">
@@ -74,7 +74,7 @@ export function DashboardSection() {
                   Verified Worker Leaderboard
                 </div>
                 <p className="mt-2 text-sm text-white/[0.55]">
-                  Accepted workers rank here once the scanner opens.
+                  Accepted workers rank here once the scanner opens and the anti-cheat filter clears them.
                 </p>
               </div>
               <div className="rounded-lg border border-beg-purple/30 bg-beg-purple/10 px-3 py-2 text-sm font-bold text-white">

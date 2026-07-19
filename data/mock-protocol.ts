@@ -13,7 +13,7 @@ export const dashboardSnapshot: DashboardSnapshot = {
       key: "creator-fees",
       label: "Creator Fees",
       value: "Coming soon",
-      helper: "Creator-fee routing starts after launch. No fake live rewards.",
+      helper: "Creator-fee routing starts after launch.",
       tone: "purple"
     },
     {
@@ -25,9 +25,9 @@ export const dashboardSnapshot: DashboardSnapshot = {
     },
     {
       key: "countdown",
-      label: "Scanner Cadence",
+      label: "AI Scanner",
       value: "After launch",
-      helper: "Applications and $POW posts are scanned every 5 minutes.",
+      helper: "Applications and public $POW posts are scored every 5 minutes.",
       tone: "lime"
     },
     {
@@ -59,7 +59,7 @@ export const dashboardSnapshot: DashboardSnapshot = {
       key: "holder-rewards",
       label: "Total X Views",
       value: "Coming soon",
-      helper: "Views from scored posts using the $POW cashtag.",
+      helper: "Views from AI-scored posts using the $POW cashtag.",
       tone: "lime"
     }
   ]
@@ -74,7 +74,7 @@ export const faqs: FaqItem[] = [
   {
     question: "How do rewards work?",
     answer:
-      "After launch, 100% of creator fees are paid as SOL payroll to top verified workers by leaderboard score."
+      "After launch, 100% of creator fees are paid as SOL payroll to top verified workers by leaderboard score. Better outreach can earn more score, and more score can earn a larger payroll share."
   },
   {
     question: "Minimum holdings?",
@@ -87,8 +87,13 @@ export const faqs: FaqItem[] = [
       "The scanner updates every 5 minutes. Payroll cadence can be set before live claims start."
   },
   {
-    question: "What counts toward score?",
+    question: "How does the AI score work?",
     answer:
-      "Holdings, hold-time multiplier, volume, $POW post engagement, and X views all feed the worker score."
+      "The AI-assisted scoring layer scans public $POW posts and combines outreach quality signals with X views, engagement, holdings, hold time, and wallet volume."
+  },
+  {
+    question: "Can cheaters be excluded?",
+    answer:
+      "Yes. Botting, fake engagement, bought views, spam, copied posts, Sybil behavior, wallet cycling, and coordinated manipulation can be filtered, blacklisted, adjusted, or withheld from payroll."
   }
 ];

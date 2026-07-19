@@ -5,7 +5,7 @@ import { ArrowUpRight, BarChart3, ShieldCheck } from "lucide-react";
 
 const statlets = [
   "1M+ $POW minimum",
-  "X work gets scored",
+  "AI-scored X work",
   "100% fees to workers"
 ];
 
@@ -37,9 +37,9 @@ export function HeroSection() {
             AI took your job.
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-white/[0.72] sm:text-xl">
-            Come work for this coin. POW turns creator fees into SOL payroll
-            for top workers: post, shill, get views, hold $POW, and climb the
-            Proof of Work leaderboard.
+            Come work for this coin. POW uses an AI scoring engine to scan
+            public $POW work on X, rank real outreach, and turn creator fees
+            into SOL payroll for the workers pushing the hardest.
           </p>
           <p className="mt-4 text-sm font-black uppercase tracking-[0.14em] text-beg-lime">
             The one job you actually want to work. No official connection implied.
@@ -87,7 +87,7 @@ export function HeroSection() {
                 <span className="text-xs font-bold uppercase tracking-[0.16em] text-white/[0.45]">
                   Worker payroll
                 </span>
-                <span className="text-xs font-bold text-beg-lime">50 / 50</span>
+                <span className="text-xs font-bold text-beg-lime">100%</span>
               </div>
               <div className="rounded-lg border border-white/10 bg-white/[0.045] p-5">
                 <p className="text-xs font-black uppercase tracking-[0.18em] text-white/[0.42]">
@@ -108,8 +108,9 @@ export function HeroSection() {
                 </div>
               </div>
               <div className="rounded-lg border border-beg-purple/[0.25] bg-beg-purple/10 p-4 text-sm leading-6 text-white/70">
-                Workers score from $POW posts, X views, engagement, holdings,
-                hold time, and volume. Creator fees pay the top of the board.
+                More useful outreach means more views, more engagement, more
+                score, and a bigger share of SOL payroll. Low-effort spam does
+                not make the cut.
               </div>
             </div>
           </div>

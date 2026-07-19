@@ -2,7 +2,7 @@ import "dotenv/config";
 import Module from "module";
 import path from "path";
 import bs58 from "bs58";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import {
   Connection,
   Keypair,
@@ -40,10 +40,24 @@ type OnlinePumpSdkInstance = {
 
 type VerifiedWorker = {
   wallet: string;
+  x_user_id: string | null;
   x_handle: string | null;
   score: string | number | null;
   holding_tokens: string | number | null;
   status: string | null;
+};
+
+type BlacklistRow = {
+  wallet: string | null;
+  x_user_id: string | null;
+  x_handle: string | null;
+  reason: string | null;
+};
+
+type BlacklistIndex = {
+  wallets: Map<string, string>;
+  userIds: Map<string, string>;
+  handles: Map<string, string>;
 };
 
 type Allocation = {
@@ -73,6 +87,7 @@ const { OnlinePumpSdk } = require("@pump-fun/pump-sdk") as {
 };
 
 const execute = process.argv.includes("--execute");
+const defaultBlacklistReason = "anti-cheat exclusion";
 
 function requiredEnv(name: string) {
   const value = process.env[name]?.trim();
@@ -103,6 +118,25 @@ function parsePrivateKey(value: string) {
   return Keypair.fromSecretKey(bs58.decode(trimmed));
 }
 
+function validPublicKey(value: string) {
+  try {
+    return new PublicKey(value).toBase58();
+  } catch {
+    return null;
+  }
+}
+
+function csvEnv(name: string) {
+  return (process.env[name] ?? "")
+    .split(/[,\n]/)
+    .map((value) => value.trim())
+    .filter(Boolean);
+}
+
+function normalizeHandle(value: string | null | undefined) {
+  return (value ?? "").trim().replace(/^@/, "").toLowerCase();
+}
+
 function solToLamports(sol: number) {
   return BigInt(Math.floor(sol * LAMPORTS_PER_SOL));
 }
@@ -120,6 +154,71 @@ function toScore(value: unknown) {
 
 function compactWallet(wallet: string) {
   return wallet.length > 12 ? `${wallet.slice(0, 4)}...${wallet.slice(-4)}` : wallet;
+}
+
+function emptyBlacklist(): BlacklistIndex {
+  return {
+    wallets: new Map(),
+    userIds: new Map(),
+    handles: new Map(),
+  };
+}
+
+function addBlacklistEntry(index: BlacklistIndex, entry: BlacklistRow) {
+  const reason = entry.reason?.trim() || defaultBlacklistReason;
+  const wallet = entry.wallet ? validPublicKey(entry.wallet) : null;
+  const userId = entry.x_user_id?.trim();
+  const handle = normalizeHandle(entry.x_handle);
+
+  if (wallet) index.wallets.set(wallet, reason);
+  if (userId) index.userIds.set(userId, reason);
+  if (handle) index.handles.set(handle, reason);
+}
+
+async function readBlacklist(db: SupabaseClient): Promise<BlacklistIndex> {
+  const index = emptyBlacklist();
+
+  for (const wallet of csvEnv("BLACKLISTED_WORKER_WALLETS")) {
+    addBlacklistEntry(index, { wallet, x_user_id: null, x_handle: null, reason: "env wallet blacklist" });
+  }
+  for (const handle of csvEnv("BLACKLISTED_X_HANDLES")) {
+    addBlacklistEntry(index, { wallet: null, x_user_id: null, x_handle: handle, reason: "env X handle blacklist" });
+  }
+  for (const userId of csvEnv("BLACKLISTED_X_USER_IDS")) {
+    addBlacklistEntry(index, { wallet: null, x_user_id: userId, x_handle: null, reason: "env X user blacklist" });
+  }
+
+  const result = await db
+    .from("pow_blacklist")
+    .select("wallet,x_user_id,x_handle,reason")
+    .eq("active", true);
+
+  if (result.error) {
+    console.warn(`POW blacklist table unavailable: ${result.error.message}`);
+    return index;
+  }
+
+  for (const entry of (result.data ?? []) as BlacklistRow[]) {
+    addBlacklistEntry(index, entry);
+  }
+
+  return index;
+}
+
+function blacklistReason(
+  index: BlacklistIndex,
+  input: { wallet?: string | null; xUserId?: string | null; handle?: string | null },
+) {
+  const wallet = input.wallet ? validPublicKey(input.wallet) : null;
+  if (wallet && index.wallets.has(wallet)) return index.wallets.get(wallet) ?? defaultBlacklistReason;
+
+  const userId = input.xUserId?.trim();
+  if (userId && index.userIds.has(userId)) return index.userIds.get(userId) ?? defaultBlacklistReason;
+
+  const handle = normalizeHandle(input.handle);
+  if (handle && index.handles.has(handle)) return index.handles.get(handle) ?? defaultBlacklistReason;
+
+  return null;
 }
 
 function payoutRows(allocations: Allocation[]): WorkerPayoutRow[] {
@@ -248,17 +347,33 @@ async function sendLegacy(tx: Transaction, label: string) {
 
 async function readWorkers(): Promise<VerifiedWorker[]> {
   const db = supabase();
-  const result = await db
-    .from("pow_verified_workers")
-    .select("wallet,x_handle,score,holding_tokens,status")
-    .in("status", ["verified", "paid"])
-    .gte("score", minScore)
-    .gte("holding_tokens", minWorkerPow)
-    .order("score", { ascending: false })
-    .limit(maxWorkers);
+  const [result, blacklist] = await Promise.all([
+    db
+      .from("pow_verified_workers")
+      .select("wallet,x_user_id,x_handle,score,holding_tokens,status")
+      .in("status", ["verified", "paid"])
+      .gte("score", minScore)
+      .gte("holding_tokens", minWorkerPow)
+      .order("score", { ascending: false })
+      .limit(maxWorkers),
+    readBlacklist(db),
+  ]);
 
   if (result.error) throw result.error;
-  return (result.data ?? []) as VerifiedWorker[];
+  return ((result.data ?? []) as VerifiedWorker[]).filter((worker) => {
+    const exclusion = blacklistReason(blacklist, {
+      wallet: worker.wallet,
+      xUserId: worker.x_user_id,
+      handle: worker.x_handle,
+    });
+
+    if (exclusion) {
+      console.log(`Excluded @${worker.x_handle || compactWallet(worker.wallet)} from payroll: ${exclusion}`);
+      return false;
+    }
+
+    return true;
+  });
 }
 
 function allocationsForWorkers(workers: VerifiedWorker[], totalLamports: bigint) {

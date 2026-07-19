@@ -229,7 +229,7 @@ async function readDashboard(): Promise<DashboardSnapshot> {
         key: "x-views",
         label: "X Views",
         value: totalViews ? totalViews.toLocaleString() : "Coming soon",
-        helper: "Views from scored $POW posts.",
+        helper: "Views from AI-scored $POW posts.",
         tone: "lime",
       },
       {
@@ -268,7 +268,7 @@ async function readDashboard(): Promise<DashboardSnapshot> {
         key: "worker-score",
         label: "Total Worker Score",
         value: totalWorkerScore ? formatScore(totalWorkerScore) : "Coming soon",
-        helper: "Engagement, holding time, and volume-score totals.",
+        helper: "AI outreach, engagement, holding time, and volume-score totals.",
         tone: "steel",
       },
     ],
@@ -284,7 +284,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.warn("POW dashboard API fell back to mock data", error);
+    console.warn("POW dashboard API fell back to launch placeholders", error);
     return NextResponse.json(dashboardSnapshot, {
       headers: {
         "Cache-Control": "no-store",

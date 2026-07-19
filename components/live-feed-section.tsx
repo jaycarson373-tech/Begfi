@@ -9,13 +9,13 @@ const feedLanes = [
   {
     title: "Application Scanner",
     body:
-      "Post $POW, #POW application, and a wallet. The scanner checks for 1M+ $POW and accepts qualified workers.",
+      "Post $POW, #POW application, and a wallet. The scanner verifies 1M+ $POW, ties the X account to the wallet, and accepts qualified workers.",
     icon: Hash
   },
   {
-    title: "Work Feed",
+    title: "AI Work Feed",
     body:
-      "Accepted workers keep posting with the $POW cashtag. Views and engagement flow into the leaderboard.",
+      "Accepted workers keep posting with the $POW cashtag. The AI scoring layer reads public outreach signals and updates the leaderboard.",
     icon: BadgeCheck
   }
 ];
@@ -27,7 +27,7 @@ export function LiveFeedSection() {
         <SectionHeading
           eyebrow="Open roles"
           title="Apply like it is LinkedIn. Work like it is CT."
-          description="AI took your job. Come work for this coin. POW turns public applications and $POW posts into a transparent worker leaderboard."
+          description="AI took your job. Come work for this coin. POW turns public applications and $POW posts into a transparent worker leaderboard with an anti-cheat filter."
           icon={<Radio className="h-3.5 w-3.5 text-beg-lime" aria-hidden="true" />}
         />
 
@@ -101,7 +101,9 @@ export function LiveFeedSection() {
                     </div>
                   </div>
                   <div className="mt-5 rounded-lg border border-dashed border-white/[0.16] bg-white/[0.025] p-4 text-sm leading-7 text-white/[0.58]">
-                    Scanner opens after launch. No fake posts. No phantom volume.
+                    Anti-cheat is part of the job board: spam, fake engagement,
+                    copied posts, bought views, wallet cycling, and coordinated
+                    manipulation can be excluded from scoring and payroll.
                   </div>
                 </motion.article>
               );

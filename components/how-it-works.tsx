@@ -8,7 +8,7 @@ const steps = [
   "Hold 1M+ $POW as the minimum worker requirement.",
   "Post your wallet with $POW and #POW application.",
   "The scanner verifies holdings and accepts qualified workers.",
-  "Keep posting with the $POW cashtag to earn views and engagement score.",
+  "Keep posting with the $POW cashtag while the AI scorer ranks real outreach.",
   "Creator fees are distributed as SOL to top workers on the leaderboard."
 ];
 
