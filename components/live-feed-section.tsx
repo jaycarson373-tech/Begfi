@@ -7,9 +7,9 @@ import { SectionHeading } from "@/components/section-heading";
 
 const feedLanes = [
   {
-    title: "Public Bagwork Feed",
+    title: "Public POW Feed",
     body:
-      "Posts using $BEG and #ProofOfBagwork will flow here after launch. Pure CT output, filtered into one clean lane.",
+      "Posts using $BEG and #POW will flow here after launch. Pure CT output, filtered into one clean lane.",
     icon: Hash
   },
   {
@@ -27,7 +27,7 @@ export function LiveFeedSection() {
         <SectionHeading
           eyebrow="The meta is already live"
           title="The work tape goes live."
-          description="CT already has the meta. ProofOfBagwork.fun turns posts, wallets, and proof into one clean verification lane."
+          description="CT already has the meta. POW turns posts, wallets, and proof into one clean verification lane."
           icon={<Radio className="h-3.5 w-3.5 text-beg-lime" aria-hidden="true" />}
         />
 
@@ -61,10 +61,10 @@ export function LiveFeedSection() {
             <div className="rounded-lg border border-white/10 bg-black/25 p-3">
               <blockquote className="twitter-tweet" data-theme="dark">
                 <p lang="en" dir="ltr">
-                  CT already has the meta. ProofOfBagwork.fun turns it into a system.
+                  CT already has the meta. POW turns it into a system.
                 </p>
                 <a href="https://x.com/slingoorio/status/2072842134823039454?s=46">
-                  View the Proof of Bagwork meta on X
+                  View the Proof of Work meta on X
                 </a>
               </blockquote>
               <Script
@@ -119,10 +119,10 @@ export function LiveFeedSection() {
                 Official format
               </div>
               <pre className="mt-4 overflow-x-auto rounded-lg border border-white/10 bg-black/30 p-4 text-sm leading-7 text-white/[0.78]">
-{`$BEG #ProofOfBagwork
+{`$BEG #POW
 
 Wallet:
-Bagwork for:
+Working on:
 Proof of work:`}
               </pre>
             </motion.article>

@@ -1,5 +1,5 @@
-import { ProofOfBagworkHome } from "@/components/proof-of-bagwork-home";
+import { PowHome } from "@/components/pow-home";
 
 export default function Page() {
-  return <ProofOfBagworkHome />;
+  return <PowHome />;
 }

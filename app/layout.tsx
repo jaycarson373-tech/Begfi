@@ -2,18 +2,18 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ProofOfBagwork.fun | Proof of Work",
+  title: "POW | Proof of Work",
   description:
-    "ProofOfBagwork.fun turns CT bagwork into a Proof of Work loop with $ANSEM rewards for eligible $BEG holders.",
-  metadataBase: new URL("https://proofofbagwork.fun"),
+    "POW turns CT output into a Proof of Work loop with $ANSEM rewards for eligible $BEG holders.",
+  metadataBase: new URL("https://pow.fun"),
   icons: {
     icon: "/favicon.png",
     apple: "/apple-icon.png"
   },
   openGraph: {
-    title: "ProofOfBagwork.fun | Proof of Work",
+    title: "POW | Proof of Work",
     description:
-      "Hold $BEG, do the bagwork, prove it publicly, and stay eligible for $ANSEM rewards."
+      "Hold $BEG, post proof, and stay eligible for $ANSEM rewards."
   }
 };
 

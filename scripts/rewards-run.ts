@@ -96,8 +96,7 @@ const sourceMintText = requiredEnv("SOURCE_TOKEN_MINT");
 const ansemMintText = process.env.ANSEM_TOKEN_MINT?.trim() || process.env.REWARD_TOKEN_MINT?.trim();
 if (!ansemMintText) throw new Error("ANSEM_TOKEN_MINT is required");
 
-const rewardWalletText =
-  process.env.BAGWORK_REWARD_WALLET?.trim() || process.env.BEGWORK_REWARD_WALLET?.trim();
+const rewardWalletText = process.env.POW_REWARD_WALLET?.trim();
 const maxClaimSol = numberEnv("MAX_CREATOR_FEE_CLAIM_SOL", numberEnv("MAX_SWAP_SOL", 0.02));
 const maxRecipients = integerEnv("MAX_AIRDROP_RECIPIENTS", 50);
 const maxTransfersPerTx = integerEnv("MAX_AIRDROP_TRANSFERS_PER_TX", 4);
@@ -605,11 +604,11 @@ async function distributeAnsem(
 async function sendRewardWalletTransfer(amountLamports: bigint) {
   if (amountLamports <= 0n) return null;
   if (!rewardWallet) {
-    throw new Error("BAGWORK_REWARD_WALLET is required for the reward-wallet split");
+    throw new Error("POW_REWARD_WALLET is required for the reward-wallet split");
   }
 
   const tx = new Transaction().add(buildSolTransfer(rewardWallet, amountLamports));
-  const signature = await sendLegacy(tx, "Proof of Bagwork bounty wallet transfer", { simulateInPreview: false });
+  const signature = await sendLegacy(tx, "POW bounty wallet transfer", { simulateInPreview: false });
   await recordRewardWalletTransfer(
     epochId,
     rewardWallet.toBase58(),
@@ -657,7 +656,7 @@ async function runClaimSplitSwapAndAirdrop(
 ) {
   const rewardWalletBps = 10_000 - ansemAirdropBps;
   if (rewardWalletBps > 0 && !rewardWallet) {
-    throw new Error("BAGWORK_REWARD_WALLET is required for the reward-wallet split");
+    throw new Error("POW_REWARD_WALLET is required for the reward-wallet split");
   }
 
   const walletSol = BigInt(await connection.getBalance(wallet.publicKey, "confirmed"));
@@ -668,7 +667,7 @@ async function runClaimSplitSwapAndAirdrop(
 
   console.log(`Mode: ${execute ? "EXECUTE" : "PREVIEW ONLY"}`);
   console.log(`Fee wallet: ${wallet.publicKey.toBase58()}`);
-  console.log(`Proof of Bagwork bounty wallet: ${rewardWallet?.toBase58() || "not configured"}`);
+  console.log(`POW bounty wallet: ${rewardWallet?.toBase58() || "not configured"}`);
   console.log(`Holder snapshot mint: ${sourceMint.toBase58()}`);
   console.log(`ANSEM mint: ${ansemMint.toBase58()}`);
   console.log(`Wallet SOL: ${formatLamports(walletSol)}`);

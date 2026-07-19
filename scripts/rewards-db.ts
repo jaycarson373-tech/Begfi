@@ -82,7 +82,7 @@ export async function startEpoch(input: StartEpochInput) {
   if (!db) return;
 
   await assertNoError(
-    await db.from("begwork_epochs").upsert({
+    await db.from("pow_epochs").upsert({
       epoch_id: input.epochId,
       status: "running",
       mode: input.mode,
@@ -91,7 +91,7 @@ export async function startEpoch(input: StartEpochInput) {
       reward_wallet: input.rewardWallet,
       started_at: input.epochId,
     }),
-    "start begwork epoch",
+    "start POW epoch",
   );
 }
 
@@ -101,7 +101,7 @@ export async function completeEpoch(epochId: string, input: CompleteEpochInput) 
 
   await assertNoError(
     await db
-      .from("begwork_epochs")
+      .from("pow_epochs")
       .update({
         status: input.status ?? "completed",
         eligible_count: input.eligibleCount,
@@ -115,7 +115,7 @@ export async function completeEpoch(epochId: string, input: CompleteEpochInput) 
         completed_at: new Date().toISOString(),
       })
       .eq("epoch_id", epochId),
-    "complete begwork epoch",
+    "complete POW epoch",
   );
 }
 
@@ -125,14 +125,14 @@ export async function failEpoch(epochId: string, error: unknown) {
 
   await assertNoError(
     await db
-      .from("begwork_epochs")
+      .from("pow_epochs")
       .update({
         status: "failed",
         error: error instanceof Error ? error.message : String(error),
         completed_at: new Date().toISOString(),
       })
       .eq("epoch_id", epochId),
-    "fail begwork epoch",
+    "fail POW epoch",
   );
 }
 
@@ -141,13 +141,13 @@ export async function recordClaim(epochId: string, amountLamports: string, txSig
   if (!db) return;
 
   await assertNoError(
-    await db.from("begwork_claims").upsert({
+    await db.from("pow_claims").upsert({
       epoch_id: epochId,
       amount_lamports: amountLamports,
       amount_sol: amountSol(amountLamports),
       tx_sig: txSig,
     }),
-    "record begwork claim",
+    "record POW claim",
   );
 }
 
@@ -161,14 +161,14 @@ export async function recordRewardWalletTransfer(
   if (!db) return;
 
   await assertNoError(
-    await db.from("begwork_reward_wallet_transfers").upsert({
+    await db.from("pow_bounty_wallet_transfers").upsert({
       epoch_id: epochId,
       wallet,
       amount_lamports: amountLamports,
       amount_sol: amountSol(amountLamports),
       tx_sig: txSig,
     }),
-    "record Proof of Bagwork bounty wallet transfer",
+    "record POW bounty wallet transfer",
   );
 }
 
@@ -183,7 +183,7 @@ export async function recordAnsemSwap(
   if (!db) return;
 
   await assertNoError(
-    await db.from("begwork_ansem_swaps").upsert({
+    await db.from("pow_ansem_swaps").upsert({
       epoch_id: epochId,
       base_spent_lamports: baseSpentLamports,
       base_spent_sol: amountSol(baseSpentLamports),
@@ -191,7 +191,7 @@ export async function recordAnsemSwap(
       ansem_received: ansemReceived,
       tx_sig: txSig,
     }),
-    "record begwork ansem swap",
+    "record POW ansem swap",
   );
 }
 
@@ -200,7 +200,7 @@ export async function persistSnapshot(epochId: string, rows: SnapshotRow[]) {
   if (!db || !rows.length) return;
 
   await assertNoError(
-    await db.from("begwork_snapshots").upsert(
+    await db.from("pow_snapshots").upsert(
       rows.map((row) => ({
         epoch_id: epochId,
         wallet: row.wallet,
@@ -210,7 +210,7 @@ export async function persistSnapshot(epochId: string, rows: SnapshotRow[]) {
       })),
       { onConflict: "epoch_id,wallet" },
     ),
-    "persist begwork snapshot",
+    "persist POW snapshot",
   );
 }
 
@@ -227,7 +227,7 @@ async function upsertPayouts(epochId: string, rows: PayoutRow[], status: "dry_ru
   if (!db || !rows.length) return;
 
   await assertNoError(
-    await db.from("begwork_payouts").upsert(
+    await db.from("pow_payouts").upsert(
       rows.map((row) => ({
         epoch_id: epochId,
         wallet: row.wallet,
@@ -240,7 +240,7 @@ async function upsertPayouts(epochId: string, rows: PayoutRow[], status: "dry_ru
       })),
       { onConflict: "idempotency_key" },
     ),
-    `${status} begwork payouts`,
+    `${status} POW payouts`,
   );
 }
 
@@ -251,7 +251,7 @@ export async function settlePayouts(epochId: string, rows: PayoutRow[], txSig: s
   for (const row of rows) {
     await assertNoError(
       await db
-        .from("begwork_payouts")
+        .from("pow_payouts")
         .update({
           status: "settled",
           tx_sig: txSig,
@@ -260,7 +260,7 @@ export async function settlePayouts(epochId: string, rows: PayoutRow[], txSig: s
         .eq("epoch_id", epochId)
         .eq("wallet", row.wallet)
         .eq("reward_asset", "ANSEM"),
-      "settle begwork payout",
+      "settle POW payout",
     );
   }
 }
@@ -272,7 +272,7 @@ export async function failPayouts(epochId: string, rows: PayoutRow[], error: unk
   for (const row of rows) {
     await assertNoError(
       await db
-        .from("begwork_payouts")
+        .from("pow_payouts")
         .update({
           status: "failed",
           error: error instanceof Error ? error.message : String(error),
@@ -281,7 +281,7 @@ export async function failPayouts(epochId: string, rows: PayoutRow[], error: unk
         .eq("epoch_id", epochId)
         .eq("wallet", row.wallet)
         .eq("reward_asset", "ANSEM"),
-      "fail begwork payout",
+      "fail POW payout",
     );
   }
 }

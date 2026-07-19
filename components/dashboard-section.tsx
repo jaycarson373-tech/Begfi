@@ -41,7 +41,7 @@ export function DashboardSection() {
           <SectionHeading
             eyebrow="Dashboard"
             title="Live proof dashboard coming after launch."
-            description="The scoreboard turns on after launch: creator fees, $ANSEM holder rewards, bounty-wallet funding, and verified bagwork payouts."
+            description="The scoreboard turns on after launch: creator fees, $ANSEM holder rewards, bounty-wallet funding, and verified work payouts."
             icon={<BarChart3 className="h-3.5 w-3.5 text-beg-lime" aria-hidden="true" />}
           />
           <div className="glass-subtle rounded-lg px-4 py-3 text-sm text-white/[0.62]">
@@ -71,7 +71,7 @@ export function DashboardSection() {
               <div>
                 <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.14em] text-white/[0.45]">
                   <ListChecks className="h-4 w-4 text-beg-lime" aria-hidden="true" />
-                  Verified Bagwork Queue
+                  Verified Work Queue
                 </div>
                 <p className="mt-2 text-sm text-white/[0.55]">
                   Verified proof appears here once the feed opens.
@@ -116,7 +116,7 @@ export function DashboardSection() {
                   ))
                 ) : (
                   <div className="bg-white/[0.02] px-4 py-8 text-sm leading-7 text-white/[0.62]">
-                    No verified bagwork yet. After launch, wallet posts with
+                    No verified work yet. After launch, wallet posts with
                     the official format will show here once eligibility is checked.
                   </div>
                 )}
@@ -174,7 +174,7 @@ export function DashboardSection() {
                   ))
                 ) : (
                   <div className="rounded-lg border border-white/10 bg-white/[0.035] p-4 text-sm leading-7 text-white/[0.58]">
-                    First verified bagwork payout gets immortalized here.
+                    First verified work payout gets immortalized here.
                   </div>
                 )}
               </div>

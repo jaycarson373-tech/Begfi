@@ -6,7 +6,7 @@ import { SectionHeading } from "@/components/section-heading";
 
 const features = [
   {
-    title: "Proof of Bagwork",
+    title: "Proof of Work",
     body:
       "Post the work: wallet, receipts, raids, threads, memes, and public proof that you are actually pushing.",
     icon: Trophy
@@ -20,7 +20,7 @@ const features = [
   {
     title: "Bounty Wallet",
     body:
-      "50% goes to a bounty wallet for manual payouts to verified bagworkers and bounties.",
+      "50% goes to a bounty wallet for manual payouts to verified workers and bounties.",
     icon: BadgeCheck
   }
 ];
@@ -30,9 +30,9 @@ export function FeaturesSection() {
     <section id="features" className="relative py-16 sm:py-20">
       <div className="section-shell">
         <SectionHeading
-          eyebrow="From bags to proof"
+          eyebrow="POW"
           title="The new meta is work you can prove."
-          description="Ansem sparked the CT reward meta. ProofOfBagwork.fun is not affiliated with him; it turns the grind into a clean 50/50 loop: $ANSEM rewards for eligible $BEG holders and a bounty wallet for verified bagworkers."
+          description="Ansem sparked the CT reward meta. POW is not affiliated with him; it turns the grind into a clean 50/50 loop: $ANSEM rewards for eligible $BEG holders and a bounty wallet for verified workers."
         />
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           {features.map((feature, index) => {

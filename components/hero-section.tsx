@@ -34,12 +34,12 @@ export function HeroSection() {
             Proof of Work for CT
           </div>
           <h1 className="mt-6 max-w-3xl text-5xl font-black leading-[0.95] text-white sm:text-6xl md:text-7xl">
-            Proof of Bagwork.
+            Proof of Work.
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-white/[0.72] sm:text-xl">
-            ProofOfBagwork.fun turns the Ansem-era grind into a public work
-            tape: hold $BEG, post the work, prove the wallet, and stay eligible
-            for $ANSEM rewards.
+            POW turns the Ansem-era grind into a public work tape: hold $BEG,
+            post the work, prove the wallet, and stay eligible for $ANSEM
+            rewards.
           </p>
           <p className="mt-4 text-sm font-black uppercase tracking-[0.14em] text-beg-lime">
             Proof of Work, but make it CT. No official connection implied.
@@ -91,7 +91,7 @@ export function HeroSection() {
               </div>
               <div className="rounded-lg border border-white/10 bg-white/[0.045] p-5">
                 <p className="text-xs font-black uppercase tracking-[0.18em] text-white/[0.42]">
-                  ProofOfBagwork.fun
+                  POW
                 </p>
                 <p className="mt-3 text-4xl font-black leading-none text-white">
                   Post. Prove. Get paid.
@@ -109,7 +109,7 @@ export function HeroSection() {
               </div>
               <div className="rounded-lg border border-beg-purple/[0.25] bg-beg-purple/10 p-4 text-sm leading-6 text-white/70">
                 Half rewards eligible $BEG holders with $ANSEM. Half goes to
-                the bounty wallet for verified bagworkers and live bounties.
+                the bounty wallet for verified workers and live bounties.
               </div>
             </div>
           </div>

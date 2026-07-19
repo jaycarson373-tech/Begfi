@@ -42,8 +42,8 @@ export const dashboardSnapshot: DashboardSnapshot = {
   previousWinners: [],
   totals: [
     {
-      key: "total-bagwork",
-      label: "Verified Bagwork",
+      key: "total-work",
+      label: "Verified Work",
       value: "Coming soon",
       helper: "The proof ledger starts after the first verified payout.",
       tone: "magenta"
@@ -69,7 +69,7 @@ export const faqs: FaqItem[] = [
   {
     question: "How do I submit?",
     answer:
-      "Hold $BEG, post the official Proof of Bagwork format, and include the wallet you want checked."
+      "Hold $BEG, post the official POW format, and include the wallet you want checked."
   },
   {
     question: "How do $ANSEM rewards work?",
@@ -89,6 +89,6 @@ export const faqs: FaqItem[] = [
   {
     question: "What is the bounty wallet?",
     answer:
-      "The other 50% of creator fees goes to a bounty wallet for manual verified bagworker payouts and bounties."
+      "The other 50% of creator fees goes to a bounty wallet for manual verified worker payouts and bounties."
   }
 ];

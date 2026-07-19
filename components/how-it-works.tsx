@@ -7,9 +7,9 @@ import { SectionHeading } from "@/components/section-heading";
 const steps = [
   "Hold $BEG as your on-chain proof.",
   "50% of creator fees fuel $ANSEM rewards for eligible $BEG holders.",
-  "50% of creator fees go to the Proof of Bagwork bounty wallet.",
+  "50% of creator fees go to the POW bounty wallet.",
   "Post your wallet and proof of work in the official format.",
-  "Verified bagworkers and bounties are paid manually from the bounty wallet."
+  "Verified workers and bounties are paid manually from the bounty wallet."
 ];
 
 export function HowItWorks() {

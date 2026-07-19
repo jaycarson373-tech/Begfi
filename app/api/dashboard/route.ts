@@ -37,7 +37,7 @@ type PayoutRow = {
   created_at: string | null;
 };
 
-type BagworkerRow = {
+type WorkerRow = {
   wallet: string;
   handle: string | null;
   proof_url: string | null;
@@ -95,23 +95,23 @@ function epochNumber(epochId: string, index: number) {
   return Number.isFinite(parsed) ? Math.floor(parsed / 600_000).toString() : `${index + 1}`;
 }
 
-function verifiedSubmissions(rows: BagworkerRow[]): Submission[] {
+function verifiedSubmissions(rows: WorkerRow[]): Submission[] {
   return rows.slice(0, 5).map((row, index) => ({
     rank: index + 1,
     wallet: compactWallet(row.wallet),
-    lane: row.category || "verified bagwork",
+    lane: row.category || "verified work",
     proof: row.proof_url || row.handle || "Verified manually",
     status: row.status || "verified",
   }));
 }
 
-function verifiedPayouts(rows: BagworkerRow[], fallbackPayouts: PayoutRow[]): PreviousWinner[] {
+function verifiedPayouts(rows: WorkerRow[], fallbackPayouts: PayoutRow[]): PreviousWinner[] {
   if (rows.length) {
     return rows.slice(0, 4).map((row, index) => ({
       round: `${index + 1}`,
       wallet: compactWallet(row.wallet),
       payout: row.payout_label || row.status || "Verified",
-      reason: row.proof_url || row.category || "Manual Proof of Bagwork reward",
+      reason: row.proof_url || row.category || "Manual POW reward",
     }));
   }
 
@@ -132,26 +132,26 @@ async function readDashboard(): Promise<DashboardSnapshot> {
     claimsResult,
     rewardWalletResult,
     payoutsResult,
-    bagworkersResult,
+    workersResult,
   ] = await Promise.all([
-    db.from("begwork_epochs").select("*").order("started_at", { ascending: false }).limit(25),
-    db.from("begwork_claims").select("amount_sol").limit(10000),
-    db.from("begwork_reward_wallet_transfers").select("amount_sol").limit(10000),
+    db.from("pow_epochs").select("*").order("started_at", { ascending: false }).limit(25),
+    db.from("pow_claims").select("amount_sol").limit(10000),
+    db.from("pow_bounty_wallet_transfers").select("amount_sol").limit(10000),
     db
-      .from("begwork_payouts")
+      .from("pow_payouts")
       .select("epoch_id,wallet,reward_amount,status,tx_sig,updated_at,created_at")
       .eq("status", "settled")
       .order("updated_at", { ascending: false })
       .limit(100),
     db
-      .from("begwork_verified_begworkers")
+      .from("pow_verified_workers")
       .select("wallet,handle,proof_url,category,payout_label,status,created_at")
       .in("status", ["verified", "paid"])
       .order("created_at", { ascending: false })
       .limit(20),
   ]);
 
-  for (const result of [epochsResult, claimsResult, rewardWalletResult, payoutsResult, bagworkersResult]) {
+  for (const result of [epochsResult, claimsResult, rewardWalletResult, payoutsResult, workersResult]) {
     if (result.error) throw result.error;
   }
 
@@ -159,7 +159,7 @@ async function readDashboard(): Promise<DashboardSnapshot> {
   const claims = (claimsResult.data ?? []) as ClaimRow[];
   const rewardWalletTransfers = (rewardWalletResult.data ?? []) as RewardWalletTransferRow[];
   const payouts = ((payoutsResult.data ?? []) as PayoutRow[]).sort((a, b) => latestTime(b) - latestTime(a));
-  const bagworkers = (bagworkersResult.data ?? []) as BagworkerRow[];
+  const workers = (workersResult.data ?? []) as WorkerRow[];
 
   const latestEpoch = epochs[0];
   const totalCreatorFees = claims.reduce((sum, row) => sum + toNumber(row.amount_sol), 0);
@@ -185,7 +185,7 @@ async function readDashboard(): Promise<DashboardSnapshot> {
         key: "creator-fees",
         label: "Creator Fees",
         value: formatSol(totalCreatorFees),
-        helper: "Claimed creator fees recorded by the Proof of Bagwork worker.",
+        helper: "Claimed creator fees recorded by the POW worker.",
         tone: "purple",
       },
       {
@@ -199,7 +199,7 @@ async function readDashboard(): Promise<DashboardSnapshot> {
         key: "reward-wallet",
         label: "Bounty Wallet",
         value: formatSol(totalRewardWallet),
-        helper: "Manual bounty and verified-bagworker funding sent to the bounty wallet.",
+        helper: "Manual bounty and verified-worker funding sent to the bounty wallet.",
         tone: "lime",
       },
       {
@@ -210,14 +210,14 @@ async function readDashboard(): Promise<DashboardSnapshot> {
         tone: "steel",
       },
     ],
-    submissions: verifiedSubmissions(bagworkers),
-    previousWinners: verifiedPayouts(bagworkers, payouts),
+    submissions: verifiedSubmissions(workers),
+    previousWinners: verifiedPayouts(workers, payouts),
     totals: [
       {
-        key: "verified-bagwork",
-        label: "Verified Bagwork",
-        value: bagworkers.length ? bagworkers.length.toLocaleString() : "Coming soon",
-        helper: "Manual Supabase rows for verified bagworkers and bounties.",
+        key: "verified-work",
+        label: "Verified Work",
+        value: workers.length ? workers.length.toLocaleString() : "Coming soon",
+        helper: "Manual Supabase rows for verified workers and bounties.",
         tone: "magenta",
       },
       {
@@ -247,7 +247,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.warn("Proof of Bagwork dashboard API fell back to mock data", error);
+    console.warn("POW dashboard API fell back to mock data", error);
     return NextResponse.json(dashboardSnapshot, {
       headers: {
         "Cache-Control": "no-store",

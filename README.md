@@ -1,6 +1,6 @@
-# ProofOfBagwork.fun
+# POW
 
-ProofOfBagwork.fun is a polished Next.js/Tailwind landing page and dashboard for a CT-native Proof of Work meta on Solana.
+POW is a polished Next.js/Tailwind landing page and dashboard for a CT-native Proof of Work meta on Solana.
 
 ## Stack
 
@@ -17,9 +17,9 @@ The feed and dashboard are ready for the X scanner and wallet verification servi
 
 ## Supabase
 
-Run `supabase/migrations/001_proof_of_bagwork_rewards.sql` in your Supabase SQL editor before enabling live worker writes.
+Run `supabase/migrations/001_pow_rewards.sql` in your Supabase SQL editor before enabling live worker writes.
 
-The dashboard reads live epochs, claims, swaps, reward-wallet transfers, holder payouts, and verified bagworker rows from Supabase. If Supabase envs are missing, the site falls back to launch placeholders.
+The dashboard reads live epochs, claims, swaps, bounty-wallet transfers, holder payouts, and verified worker rows from Supabase. If Supabase envs are missing, the site falls back to launch placeholders.
 
 Required for Railway worker writes:
 
@@ -39,7 +39,7 @@ SUPABASE_SERVICE_ROLE_KEY=<SERVICE_ROLE_KEY>
 
 ## Rewards Worker
 
-The worker can claim Pump creator fees, send 50% of each claim to the Proof of Bagwork bounty wallet, swap the other 50% into `$ANSEM`, snapshot eligible `$BEG` holders, and airdrop the `$ANSEM` pro-rata to holders.
+The worker can claim Pump creator fees, send 50% of each claim to the POW bounty wallet, swap the other 50% into `$ANSEM`, snapshot eligible `$BEG` holders, and airdrop the `$ANSEM` pro-rata to holders.
 
 It is preview-only by default.
 
@@ -57,9 +57,9 @@ For Railway, deploy the same repo as a separate worker service with:
 pnpm rewards:daemon
 ```
 
-Set `REWARDS_DAEMON_EXECUTE=true` only when the fee wallet, Proof of Bagwork bounty wallet, `$BEG` mint, `$ANSEM` mint, RPC, and claim cap are configured. Required envs are listed in `.env.example`.
+Set `REWARDS_DAEMON_EXECUTE=true` only when the fee wallet, POW bounty wallet, `$BEG` mint, `$ANSEM` mint, RPC, and claim cap are configured. Required envs are listed in `.env.example`.
 
-`SOURCE_TOKEN_MINT` is the `$BEG` mint used for the holder snapshot. `ANSEM_TOKEN_MINT` is the token bought and airdropped to eligible holders. `BAGWORK_REWARD_WALLET` receives the manual bounties and verified-bagworker side of the split. The older `BEGWORK_REWARD_WALLET` env still works as a fallback.
+`SOURCE_TOKEN_MINT` is the `$BEG` mint used for the holder snapshot. `ANSEM_TOKEN_MINT` is the token bought and airdropped to eligible holders. `POW_REWARD_WALLET` receives the manual bounties and verified-worker side of the split.
 
 ## Commands
 

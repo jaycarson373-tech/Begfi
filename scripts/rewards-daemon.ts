@@ -41,7 +41,7 @@ function runEpoch() {
 }
 
 console.log(
-  `Proof of Bagwork rewards daemon started; epochs run every ${Math.round(
+  `POW rewards daemon started; epochs run every ${Math.round(
     intervalMs / 1000,
   )}s in ${execute ? "EXECUTE" : "PREVIEW"} mode.`,
 );
@@ -53,7 +53,7 @@ function stop() {
   stopping = true;
   clearInterval(timer);
   if (activeChild) activeChild.kill("SIGTERM");
-  console.log("Proof of Bagwork rewards daemon stopped.");
+  console.log("POW rewards daemon stopped.");
 }
 
 process.once("SIGINT", stop);
