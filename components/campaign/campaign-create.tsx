@@ -88,7 +88,7 @@ export function CampaignCreate() {
               <span className="rounded-full border border-[#5f95ff]/25 bg-[#1e5eff]/10 px-3 py-1.5 text-[0.65rem] font-black uppercase text-[#a8c4ff]">Frontend Demo</span>
               <span className="text-xs font-bold text-white/[0.35]">No funds will move</span>
             </div>
-            <h1 className="mt-7 text-5xl font-black leading-[0.96] text-white sm:text-7xl">Launch a Proof of Work Campaign</h1>
+            <h1 className="mt-7 text-5xl font-black leading-[0.96] text-white sm:text-7xl">Launch a POW Campaign</h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-white/50 sm:text-xl">Fund a campaign in SOL or an SPL token. Eligible workers receive rewards in $POW.</p>
           </div>
 

@@ -6,20 +6,20 @@ import { Plus } from "lucide-react";
 
 const questions = [
   {
-    question: "How do I become a Proof of Worker?",
+    question: "How do I become a POW Worker?",
     answer: "Hold 1M+ $POW, then post #POWApplication and your wallet in the official POW X Community. Applications posted outside the community are not accepted."
   },
   {
-    question: "What is a Proof of Work campaign?",
+    question: "What is a PROOF OF WORK campaign?",
     answer: "A project-defined competition where verified workers contribute, receive a campaign-specific score, and earn $POW from that campaign's payout allocation."
   },
   {
     question: "Who funds the native $POW campaign?",
-    answer: "The native Proof of Work Campaign is funded automatically from $POW protocol fees. It remains the default campaign on the platform."
+    answer: "The native POW Campaign is funded automatically from $POW protocol fees. It remains the default campaign on the platform."
   },
   {
     question: "Who funds external campaigns?",
-    answer: "The project deposits its own SOL or SPL-token funding upfront. Proof of Work does not fund external campaigns, and non-$POW deposits must be converted before $POW payouts begin."
+    answer: "The project deposits its own SOL or SPL-token funding upfront. PROOF OF WORK does not fund external campaigns, and non-$POW deposits must be converted before $POW payouts begin."
   },
   {
     question: "Can I join more than one campaign?",

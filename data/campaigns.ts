@@ -35,12 +35,12 @@ export type Campaign = {
 export const campaigns: Campaign[] = [
   {
     slug: "pow",
-    name: "Proof of Work Campaign",
+    name: "POW Campaign",
     ticker: "$POW",
     mark: "POW",
-    logo: "/images/pow-logo.png",
+    logo: "/images/pow-network-mark.svg",
     description:
-      "Protocol fees continuously fund the native Proof of Work campaign, rewarding the strongest contributors helping grow $POW.",
+      "Protocol fees continuously fund the native POW campaign, rewarding the strongest contributors helping grow $POW.",
     rewardPool: "Coming soon",
     workers: "—",
     posts: "—",
@@ -82,7 +82,7 @@ export const campaigns: Campaign[] = [
     keyword: "$VCTR",
     schedule: "August 1 – August 21",
     eligibility: [
-      "Verified Proof of Worker profile.",
+      "Verified POW Worker profile.",
       "Public posts must include $VCTR.",
       "Original content only; copied posts are excluded.",
       "Minimum campaign score of 250 points."
@@ -117,7 +117,7 @@ export const campaigns: Campaign[] = [
     keyword: "$ARC",
     schedule: "August 8 – September 1",
     eligibility: [
-      "Verified Proof of Worker profile.",
+      "Verified POW Worker profile.",
       "Public posts must include $ARC.",
       "No bought engagement or coordinated spam.",
       "Workers can join while the campaign is open."

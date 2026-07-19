@@ -36,7 +36,7 @@ export function WhyPow() {
             Your score in one campaign never changes your rank in another.
           </p>
           <a href={powCommunityUrl} target="_blank" rel="noreferrer" className="button-primary mt-8 w-full sm:w-auto">
-            Become a Proof of Worker
+            Become a POW Worker
             <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </a>
         </motion.div>

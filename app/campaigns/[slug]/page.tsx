@@ -11,7 +11,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   const campaign = campaignBySlug(params.slug);
   if (!campaign) return {};
   return {
-    title: `${campaign.name} | Proof of Work`,
+    title: `${campaign.name} | POW · PROOF OF WORK`,
     description: campaign.description
   };
 }

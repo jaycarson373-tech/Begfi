@@ -7,7 +7,7 @@ const phases = [
   {
     phase: "Phase 1",
     title: "Native $POW Campaign",
-    points: ["Verified Proof of Workers", "Social and on-chain scoring", "Wallet-free public leaderboard", "$POW rewards funded by protocol fees"],
+    points: ["Verified POW Workers", "Social and on-chain scoring", "Wallet-free public leaderboard", "$POW rewards funded by protocol fees"],
     status: "Live",
     href: "/campaigns/pow",
     cta: "View Campaign"
@@ -22,7 +22,7 @@ const phases = [
   },
   {
     phase: "Phase 3",
-    title: "Proof of Work Marketplace",
+    title: "POW Marketplace",
     points: ["Proven worker profiles", "Verified projects", "Paid listings", "Talent discovery", "B2B hiring tools"],
     status: "Coming Soon",
     href: "/marketplace",

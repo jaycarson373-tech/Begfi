@@ -155,7 +155,7 @@ export function EnterpriseView() {
         <section className="market-panel p-7 sm:p-8">
           <PreviewBadge>Early Access</PreviewBadge>
           <h2 className="mt-8 text-3xl font-black text-white">Professional Hiring Suite</h2>
-          <p className="mt-4 text-base leading-7 text-white/[0.45]">One place to discover, compare, and hire contributors with verified Proof of Work.</p>
+          <p className="mt-4 text-base leading-7 text-white/[0.45]">One place to discover, compare, and hire contributors with verified PROOF OF WORK.</p>
           <div className="mt-8 border-t border-white/[0.08] pt-8"><span className="text-5xl font-black text-white">Coming Soon</span><p className="mt-2 text-sm text-white/[0.35]">Subscription pricing in development</p></div>
         </section>
         <section className="market-panel p-7 sm:p-8">

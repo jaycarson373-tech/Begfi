@@ -34,10 +34,10 @@ export function MarketplaceDashboard({ onExplore, onWaitlist }: { onExplore: () 
             Hire. Build. Grow.
           </h1>
           <p className="mt-6 max-w-2xl text-xl font-semibold leading-8 text-white/70 sm:text-2xl">
-            The B2B marketplace powered by Proof of Work.
+            The B2B marketplace powered by PROOF OF WORK.
           </p>
           <p className="mt-4 max-w-2xl text-base leading-7 text-white/[0.45] sm:text-lg">
-            Projects discover proven contributors. Builders discover verified opportunities. Proof of Work becomes your professional reputation.
+            Projects discover proven contributors. Builders discover verified opportunities. PROOF OF WORK becomes your professional reputation.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <button type="button" onClick={onExplore} className="button-primary">

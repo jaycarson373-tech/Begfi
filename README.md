@@ -1,6 +1,6 @@
-# Proof of Work
+# POW · PROOF OF WORK
 
-Proof of Work links an X account to a private Solana wallet, scans public `$POW` posts, ranks verified contribution, and rewards eligible workers in `$POW`.
+PROOF OF WORK links an X account to a private Solana wallet, scans public `$POW` posts, ranks verified contribution, and rewards eligible workers in `$POW`.
 
 ## Current Product Boundary
 

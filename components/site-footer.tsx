@@ -33,7 +33,7 @@ export function SiteFooter() {
           </nav>
         </div>
         <div className="mt-10 flex flex-col gap-3 border-t border-white/[0.08] pt-6 text-xs leading-5 text-white/30 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Proof of Work.</p>
+          <p>© {new Date().getFullYear()} POW · PROOF OF WORK.</p>
           <p className="max-w-2xl sm:text-right">
             External projects fund campaigns in SOL or SPL tokens. Worker rewards are paid in $POW from pre-funded allocations. Digital assets involve risk; eligibility and rewards are subject to verification.
           </p>

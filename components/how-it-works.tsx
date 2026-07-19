@@ -18,7 +18,7 @@ const steps = [
   },
   {
     number: "03",
-    title: "Proof of Work ranks performance",
+    title: "POW ranks performance",
     body: "Social and on-chain activity produce a campaign-specific score.",
     icon: BarChart3
   },

@@ -70,7 +70,7 @@ export function MarketplaceApp() {
                   <p className="mt-0.5 text-[0.62rem] font-bold uppercase text-[#7fa8ff]">Pre-Beta</p>
                 </div>
               </div>
-              <a href="/" aria-label="Back to Proof of Work" className="grid h-9 w-9 place-items-center rounded-lg border border-white/10 text-white/40 transition hover:text-white">
+              <a href="/" aria-label="Back to POW, PROOF OF WORK" className="grid h-9 w-9 place-items-center rounded-lg border border-white/10 text-white/40 transition hover:text-white">
                 <ArrowLeft className="h-4 w-4" />
               </a>
             </div>
