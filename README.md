@@ -4,7 +4,7 @@ POW is a polished Next.js/Tailwind landing page and dashboard for a CT-native Pr
 
 AI took your job. Come work for this coin. 100% of creator fees are used to distribute SOL to top workers. Post. Shill. Get paid. The one job you actually want to work.
 
-The POW scanner uses an AI-assisted scoring layer for public X outreach. Better posts earn more reach, more engagement, more score, and a larger share of SOL payroll, which creates a positive feedback loop for workers who keep pushing the coin.
+The POW scanner links public X accounts to wallets through an application post. After that, it scans each verified worker profile for `$POW` posts. Better posts earn more reach, more engagement, more score, and a larger share of SOL payroll, which creates a positive feedback loop for workers who keep pushing the coin.
 
 ## Stack
 
@@ -17,7 +17,7 @@ The POW scanner uses an AI-assisted scoring layer for public X outreach. Better 
 
 ## Feed Boundary
 
-The feed and dashboard are ready for the X scanner and wallet verification services once those launch.
+The feed and dashboard are ready for the X profile scanner and wallet verification services once those launch.
 
 ## Supabase
 
@@ -43,7 +43,7 @@ SUPABASE_SERVICE_ROLE_KEY=<SERVICE_ROLE_KEY>
 
 ## POW Scanner
 
-The scanner runs every 5 minutes. It accepts public X applications when the post includes a wallet and the wallet holds at least 1M `$POW`.
+The scanner runs every 5 minutes. The application step only links an X account to a Solana wallet. It accepts public X applications when the post includes a wallet and that wallet holds at least 1M `$POW`.
 
 Application format:
 
@@ -51,11 +51,9 @@ Application format:
 $POW #POW application
 
 Wallet:
-Working on:
-Proof of work:
 ```
 
-After acceptance, the scanner scores posts from verified workers that use the `$POW` cashtag. The AI-assisted score is based on X engagement, X views, holdings, hold time, and optional wallet volume.
+After acceptance, the scanner checks each verified worker's X profile for posts that use the `$POW` cashtag. The AI-assisted score is based on those posts' X engagement, X views, current holdings, hold time, and optional wallet volume.
 
 Score inputs:
 
@@ -63,7 +61,10 @@ Score inputs:
 - Hold-time multiplier from the worker acceptance timestamp.
 - X engagement on `$POW` posts: likes, reposts, replies, quotes, bookmarks.
 - X views from post public metrics.
+- Current `$POW` balance. Selling down reduces holding score.
 - Wallet volume, when `POW_VOLUME_API_URL` is configured.
+
+If a worker wallet falls below 1M `$POW`, the worker moves to pending and is excluded from payroll. If it re-qualifies later, the holding-time streak restarts.
 
 Anti-cheat exclusions are supported through the private `pow_blacklist` Supabase table and quick Railway env lists. Excluded accounts can be filtered from applications, scoring, and SOL payroll.
 
@@ -80,6 +81,8 @@ SUPABASE_SERVICE_ROLE_KEY=<SERVICE_ROLE_KEY>
 SOLANA_RPC_URL=<RPC_URL>
 SOURCE_TOKEN_MINT=<POW_TOKEN_MINT>
 MIN_WORKER_POW_BALANCE=1000000
+POW_WORK_CASHTAG="$POW"
+MAX_PROFILE_SCAN_WORKERS=100
 BLACKLISTED_WORKER_WALLETS=
 BLACKLISTED_X_HANDLES=
 BLACKLISTED_X_USER_IDS=

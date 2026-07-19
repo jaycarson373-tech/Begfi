@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "POW | Proof of Work",
   description:
-    "AI took your job. Come work for this coin. POW uses AI-scored outreach to turn creator fees into SOL payroll for top workers.",
+    "AI took your job. Come work for this coin. POW links X accounts to wallets and turns $POW profile work into SOL payroll.",
   metadataBase: new URL("https://pow.fun"),
   icons: {
     icon: "/favicon.png",
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "POW | Proof of Work",
     description:
-      "Post. Shill. Get paid. AI-scored outreach sends creator fees to top POW workers."
+      "Post. Shill. Get paid. Verified $POW profile work sends creator fees to top POW workers."
   }
 };
 

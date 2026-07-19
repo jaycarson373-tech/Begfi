@@ -25,16 +25,16 @@ export const dashboardSnapshot: DashboardSnapshot = {
     },
     {
       key: "countdown",
-      label: "AI Scanner",
+      label: "Profile Scanner",
       value: "After launch",
-      helper: "Applications and public $POW posts are scored every 5 minutes.",
+      helper: "Verified X profiles are checked for public $POW posts every 5 minutes.",
       tone: "lime"
     },
     {
       key: "current-round",
       label: "Eligibility",
       value: "1M+ $POW",
-      helper: "Holding $POW is the on-chain proof.",
+      helper: "Holding $POW keeps the linked wallet eligible.",
       tone: "steel"
     }
   ],
@@ -45,7 +45,7 @@ export const dashboardSnapshot: DashboardSnapshot = {
       key: "total-work",
       label: "Verified Work",
       value: "Coming soon",
-      helper: "The proof ledger starts after the first verified payout.",
+      helper: "The worker ledger starts after the first verified payout.",
       tone: "magenta"
     },
     {
@@ -56,10 +56,10 @@ export const dashboardSnapshot: DashboardSnapshot = {
       tone: "purple"
     },
     {
-      key: "holder-rewards",
+      key: "x-views",
       label: "Total X Views",
       value: "Coming soon",
-      helper: "Views from AI-scored posts using the $POW cashtag.",
+      helper: "Views from verified profile posts using the $POW cashtag.",
       tone: "lime"
     }
   ]
@@ -69,7 +69,7 @@ export const faqs: FaqItem[] = [
   {
     question: "How do I submit?",
     answer:
-      "Hold 1M+ $POW, post the official POW application format, and include the wallet you want checked."
+      "Hold 1M+ $POW, post the official application format, and include the wallet you want linked to your X account."
   },
   {
     question: "How do rewards work?",
@@ -79,7 +79,7 @@ export const faqs: FaqItem[] = [
   {
     question: "Minimum holdings?",
     answer:
-      "Verified workers need 1M+ $POW. Holder-reward eligibility can use the same minimum unless you change it before launch."
+      "Verified workers need 1M+ $POW. If the linked wallet sells down, its holding score drops. If it falls below the minimum, the worker goes pending and stops qualifying for payroll."
   },
   {
     question: "When are rewards sent?",
@@ -89,7 +89,7 @@ export const faqs: FaqItem[] = [
   {
     question: "How does the AI score work?",
     answer:
-      "The AI-assisted scoring layer scans public $POW posts and combines outreach quality signals with X views, engagement, holdings, hold time, and wallet volume."
+      "After the application links X to wallet, the scanner checks that X profile for public $POW posts and combines their views and engagement with current holdings, hold time, and wallet volume."
   },
   {
     question: "Can cheaters be excluded?",

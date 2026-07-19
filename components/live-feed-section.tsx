@@ -7,15 +7,15 @@ import { SectionHeading } from "@/components/section-heading";
 
 const feedLanes = [
   {
-    title: "Application Scanner",
+    title: "Wallet Link Scanner",
     body:
-      "Post $POW, #POW application, and a wallet. The scanner verifies 1M+ $POW, ties the X account to the wallet, and accepts qualified workers.",
+      "Post $POW, #POW application, and a wallet. That application is only the link between your X account and wallet.",
     icon: Hash
   },
   {
-    title: "AI Work Feed",
+    title: "Profile Work Scanner",
     body:
-      "Accepted workers keep posting with the $POW cashtag. The AI scoring layer reads public outreach signals and updates the leaderboard.",
+      "After verification, the scanner watches your X profile for public $POW posts and feeds their views and engagement into your score.",
     icon: BadgeCheck
   }
 ];
@@ -27,7 +27,7 @@ export function LiveFeedSection() {
         <SectionHeading
           eyebrow="Open roles"
           title="Apply like it is LinkedIn. Work like it is CT."
-          description="AI took your job. Come work for this coin. POW turns public applications and $POW posts into a transparent worker leaderboard with an anti-cheat filter."
+          description="AI took your job. Come work for this coin. POW uses applications to connect X accounts to wallets, then scores the actual $POW posts that come after."
           icon={<Radio className="h-3.5 w-3.5 text-beg-lime" aria-hidden="true" />}
         />
 
@@ -123,9 +123,7 @@ export function LiveFeedSection() {
               <pre className="mt-4 overflow-x-auto rounded-lg border border-white/10 bg-black/30 p-4 text-sm leading-7 text-white/[0.78]">
 {`$POW #POW application
 
-Wallet:
-Working on:
-Proof of work:`}
+Wallet:`}
               </pre>
             </motion.article>
           </div>

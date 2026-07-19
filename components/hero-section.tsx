@@ -5,7 +5,7 @@ import { ArrowUpRight, BarChart3, ShieldCheck } from "lucide-react";
 
 const statlets = [
   "1M+ $POW minimum",
-  "AI-scored X work",
+  "Profile-scanned work",
   "100% fees to workers"
 ];
 

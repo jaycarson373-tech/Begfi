@@ -6,9 +6,9 @@ import { SectionHeading } from "@/components/section-heading";
 
 const features = [
   {
-    title: "Apply For Work",
+    title: "Link Wallet To X",
     body:
-      "Post your wallet with $POW and #POW application. The scanner checks the wallet and adds qualified workers.",
+      "Post the application with your wallet. The scanner verifies 1M+ $POW and links that wallet to your X account.",
     icon: Trophy
   },
   {
@@ -32,7 +32,7 @@ export function FeaturesSection() {
         <SectionHeading
           eyebrow="POW careers"
           title="LinkedIn for people who actually post."
-          description="AI took your job. POW gives CT one back: public applications, verified wallets, AI-scored outreach, and SOL payroll from creator fees."
+          description="AI took your job. POW gives CT one back: link your wallet to X, post with $POW, build score, and earn SOL payroll from creator fees."
         />
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           {features.map((feature, index) => {

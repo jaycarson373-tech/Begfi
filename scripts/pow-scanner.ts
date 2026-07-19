@@ -40,6 +40,7 @@ type VerifiedWorker = {
   x_handle: string;
   wallet: string;
   status: string | null;
+  holding_tokens: string | number | null;
   accepted_at: string | null;
   created_at: string | null;
 };
@@ -58,7 +59,8 @@ type BlacklistIndex = {
 };
 
 const walletPattern = /\b[1-9A-HJ-NP-Za-km-z]{32,44}\b/g;
-const xBaseUrl = "https://api.x.com/2/tweets/search/recent";
+const xApiBaseUrl = "https://api.x.com/2";
+const xSearchUrl = `${xApiBaseUrl}/tweets/search/recent`;
 const runningOnce = process.argv.includes("--once");
 const defaultBlacklistReason = "anti-cheat exclusion";
 
@@ -88,10 +90,15 @@ const xBearerToken = requiredEnv("X_BEARER_TOKEN");
 const powMint = new PublicKey(requiredEnv("SOURCE_TOKEN_MINT"));
 const minWorkerPow = numberEnv("MIN_WORKER_POW_BALANCE", 1_000_000);
 const applicationQuery = process.env.POW_APPLICATION_QUERY?.trim() || "$POW #POW application -is:retweet";
-const postQuery = process.env.POW_POST_QUERY?.trim() || "$POW -is:retweet";
+const workCashtag = process.env.POW_WORK_CASHTAG?.trim() || "$POW";
 const intervalMs = integerEnv("POW_SCANNER_INTERVAL_MS", 5 * 60 * 1000);
+const maxProfileScanWorkers = integerEnv("MAX_PROFILE_SCAN_WORKERS", 100);
 const volumeApiUrl = process.env.POW_VOLUME_API_URL?.trim();
 const volumeApiKey = process.env.POW_VOLUME_API_KEY?.trim();
+
+if (maxProfileScanWorkers < 1 || maxProfileScanWorkers > 500) {
+  throw new Error("MAX_PROFILE_SCAN_WORKERS must be an integer from 1 to 500");
+}
 
 let running = false;
 let cachedDecimals: number | null = null;
@@ -119,6 +126,10 @@ function extractWallet(text: string) {
     if (wallet) return wallet;
   }
   return null;
+}
+
+function includesWorkCashtag(text: string) {
+  return text.toLowerCase().includes(workCashtag.toLowerCase());
 }
 
 function csvEnv(name: string) {
@@ -251,7 +262,7 @@ async function searchX(query: string, sinceId?: string) {
 
   if (sinceId) params.set("since_id", sinceId);
 
-  const response = await fetch(`${xBaseUrl}?${params}`, {
+  const response = await fetch(`${xSearchUrl}?${params}`, {
     headers: {
       authorization: `Bearer ${xBearerToken}`,
     },
@@ -259,6 +270,28 @@ async function searchX(query: string, sinceId?: string) {
 
   if (!response.ok) {
     throw new Error(`X search failed ${response.status}: ${await response.text()}`);
+  }
+
+  return (await response.json()) as XSearchResponse;
+}
+
+async function fetchWorkerTimeline(worker: VerifiedWorker, sinceId?: string) {
+  const params = new URLSearchParams({
+    max_results: "100",
+    exclude: "retweets",
+    "tweet.fields": "author_id,created_at,public_metrics",
+  });
+
+  if (sinceId) params.set("since_id", sinceId);
+
+  const response = await fetch(`${xApiBaseUrl}/users/${worker.x_user_id}/tweets?${params}`, {
+    headers: {
+      authorization: `Bearer ${xBearerToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`X profile scan failed for @${worker.x_handle} ${response.status}: ${await response.text()}`);
   }
 
   return (await response.json()) as XSearchResponse;
@@ -389,7 +422,7 @@ async function scanApplications(blacklist: BlacklistIndex) {
 async function verifiedWorkers() {
   const result = await db
     .from("pow_verified_workers")
-    .select("x_user_id,x_handle,wallet,status,accepted_at,created_at")
+    .select("x_user_id,x_handle,wallet,status,holding_tokens,accepted_at,created_at")
     .in("status", ["verified", "pending", "paid"]);
 
   if (result.error) throw result.error;
@@ -399,42 +432,43 @@ async function verifiedWorkers() {
 async function scanWorkerPosts(workers: VerifiedWorker[]) {
   if (!workers.length) return;
 
-  const workerByUserId = new Map(workers.map((worker) => [worker.x_user_id, worker]));
-  const sinceId = await getState("posts_since_id");
-  const response = await searchX(postQuery, sinceId);
-  const users = userMap(response);
-  const tweets = response.data ?? [];
+  for (const worker of workers.slice(0, maxProfileScanWorkers)) {
+    try {
+      const stateKey = `worker_posts_since_id:${worker.x_user_id}`;
+      const sinceId = await getState(stateKey);
+      const response = await fetchWorkerTimeline(worker, sinceId);
+      const tweets = (response.data ?? []).filter((tweet) => includesWorkCashtag(tweet.text));
 
-  for (const tweet of tweets) {
-    const worker = workerByUserId.get(tweet.author_id);
-    if (!worker) continue;
+      for (const tweet of tweets) {
+        const metrics = tweet.public_metrics ?? {};
+        const postScore = engagementScore(metrics);
 
-    const user = users.get(tweet.author_id);
-    const handle = user?.username || worker.x_handle;
-    const metrics = tweet.public_metrics ?? {};
-    const postScore = engagementScore(metrics);
+        const result = await db.from("pow_worker_posts").upsert({
+          tweet_id: tweet.id,
+          x_user_id: worker.x_user_id,
+          x_handle: worker.x_handle,
+          wallet: worker.wallet,
+          text: tweet.text,
+          url: postUrl(worker.x_handle, tweet.id),
+          like_count: metrics.like_count ?? 0,
+          repost_count: metrics.retweet_count ?? 0,
+          reply_count: metrics.reply_count ?? 0,
+          quote_count: metrics.quote_count ?? 0,
+          bookmark_count: metrics.bookmark_count ?? 0,
+          impression_count: metrics.impression_count ?? 0,
+          engagement_score: postScore,
+          tweet_created_at: tweet.created_at,
+          updated_at: new Date().toISOString(),
+        });
+        if (result.error) throw result.error;
+      }
 
-    const result = await db.from("pow_worker_posts").upsert({
-      tweet_id: tweet.id,
-      x_user_id: tweet.author_id,
-      x_handle: handle,
-      wallet: worker.wallet,
-      text: tweet.text,
-      url: postUrl(handle, tweet.id),
-      like_count: metrics.like_count ?? 0,
-      repost_count: metrics.retweet_count ?? 0,
-      reply_count: metrics.reply_count ?? 0,
-      quote_count: metrics.quote_count ?? 0,
-      bookmark_count: metrics.bookmark_count ?? 0,
-      impression_count: metrics.impression_count ?? 0,
-      engagement_score: postScore,
-      tweet_created_at: tweet.created_at,
-      updated_at: new Date().toISOString(),
-    });
-    if (result.error) throw result.error;
+      if (response.meta?.newest_id) await setState(stateKey, response.meta.newest_id);
+      console.log(`profile scanned @${worker.x_handle}: ${tweets.length} ${workCashtag} posts`);
+    } catch (error) {
+      console.warn(`Skipping profile scan for @${worker.x_handle}`, error);
+    }
   }
-
-  if (response.meta?.newest_id) await setState("posts_since_id", response.meta.newest_id);
 }
 
 function holdingDays(worker: VerifiedWorker) {
@@ -486,14 +520,21 @@ async function recalculateWorkerScores(workers: VerifiedWorker[], blacklist: Bla
     const quotes = posts.reduce((sum, post) => sum + Number(post.quote_count ?? 0), 0);
     const views = posts.reduce((sum, post) => sum + Number(post.impression_count ?? 0), 0);
     const engagement = posts.reduce((sum, post) => sum + Number(post.engagement_score ?? 0), 0);
-    const daysHeld = holdingDays(worker);
-    const volumeUsd = await walletVolumeUsd(worker.wallet);
+    const qualified = balance.tokens >= minWorkerPow;
+    const previousHoldingTokens = Number(worker.holding_tokens ?? 0);
+    const soldDown = qualified && previousHoldingTokens > 0 && balance.tokens < previousHoldingTokens;
+    const now = new Date().toISOString();
+    const acceptedAt = qualified && (worker.status === "pending" || soldDown)
+      ? now
+      : worker.accepted_at ?? now;
+    const daysHeld = qualified ? holdingDays({ ...worker, accepted_at: acceptedAt }) : 0;
+    const volumeUsd = qualified ? await walletVolumeUsd(worker.wallet) : 0;
 
-    const holdingMultiplier = 1 + Math.min(2, daysHeld / 30);
-    const holdingScore = Math.max(0, balance.tokens / minWorkerPow) * 100 * holdingMultiplier;
-    const volumeScore = Math.sqrt(volumeUsd) * 2;
-    const score = engagement * holdingMultiplier + holdingScore + volumeScore;
-    const status = balance.tokens >= minWorkerPow
+    const holdingMultiplier = qualified ? 1 + Math.min(2, daysHeld / 30) : 0;
+    const holdingScore = qualified ? Math.max(0, balance.tokens / minWorkerPow) * 100 * holdingMultiplier : 0;
+    const volumeScore = qualified ? Math.sqrt(volumeUsd) * 2 : 0;
+    const score = qualified ? engagement * holdingMultiplier + holdingScore + volumeScore : 0;
+    const status = qualified
       ? worker.status === "paid"
         ? "paid"
         : "verified"
@@ -505,6 +546,7 @@ async function recalculateWorkerScores(workers: VerifiedWorker[], blacklist: Bla
         status,
         exclusion_reason: null,
         excluded_at: null,
+        accepted_at: acceptedAt,
         holding_raw: balance.raw,
         holding_tokens: balance.tokens,
         holding_days: daysHeld,

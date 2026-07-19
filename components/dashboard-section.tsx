@@ -41,7 +41,7 @@ export function DashboardSection() {
           <SectionHeading
             eyebrow="Dashboard"
             title="Live POW leaderboard coming after launch."
-            description="The scoreboard turns on after launch: verified workers, AI-scored outreach, hold-time multipliers, volume, X views, engagement, blacklist enforcement, and SOL payroll."
+            description="The scoreboard turns on after launch: wallet-linked X accounts, profile-scanned $POW posts, hold-time multipliers, current holdings, X views, engagement, blacklist enforcement, and SOL payroll."
             icon={<BarChart3 className="h-3.5 w-3.5 text-beg-lime" aria-hidden="true" />}
           />
           <div className="glass-subtle rounded-lg px-4 py-3 text-sm text-white/[0.62]">
@@ -74,7 +74,7 @@ export function DashboardSection() {
                   Verified Worker Leaderboard
                 </div>
                 <p className="mt-2 text-sm text-white/[0.55]">
-                  Accepted workers rank here once the scanner opens and the anti-cheat filter clears them.
+                  Workers rank here after the application links their X account to a qualified wallet.
                 </p>
               </div>
               <div className="rounded-lg border border-beg-purple/30 bg-beg-purple/10 px-3 py-2 text-sm font-bold text-white">
@@ -122,8 +122,8 @@ export function DashboardSection() {
                   ))
                 ) : (
                   <div className="bg-white/[0.02] px-4 py-8 text-sm leading-7 text-white/[0.62]">
-                    No verified workers yet. After launch, X posts with wallet,
-                    #POW application, and 1M+ $POW holdings will show here.
+                    No verified workers yet. After launch, wallet-linked X
+                    accounts with 1M+ $POW holdings will show here.
                   </div>
                 )}
               </div>

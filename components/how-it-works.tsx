@@ -6,9 +6,9 @@ import { SectionHeading } from "@/components/section-heading";
 
 const steps = [
   "Hold 1M+ $POW as the minimum worker requirement.",
-  "Post your wallet with $POW and #POW application.",
-  "The scanner verifies holdings and accepts qualified workers.",
-  "Keep posting with the $POW cashtag while the AI scorer ranks real outreach.",
+  "Post your wallet with $POW and #POW application to link X to wallet.",
+  "The scanner verifies holdings and registers the account as a worker.",
+  "Keep posting with the $POW cashtag while the profile scanner scores real outreach.",
   "Creator fees are distributed as SOL to top workers on the leaderboard."
 ];
 
