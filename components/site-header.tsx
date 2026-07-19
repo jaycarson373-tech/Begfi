@@ -5,6 +5,7 @@ const navItems = [
   { label: "Jobs", href: "#features" },
   { label: "Apply", href: "#feed" },
   { label: "Leaderboard", href: "#dashboard" },
+  { label: "Roadmap", href: "#roadmap" },
   { label: "FAQ", href: "#faq" }
 ];
 

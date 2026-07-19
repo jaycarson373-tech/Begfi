@@ -1,12 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowUpRight, BarChart3, ShieldCheck } from "lucide-react";
 
 const statlets = [
-  "1M+ $POW minimum",
-  "Profile-scanned work",
-  "100% fees to workers"
+  "Wallet-linked X accounts",
+  "Automatic PoW scanner",
+  "100% SOL fee flywheel"
 ];
 
 export function HeroSection() {
@@ -31,18 +32,19 @@ export function HeroSection() {
         >
           <div className="eyebrow">
             <ShieldCheck className="h-3.5 w-3.5 text-beg-lime" aria-hidden="true" />
-            Proof of Work for CT
+            Attention flywheel for CT
           </div>
           <h1 className="mt-6 max-w-3xl text-5xl font-black leading-[0.95] text-white sm:text-6xl md:text-7xl">
-            AI took your job.
+            Proof of Work.
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-white/[0.72] sm:text-xl">
-            Come work for this coin. POW uses an AI scoring engine to scan
-            public $POW work on X, rank real outreach, and turn creator fees
-            into SOL payroll for the workers pushing the hardest.
+            Ansem asked CT for a better work tool. POW turns that prompt into
+            an attention flywheel: link wallet to X, post with $POW, let the
+            automatic scanner measure wallet activity and engagement, and earn
+            SOL from creator fees.
           </p>
           <p className="mt-4 text-sm font-black uppercase tracking-[0.14em] text-beg-lime">
-            The one job you actually want to work. No official connection implied.
+            Independent project. No official partnership implied.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
@@ -78,14 +80,30 @@ export function HeroSection() {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.12, ease: "easeOut" }}
-          className="hidden justify-end lg:flex"
-          aria-hidden="true"
+          className="justify-end"
         >
-          <div className="glass-surface animate-float-slow rounded-lg p-4">
-            <div className="grid w-[360px] gap-3">
+          <div className="glass-surface rounded-lg p-3 sm:p-4">
+            <div className="grid gap-3 lg:w-[430px]">
+              <div className="pow-banner-frame relative aspect-[1280/426] overflow-hidden rounded-lg border border-white/10 bg-black/40">
+                <motion.div
+                  className="absolute inset-0"
+                  animate={{ y: [0, -1.5, 0, 0.8, 0], rotate: [0, -0.12, 0.08, 0] }}
+                  transition={{ duration: 1.7, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <Image
+                    src="/images/pow-banner.png"
+                    alt="Proof of Work banner"
+                    fill
+                    priority
+                    sizes="(min-width: 1024px) 430px, calc(100vw - 56px)"
+                    className="object-cover"
+                  />
+                </motion.div>
+                <span className="pow-impact-flash" aria-hidden="true" />
+              </div>
               <div className="flex items-center justify-between border-b border-white/10 pb-3">
                 <span className="text-xs font-bold uppercase tracking-[0.16em] text-white/[0.45]">
-                  Worker payroll
+                  Attention flywheel
                 </span>
                 <span className="text-xs font-bold text-beg-lime">100%</span>
               </div>
@@ -94,7 +112,7 @@ export function HeroSection() {
                   POW
                 </p>
                 <p className="mt-3 text-4xl font-black leading-none text-white">
-                  Post. Shill. Get paid.
+                  Mine attention. Get paid.
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -108,9 +126,9 @@ export function HeroSection() {
                 </div>
               </div>
               <div className="rounded-lg border border-beg-purple/[0.25] bg-beg-purple/10 p-4 text-sm leading-6 text-white/70">
-                More useful outreach means more views, more engagement, more
-                score, and a bigger share of SOL payroll. Low-effort spam does
-                not make the cut.
+                The scanner tracks current wallet behavior and public $POW
+                engagement. Stronger output builds score. Stronger score earns
+                more SOL payroll.
               </div>
             </div>
           </div>

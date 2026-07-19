@@ -26,8 +26,8 @@ export function SiteFooter() {
         <div>
           <Logo />
           <p className="mt-3 max-w-xl text-sm leading-6 text-white/[0.45]">
-            POW is not affiliated with Ansem. It turns CT output into public
-            Proof of Work.
+            POW is an independent project inspired by CT's demand for measurable
+            work. No official partnership implied.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">

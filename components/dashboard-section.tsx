@@ -41,7 +41,7 @@ export function DashboardSection() {
           <SectionHeading
             eyebrow="Dashboard"
             title="Live POW leaderboard coming after launch."
-            description="The scoreboard turns on after launch: wallet-linked X accounts, profile-scanned $POW posts, hold-time multipliers, current holdings, X views, engagement, blacklist enforcement, and SOL payroll."
+            description="The scoreboard turns on after launch: wallet-linked X accounts, profile-scanned $POW posts, current wallet activity, hold-time multipliers, X engagement, blacklist enforcement, and SOL payroll."
             icon={<BarChart3 className="h-3.5 w-3.5 text-beg-lime" aria-hidden="true" />}
           />
           <div className="glass-subtle rounded-lg px-4 py-3 text-sm text-white/[0.62]">

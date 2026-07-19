@@ -2,9 +2,11 @@
 
 POW is a polished Next.js/Tailwind landing page and dashboard for a CT-native Proof of Work meta on Solana.
 
-AI took your job. Come work for this coin. 100% of creator fees are used to distribute SOL to top workers. Post. Shill. Get paid. The one job you actually want to work.
+POW is an attention flywheel for CT. Wallet-linked workers post with `$POW`, the automatic scanner measures wallet activity and X engagement, and 100% of creator fees are used to distribute SOL to top workers.
 
 The POW scanner links public X accounts to wallets through an application post. After that, it scans each verified worker profile for `$POW` posts. Better posts earn more reach, more engagement, more score, and a larger share of SOL payroll, which creates a positive feedback loop for workers who keep pushing the coin.
+
+The future roadmap is a PoW marketplace: verified worker trust scores, project demand, campaign history, and a B2B SaaS layer that can help projects find higher-quality workers while giving workers better projects.
 
 ## Stack
 
@@ -14,6 +16,7 @@ The POW scanner links public X accounts to wallets through an application post. 
 - Lucide icons
 - Launch-ready feed and dashboard placeholders
 - Pump creator-fee rewards worker
+- POW logo/banner assets
 
 ## Feed Boundary
 
@@ -53,7 +56,7 @@ $POW #POW application
 Wallet:
 ```
 
-After acceptance, the scanner checks each verified worker's X profile for posts that use the `$POW` cashtag. The AI-assisted score is based on those posts' X engagement, X views, current holdings, hold time, and optional wallet volume.
+After acceptance, the scanner checks each verified worker's X profile for posts that use the `$POW` cashtag. The automatic score is based on those posts' X engagement, X views, current holdings, hold time, and optional wallet volume.
 
 Score inputs:
 

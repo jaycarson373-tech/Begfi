@@ -20,7 +20,7 @@ export const dashboardSnapshot: DashboardSnapshot = {
       key: "current-pool",
       label: "Worker Payroll",
       value: "100%",
-      helper: "Creator fees are reserved for top workers on the leaderboard.",
+      helper: "Creator fees power the SOL attention flywheel.",
       tone: "magenta"
     },
     {
@@ -34,7 +34,7 @@ export const dashboardSnapshot: DashboardSnapshot = {
       key: "current-round",
       label: "Eligibility",
       value: "1M+ $POW",
-      helper: "Holding $POW keeps the linked wallet eligible.",
+      helper: "Current wallet activity keeps the linked account eligible.",
       tone: "steel"
     }
   ],
@@ -74,7 +74,7 @@ export const faqs: FaqItem[] = [
   {
     question: "How do rewards work?",
     answer:
-      "After launch, 100% of creator fees are paid as SOL payroll to top verified workers by leaderboard score. Better outreach can earn more score, and more score can earn a larger payroll share."
+      "After launch, 100% of creator fees are paid as SOL payroll to top verified workers by leaderboard score. Better attention can earn more score, and more score can earn a larger payroll share."
   },
   {
     question: "Minimum holdings?",
@@ -89,7 +89,12 @@ export const faqs: FaqItem[] = [
   {
     question: "How does the AI score work?",
     answer:
-      "After the application links X to wallet, the scanner checks that X profile for public $POW posts and combines their views and engagement with current holdings, hold time, and wallet volume."
+      "After the application links X to wallet, the automatic scanner checks that X profile for public $POW posts and combines their views and engagement with current holdings, hold time, and wallet activity."
+  },
+  {
+    question: "What is the bigger PoW vision?",
+    answer:
+      "The roadmap points toward a PoW marketplace where projects can find trust-scored verified workers, workers can find higher-quality projects, and the protocol can earn revenue from real distribution demand."
   },
   {
     question: "Can cheaters be excluded?",

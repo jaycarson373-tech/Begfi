@@ -1,6 +1,6 @@
 "use client";
 
-import Script from "next/script";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { BadgeCheck, Hash, Radio, Wallet } from "lucide-react";
 import { SectionHeading } from "@/components/section-heading";
@@ -15,7 +15,7 @@ const feedLanes = [
   {
     title: "Profile Work Scanner",
     body:
-      "After verification, the scanner watches your X profile for public $POW posts and feeds their views and engagement into your score.",
+      "After verification, the scanner watches your X profile for public $POW posts and feeds their views, engagement, and wallet behavior into your score.",
     icon: BadgeCheck
   }
 ];
@@ -27,7 +27,7 @@ export function LiveFeedSection() {
         <SectionHeading
           eyebrow="Open roles"
           title="Apply like it is LinkedIn. Work like it is CT."
-          description="AI took your job. Come work for this coin. POW uses applications to connect X accounts to wallets, then scores the actual $POW posts that come after."
+          description="POW uses applications to connect X accounts to wallets, then scores the actual $POW posts and wallet activity that come after."
           icon={<Radio className="h-3.5 w-3.5 text-beg-lime" aria-hidden="true" />}
         />
 
@@ -42,35 +42,23 @@ export function LiveFeedSection() {
             <div className="mb-4 flex items-center justify-between gap-3 border-b border-white/10 pb-4">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/[0.45]">
-                  Social proof
+                  Brand signal
                 </p>
                 <p className="mt-2 text-sm leading-6 text-white/[0.62]">
-                  No partnership implied. Just CT turning public work into payroll.
+                  The miner is the metaphor: every verified post is another swing at attention.
                 </p>
               </div>
-              <a
-                href="https://x.com/slingoorio/status/2072842134823039454?s=46"
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-lg border border-white/[0.12] bg-white/[0.06] px-3 py-2 text-sm font-bold text-white/70 transition hover:border-beg-purple/[0.55] hover:text-white"
-              >
-                Open X
-              </a>
             </div>
 
-            <div className="rounded-lg border border-white/10 bg-black/25 p-3">
-              <blockquote className="twitter-tweet" data-theme="dark">
-                <p lang="en" dir="ltr">
-                  AI took your job. Come work for this coin.
-                </p>
-                <a href="https://x.com/slingoorio/status/2072842134823039454?s=46">
-                  View the POW meta on X
-                </a>
-              </blockquote>
-              <Script
-                src="https://platform.twitter.com/widgets.js"
-                strategy="lazyOnload"
+            <div className="pow-banner-frame relative aspect-[1280/426] overflow-hidden rounded-lg border border-white/10 bg-black/25">
+              <Image
+                src="/images/pow-banner.png"
+                alt="Proof of Work banner"
+                fill
+                sizes="(min-width: 1024px) 520px, calc(100vw - 56px)"
+                className="object-cover"
               />
+              <span className="pow-impact-flash" aria-hidden="true" />
             </div>
           </motion.article>
 

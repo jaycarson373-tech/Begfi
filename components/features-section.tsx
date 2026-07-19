@@ -8,19 +8,19 @@ const features = [
   {
     title: "Link Wallet To X",
     body:
-      "Post the application with your wallet. The scanner verifies 1M+ $POW and links that wallet to your X account.",
+      "Post the application with your wallet. It only connects your X account to an eligible on-chain wallet.",
     icon: Trophy
   },
   {
-    title: "AI Work Scoring",
+    title: "Automatic Scanner",
     body:
-      "The scoring engine scans public $POW posts and weighs reach, replies, reposts, likes, views, holdings, hold time, and volume.",
+      "The scanner reads wallet activity and public $POW posts, then weighs views, replies, reposts, likes, holdings, hold time, and volume.",
     icon: Coins
   },
   {
-    title: "Creator-Fee Payroll",
+    title: "Fee Flywheel",
     body:
-      "100% of creator fees are distributed as SOL to top workers, creating a loop: better work earns more score, and more score earns more payroll.",
+      "100% of creator fees feed SOL payroll for verified workers. More quality attention creates more score, which earns more payroll.",
     icon: BadgeCheck
   }
 ];
@@ -32,7 +32,7 @@ export function FeaturesSection() {
         <SectionHeading
           eyebrow="POW careers"
           title="LinkedIn for people who actually post."
-          description="AI took your job. POW gives CT one back: link your wallet to X, post with $POW, build score, and earn SOL payroll from creator fees."
+          description="POW turns CT work into a measurable attention flywheel: verified wallets, profile-scanned $POW posts, trust-weighted scores, and SOL payroll from creator fees."
         />
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           {features.map((feature, index) => {
