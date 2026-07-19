@@ -2,137 +2,122 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowUpRight, BarChart3, ShieldCheck } from "lucide-react";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { AmbientBackground } from "@/components/ambient-background";
 
-const statlets = [
-  "Wallet-linked X accounts",
-  "Automatic PoW scanner",
-  "100% SOL fee flywheel"
+const buyUrl = process.env.NEXT_PUBLIC_BUY_URL || "https://pump.fun";
+
+const line = [
+  "Link your X account.",
+  "Post.",
+  "Climb the leaderboard.",
+  "Earn SOL."
 ];
 
 export function HeroSection() {
   return (
-    <section
-      id="top"
-      className="relative isolate flex min-h-[88svh] items-center overflow-hidden pt-24"
-    >
-      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_78%_24%,rgba(20,104,255,0.44),transparent_30rem),radial-gradient(circle_at_46%_72%,rgba(74,162,255,0.22),transparent_24rem),linear-gradient(135deg,#01081f_0%,#02133d_54%,#01081f_100%)]" />
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(1,8,31,0.96)_0%,rgba(1,12,44,0.82)_42%,rgba(3,39,118,0.54)_74%,rgba(1,8,31,0.92)_100%)]" />
-      <div className="absolute inset-x-0 bottom-0 -z-10 h-44 bg-gradient-to-t from-beg-black to-transparent" />
-      <div className="noise-mask" />
-      <span className="scanline left-[4%] top-[28%] animate-pulse-line" />
-      <span className="scanline bottom-[24%] right-[10%] animate-pulse-line [animation-delay:1.4s]" />
-
-      <div className="section-shell relative z-10 grid items-center gap-10 pb-16 lg:grid-cols-[1.05fr_0.95fr]">
+    <section id="top" className="relative flex min-h-[100svh] items-center overflow-hidden pt-24">
+      <AmbientBackground />
+      <div className="site-shell relative z-10 flex flex-col items-center pb-16 pt-16 text-center sm:pb-20 sm:pt-24">
         <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-          className="max-w-3xl"
-        >
-          <div className="eyebrow">
-            <ShieldCheck className="h-3.5 w-3.5 text-beg-lime" aria-hidden="true" />
-            Attention flywheel for CT
-          </div>
-          <h1 className="mt-6 max-w-3xl text-5xl font-black leading-[0.95] text-white sm:text-6xl md:text-7xl">
-            Proof of Work.
-          </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-white/[0.72] sm:text-xl">
-            Ansem asked CT for a better work tool. POW turns that prompt into
-            an attention flywheel: link wallet to X, post with $POW, let the
-            automatic scanner measure wallet activity and engagement, and earn
-            SOL from creator fees.
-          </p>
-          <p className="mt-4 text-sm font-black uppercase tracking-[0.14em] text-beg-lime">
-            Independent project. No official partnership implied.
-          </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a
-              href="https://pump.fun"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-black uppercase tracking-[0.08em] text-black transition hover:bg-beg-lime focus:outline-none focus:ring-2 focus:ring-beg-lime/80"
-            >
-              Buy $POW
-              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-            </a>
-            <a
-              href="#dashboard"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-white/[0.15] bg-white/[0.06] px-5 py-3 text-sm font-black uppercase tracking-[0.08em] text-white transition hover:border-beg-purple/60 hover:bg-white/[0.1] focus:outline-none focus:ring-2 focus:ring-beg-purple/60"
-            >
-              View Leaderboard
-              <BarChart3 className="h-4 w-4" aria-hidden="true" />
-            </a>
-          </div>
-          <div className="mt-8 grid max-w-2xl grid-cols-1 gap-2 sm:grid-cols-3">
-            {statlets.map((item) => (
-              <div
-                key={item}
-                className="rounded-lg border border-white/10 bg-white/[0.045] px-3 py-3 text-sm font-semibold text-white/70 backdrop-blur"
-              >
-                {item}
-              </div>
-            ))}
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
+          initial={{ opacity: 0, scale: 0.86 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.12, ease: "easeOut" }}
-          className="justify-end"
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="relative mb-8"
         >
-          <div className="glass-surface rounded-lg p-3 sm:p-4">
-            <div className="grid gap-3 lg:w-[430px]">
-              <div className="pow-banner-frame relative aspect-[1280/426] overflow-hidden rounded-lg border border-white/10 bg-black/40">
-                <motion.div
-                  className="absolute inset-0"
-                  animate={{ y: [0, -1.5, 0, 0.8, 0], rotate: [0, -0.12, 0.08, 0] }}
-                  transition={{ duration: 1.7, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <Image
-                    src="/images/pow-banner.png"
-                    alt="Proof of Work banner"
-                    fill
-                    priority
-                    sizes="(min-width: 1024px) 430px, calc(100vw - 56px)"
-                    className="object-cover"
-                  />
-                </motion.div>
-                <span className="pow-impact-flash" aria-hidden="true" />
-              </div>
-              <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <span className="text-xs font-bold uppercase tracking-[0.16em] text-white/[0.45]">
-                  Attention flywheel
-                </span>
-                <span className="text-xs font-bold text-beg-lime">100%</span>
-              </div>
-              <div className="rounded-lg border border-white/10 bg-white/[0.045] p-5">
-                <p className="text-xs font-black uppercase tracking-[0.18em] text-white/[0.42]">
-                  POW
-                </p>
-                <p className="mt-3 text-4xl font-black leading-none text-white">
-                  Mine attention. Get paid.
-                </p>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-lg border border-white/10 bg-white/[0.045] p-4">
-                  <p className="text-xs text-white/[0.45]">Creator Fees</p>
-                  <p className="mt-2 text-2xl font-black">100%</p>
-                </div>
-                <div className="rounded-lg border border-white/10 bg-white/[0.045] p-4">
-                  <p className="text-xs text-white/[0.45]">Paid In</p>
-                  <p className="mt-2 text-2xl font-black">SOL</p>
-                </div>
-              </div>
-              <div className="rounded-lg border border-beg-purple/[0.25] bg-beg-purple/10 p-4 text-sm leading-6 text-white/70">
-                The scanner tracks current wallet behavior and public $POW
-                engagement. Stronger output builds score. Stronger score earns
-                more SOL payroll.
-              </div>
-            </div>
-          </div>
+          <div className="absolute inset-0 scale-[1.8] rounded-full bg-[#1e5eff]/20 blur-3xl" />
+          <motion.div
+            animate={{ y: [0, -8, 0] }}
+            transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
+            className="relative h-20 w-20 overflow-hidden rounded-lg border border-white/20 bg-[#0a37a4] shadow-[0_0_70px_rgba(30,94,255,0.46)] sm:h-24 sm:w-24"
+          >
+            <Image
+              src="/images/pow-logo.png"
+              alt="Proof of Work logo"
+              fill
+              priority
+              sizes="96px"
+              className="object-cover"
+            />
+          </motion.div>
         </motion.div>
+
+        <motion.p
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, delay: 0.08 }}
+          className="mb-5 text-sm font-bold uppercase text-[#8db3ff]"
+        >
+          Social mining on Solana
+        </motion.p>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.75, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+          className="max-w-6xl text-[3.7rem] font-black leading-[0.92] text-white sm:text-[5.6rem] lg:text-[8.4rem]"
+        >
+          Proof of Work
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="mt-7 max-w-3xl text-2xl font-semibold leading-tight text-white sm:text-4xl"
+        >
+          Get paid for posting on CT.
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.27 }}
+          className="mt-6 max-w-2xl text-base leading-7 text-white/[0.58] sm:text-lg sm:leading-8"
+        >
+          Crypto runs on attention. Proof of Work rewards the people creating it.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.34 }}
+          className="mt-7 flex max-w-3xl flex-wrap justify-center gap-x-3 gap-y-2 text-sm font-semibold text-white/[0.45] sm:text-base"
+        >
+          {line.map((item, index) => (
+            <span key={item} className="flex items-center gap-3">
+              {item}
+              {index < line.length - 1 && <span className="text-[#3b82f6]">/</span>}
+            </span>
+          ))}
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.42 }}
+          className="mt-9 grid w-full max-w-md gap-3 sm:flex sm:max-w-none sm:justify-center"
+        >
+          <a href={buyUrl} target="_blank" rel="noreferrer" className="button-primary">
+            Buy $POW
+            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+          </a>
+          <a href="#leaderboard" className="button-secondary">
+            View Leaderboard
+            <ArrowDown className="h-4 w-4" aria-hidden="true" />
+          </a>
+        </motion.div>
+
+        <motion.a
+          href="#how-it-works"
+          aria-label="See how Proof of Work works"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, y: [0, 7, 0] }}
+          transition={{ opacity: { delay: 0.9 }, y: { duration: 2.6, repeat: Infinity } }}
+          className="mt-16 grid h-11 w-11 place-items-center rounded-full border border-white/10 text-white/[0.45] transition hover:border-white/25 hover:text-white"
+        >
+          <ArrowDown className="h-4 w-4" />
+        </motion.a>
       </div>
     </section>
   );

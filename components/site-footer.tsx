@@ -1,52 +1,38 @@
-import { MessageCircle, Send, Twitter } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Logo } from "@/components/logo";
 
 const links = [
-  {
-    label: "X",
-    href: "https://x.com",
-    icon: Twitter
-  },
-  {
-    label: "Telegram",
-    href: "https://telegram.org",
-    icon: Send
-  },
-  {
-    label: "Pump.fun",
-    href: "https://pump.fun",
-    icon: MessageCircle
-  }
+  { label: "X", href: process.env.NEXT_PUBLIC_X_URL || "https://x.com" },
+  { label: "Telegram", href: process.env.NEXT_PUBLIC_TELEGRAM_URL || "https://telegram.org" },
+  { label: "Buy $POW", href: process.env.NEXT_PUBLIC_BUY_URL || "https://pump.fun" }
 ];
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-white/10 py-8">
-      <div className="section-shell flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-        <div>
+    <footer className="border-t border-white/[0.08] py-10 sm:py-12">
+      <div className="site-shell">
+        <div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
           <Logo />
-          <p className="mt-3 max-w-xl text-sm leading-6 text-white/[0.45]">
-            POW is an independent project inspired by CT's demand for measurable
-            work. No official partnership implied.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {links.map((link) => {
-            const Icon = link.icon;
-
-            return (
+          <nav className="flex flex-wrap gap-x-6 gap-y-3" aria-label="Footer navigation">
+            {links.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg border border-white/[0.12] bg-white/[0.055] px-3 py-2 text-sm font-bold text-white/70 transition hover:border-beg-purple/[0.55] hover:text-white"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-white/50 transition hover:text-white"
               >
-                <Icon className="h-4 w-4" aria-hidden="true" />
                 {link.label}
+                <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
               </a>
-            );
-          })}
+            ))}
+          </nav>
+        </div>
+        <div className="mt-10 flex flex-col gap-3 border-t border-white/[0.08] pt-6 text-xs leading-5 text-white/30 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} Proof of Work.</p>
+          <p className="max-w-2xl sm:text-right">
+            Independent community project. No affiliation or partnership is implied. Digital assets involve risk. Eligibility and rewards are subject to verification.
+          </p>
         </div>
       </div>
     </footer>

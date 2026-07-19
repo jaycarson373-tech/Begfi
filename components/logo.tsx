@@ -1,24 +1,28 @@
 import Image from "next/image";
 
-export function Logo() {
+type LogoProps = {
+  compact?: boolean;
+  href?: string;
+};
+
+export function Logo({ compact = false, href = "#top" }: LogoProps) {
   return (
-    <a href="#top" className="flex items-center gap-2" aria-label="POW home">
-      <span className="relative h-9 w-9 overflow-hidden rounded-lg border border-white/[0.15] bg-white/[0.08] shadow-glow">
+    <a href={href} className="group flex items-center gap-3" aria-label="Proof of Work home">
+      <span className="relative h-9 w-9 overflow-hidden rounded-lg border border-white/[0.15] bg-[#0a37a4] shadow-[0_0_28px_rgba(30,94,255,0.28)] transition duration-300 group-hover:border-white/30 group-hover:shadow-[0_0_36px_rgba(30,94,255,0.45)]">
         <Image
           src="/images/pow-logo.png"
           alt=""
           fill
+          priority
           sizes="36px"
           className="object-cover"
-          priority
         />
       </span>
-      <span className="flex flex-col leading-none">
-        <span className="text-base font-black text-white">POW</span>
-        <span className="mt-1 text-[0.62rem] font-bold uppercase tracking-[0.18em] text-white/[0.45]">
+      {!compact && (
+        <span className="text-sm font-extrabold text-white sm:text-base">
           Proof of Work
         </span>
-      </span>
+      )}
     </a>
   );
 }

@@ -1,49 +1,103 @@
-import { ArrowUpRight, BarChart3 } from "lucide-react";
+"use client";
+
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import { Logo } from "@/components/logo";
 
-const navItems = [
-  { label: "Jobs", href: "#features" },
-  { label: "Apply", href: "#feed" },
-  { label: "Leaderboard", href: "#dashboard" },
-  { label: "Roadmap", href: "#roadmap" },
+const navigation = [
+  { label: "How it works", href: "#how-it-works" },
+  { label: "Leaderboard", href: "#leaderboard" },
+  { label: "Why POW", href: "#why-pow" },
+  { label: "Marketplace (Beta)", href: "/marketplace" },
   { label: "FAQ", href: "#faq" }
 ];
 
+const buyUrl = process.env.NEXT_PUBLIC_BUY_URL || "https://pump.fun";
+
 export function SiteHeader() {
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 18);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black/[0.35] backdrop-blur-xl">
-      <div className="section-shell flex h-16 items-center justify-between gap-4">
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition duration-300 ${
+        scrolled ? "border-b border-white/10 bg-[#05070c]/80 backdrop-blur-2xl" : "bg-transparent"
+      }`}
+    >
+      <div className="site-shell flex h-20 items-center justify-between">
         <Logo />
-        <nav className="hidden items-center gap-5 text-sm font-semibold text-white/[0.62] md:flex">
-          {navItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="transition hover:text-white focus:outline-none focus:ring-2 focus:ring-beg-purple/60"
-            >
+
+        <nav className="hidden items-center gap-8 text-sm font-semibold text-white/60 md:flex" aria-label="Primary navigation">
+          {navigation.map((item) => (
+            <a key={item.href} href={item.href} className="transition hover:text-white">
               {item.label}
             </a>
           ))}
         </nav>
+
         <div className="flex items-center gap-2">
           <a
-            href="#dashboard"
-            className="hidden items-center gap-2 rounded-lg border border-white/[0.12] bg-white/[0.06] px-3 py-2 text-sm font-semibold text-white/80 transition hover:border-white/[0.22] hover:bg-white/[0.1] sm:flex"
-          >
-            <BarChart3 className="h-4 w-4" aria-hidden="true" />
-            Leaderboard
-          </a>
-          <a
-            href="https://pump.fun"
+            href={buyUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm font-black text-black transition hover:bg-beg-lime focus:outline-none focus:ring-2 focus:ring-beg-lime/70"
+            className="hidden items-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-extrabold text-[#05070c] transition hover:bg-[#dce8ff] sm:inline-flex"
           >
-            Buy
+            Buy $POW
             <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </a>
+          <button
+            type="button"
+            onClick={() => setOpen((value) => !value)}
+            className="grid h-11 w-11 place-items-center rounded-lg border border-white/10 bg-white/[0.05] text-white md:hidden"
+            aria-label={open ? "Close navigation" : "Open navigation"}
+            aria-expanded={open}
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </div>
+
+      <AnimatePresence>
+        {open && (
+          <motion.nav
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            className="border-t border-white/10 bg-[#05070c]/95 px-4 pb-5 pt-3 backdrop-blur-2xl md:hidden"
+            aria-label="Mobile navigation"
+          >
+            <div className="site-shell grid gap-1">
+              {navigation.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="rounded-lg px-3 py-3 text-base font-semibold text-white/75 transition hover:bg-white/[0.06] hover:text-white"
+                >
+                  {item.label}
+                </a>
+              ))}
+              <a
+                href={buyUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-2 inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-white px-4 text-sm font-extrabold text-[#05070c]"
+              >
+                Buy $POW
+                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+              </a>
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

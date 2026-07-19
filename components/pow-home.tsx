@@ -1,29 +1,31 @@
 "use client";
 
-import { DashboardSection } from "@/components/dashboard-section";
 import { FaqSection } from "@/components/faq-section";
-import { FeaturesSection } from "@/components/features-section";
+import { FutureSection } from "@/components/future-section";
 import { HeroSection } from "@/components/hero-section";
 import { HowItWorks } from "@/components/how-it-works";
-import { LiveFeedSection } from "@/components/live-feed-section";
+import { LeaderboardSection } from "@/components/leaderboard-section";
+import { ProofFlow } from "@/components/proof-flow";
 import { RoadmapSection } from "@/components/roadmap-section";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { WhyPow } from "@/components/why-pow";
 
 export function PowHome() {
   return (
-    <>
+    <div className="relative isolate overflow-hidden">
       <SiteHeader />
       <main>
         <HeroSection />
-        <FeaturesSection />
-        <LiveFeedSection />
-        <DashboardSection />
         <HowItWorks />
+        <ProofFlow />
+        <LeaderboardSection />
+        <WhyPow />
+        <FutureSection />
         <RoadmapSection />
         <FaqSection />
       </main>
       <SiteFooter />
-    </>
+    </div>
   );
 }

@@ -1,12 +1,18 @@
 # POW
 
-POW is a polished Next.js/Tailwind landing page and dashboard for a CT-native Proof of Work meta on Solana.
+POW is a polished Next.js/Tailwind landing page for a CT-native Proof of Work protocol on Solana.
 
 POW is an attention flywheel for CT. Wallet-linked workers post with `$POW`, the automatic scanner measures wallet activity and X engagement, and 100% of creator fees are used to distribute SOL to top workers.
 
-The POW scanner links public X accounts to wallets through an application post. After that, it scans each verified worker profile for `$POW` posts. Better posts earn more reach, more engagement, more score, and a larger share of SOL payroll, which creates a positive feedback loop for workers who keep pushing the coin.
+The POW scanner links public X accounts to wallets through an application post. After that, it scans each verified worker profile for `$POW` posts. Better posts earn more reach, more engagement, more score, and a larger share of SOL payroll.
 
-The future roadmap is a PoW marketplace: verified worker trust scores, project demand, campaign history, and a B2B SaaS layer that can help projects find higher-quality workers while giving workers better projects.
+The future roadmap includes a marketplace where projects can discover proven contributors and workers can discover verified opportunities.
+
+## Marketplace Preview
+
+`/marketplace` is an interactive pre-beta product preview with dashboard, worker, project, job, analytics, enterprise, and settings views. All marketplace people, companies, roles, charts, metrics, and waitlist interactions are local demo data. The marketplace does not read from or write to Supabase, scanner, wallet, or rewards services.
+
+The separation is intentional: the protocol homepage continues to use the live dashboard API, while the marketplace can later become its own product surface without changing the reward worker.
 
 ## Stack
 
