@@ -52,8 +52,8 @@ export function LeaderboardSection() {
             transition={{ duration: 0.7 }}
             className="max-w-3xl"
           >
-            <p className="section-kicker">Leaderboard</p>
-            <h2 className="section-title mt-5">The work speaks for itself.</h2>
+            <p className="section-kicker">$POW Native Leaderboard</p>
+            <h2 className="section-title mt-5">The native campaign stays first.</h2>
           </motion.div>
           <div className="flex items-center gap-2 text-sm font-semibold text-white/[0.45]">
             <span className={`h-2 w-2 rounded-full ${rows.length ? "bg-[#4f8cff] shadow-[0_0_16px_rgba(79,140,255,0.9)]" : "bg-white/25"}`} />
@@ -121,9 +121,9 @@ export function LeaderboardSection() {
         </motion.div>
 
         <div className="mt-5 flex flex-col justify-between gap-4 text-sm text-white/40 sm:flex-row sm:items-center">
-          <p>Rankings refresh as verified work is counted.</p>
-          <a href="#faq" className="inline-flex items-center gap-2 font-bold text-white/70 transition hover:text-white">
-            How to qualify
+          <p>This leaderboard only tracks work performed for the native $POW campaign.</p>
+          <a href="/campaigns/pow" className="inline-flex items-center gap-2 font-bold text-white/70 transition hover:text-white">
+            View native campaign
             <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </a>
         </div>

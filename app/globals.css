@@ -178,6 +178,31 @@ button {
     -webkit-background-clip: text;
     color: transparent;
   }
+
+  .form-input {
+    min-height: 3.25rem;
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.035);
+    padding-inline: 1rem;
+    color: white;
+    outline: none;
+    transition:
+      border-color 200ms ease,
+      background-color 200ms ease,
+      box-shadow 200ms ease;
+  }
+
+  .form-input::placeholder {
+    color: rgba(255, 255, 255, 0.24);
+  }
+
+  .form-input:focus {
+    border-color: rgba(95, 149, 255, 0.48);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 0 3px rgba(30, 94, 255, 0.1);
+  }
 }
 
 .hero-grid {

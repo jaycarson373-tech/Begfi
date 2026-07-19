@@ -3,10 +3,10 @@
 import { motion } from "framer-motion";
 
 const stages = [
-  { label: "Posts", detail: "You create" },
-  { label: "Attention", detail: "People notice" },
-  { label: "Proof", detail: "Your work compounds" },
-  { label: "SOL", detail: "Creators get paid" }
+  { label: "Social", detail: "Posts and engagement" },
+  { label: "On-chain", detail: "Holdings, buys, volume, selling" },
+  { label: "Campaign Score", detail: "Ranked separately in every campaign" },
+  { label: "SOL", detail: "Strongest workers earn" }
 ];
 
 export function ProofFlow() {
@@ -21,10 +21,10 @@ export function ProofFlow() {
           transition={{ duration: 0.7 }}
           className="mx-auto max-w-4xl text-center"
         >
-          <p className="section-kicker">Proof of Work</p>
-          <h2 className="section-title mt-5">Posting is mining.</h2>
+          <p className="section-kicker">Campaign scoring</p>
+          <h2 className="section-title mt-5">Every signal counts.</h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-white/50">
-            Attention is the commodity. The work you put into CT is the proof.
+            Social contribution, post performance, engagement, holdings, buys, volume, and selling behavior combine into a campaign-specific score.
           </p>
         </motion.div>
 

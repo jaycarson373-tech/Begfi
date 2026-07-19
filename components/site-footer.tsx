@@ -2,8 +2,10 @@ import { ArrowUpRight } from "lucide-react";
 import { Logo } from "@/components/logo";
 
 const links = [
+  { label: "Campaigns", href: "/#campaigns" },
+  { label: "Launch Campaign", href: "/campaigns/create" },
+  { label: "Marketplace Beta", href: "/marketplace" },
   { label: "X", href: process.env.NEXT_PUBLIC_X_URL || "https://x.com" },
-  { label: "Telegram", href: process.env.NEXT_PUBLIC_TELEGRAM_URL || "https://telegram.org" },
   { label: "Buy $POW", href: process.env.NEXT_PUBLIC_BUY_URL || "https://pump.fun" }
 ];
 
@@ -12,14 +14,14 @@ export function SiteFooter() {
     <footer className="border-t border-white/[0.08] py-10 sm:py-12">
       <div className="site-shell">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-          <Logo />
+            <Logo href="/" />
           <nav className="flex flex-wrap gap-x-6 gap-y-3" aria-label="Footer navigation">
             {links.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
-                target="_blank"
-                rel="noreferrer"
+                target={link.href.startsWith("http") ? "_blank" : undefined}
+                rel={link.href.startsWith("http") ? "noreferrer" : undefined}
                 className="inline-flex items-center gap-1.5 text-sm font-semibold text-white/50 transition hover:text-white"
               >
                 {link.label}
@@ -31,7 +33,7 @@ export function SiteFooter() {
         <div className="mt-10 flex flex-col gap-3 border-t border-white/[0.08] pt-6 text-xs leading-5 text-white/30 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Proof of Work.</p>
           <p className="max-w-2xl sm:text-right">
-            Independent community project. No affiliation or partnership is implied. Digital assets involve risk. Eligibility and rewards are subject to verification.
+            External projects fund their own SOL campaign pools. Proof of Work does not fund outside campaigns. Digital assets involve risk; eligibility and rewards are subject to verification.
           </p>
         </div>
       </div>

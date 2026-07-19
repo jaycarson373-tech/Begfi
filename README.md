@@ -1,12 +1,18 @@
 # POW
 
-POW is a polished Next.js/Tailwind landing page for a CT-native Proof of Work protocol on Solana.
+POW is a polished Next.js/Tailwind campaign platform for CT-native Proof of Work on Solana.
 
-POW is an attention flywheel for CT. Wallet-linked workers post with `$POW`, the automatic scanner measures wallet activity and X engagement, and 100% of creator fees are used to distribute SOL to top workers.
+The native `$POW` campaign rewards verified workers using SOL funded from protocol fees. The existing scanner measures wallet activity and X engagement, and the existing reward worker distributes SOL to top eligible workers.
 
 The POW scanner links public X accounts to wallets through an application post. After that, it scans each verified worker profile for `$POW` posts. Better posts earn more reach, more engagement, more score, and a larger share of SOL payroll.
 
-The future roadmap includes a marketplace where projects can discover proven contributors and workers can discover verified opportunities.
+The multi-campaign expansion lets outside projects create separate campaigns using the same scoring infrastructure. Every outside project must fund its own SOL reward pool, campaign rules, leaderboard, and payout cycle. The native `$POW` campaign remains the default campaign.
+
+## Campaign Preview
+
+`/campaigns/create` is a frontend-only campaign funding preview. It does not create a campaign or move SOL.
+
+`/campaigns/[slug]` shows a campaign-specific ruleset, metrics, leaderboard, and estimated reward view. The native `$POW` page reads the existing dashboard API. External campaigns and their metrics are clearly labeled demo data and do not connect to Supabase or the reward worker yet.
 
 ## Marketplace Preview
 

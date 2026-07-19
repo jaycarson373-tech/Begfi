@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "POW | Proof of Work",
   description:
-    "Get paid for posting on CT. Proof of Work rewards the people creating crypto attention.",
+    "Launch SOL-funded contributor campaigns. Proof of Work ranks social and on-chain performance, then rewards the strongest workers.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://pow.fun"),
   icons: {
     icon: "/favicon.png",
@@ -13,22 +13,22 @@ export const metadata: Metadata = {
   openGraph: {
     title: "POW | Proof of Work",
     description:
-      "Get paid for posting on CT. Post, climb the leaderboard, and earn SOL.",
+      "Reward the people growing your project with campaign-specific Proof of Work.",
     type: "website",
     images: [
       {
-        url: "/og.png",
-        width: 1731,
-        height: 909,
-        alt: "Proof of Work — Get paid for posting on CT."
+        url: "/og-campaigns.png",
+        width: 1732,
+        height: 908,
+        alt: "Proof of Work campaign platform"
       }
     ]
   },
   twitter: {
     card: "summary_large_image",
     title: "POW | Proof of Work",
-    description: "Get paid for posting on CT.",
-    images: ["/og.png"]
+    description: "Reward the people growing your project.",
+    images: ["/og-campaigns.png"]
   }
 };
 

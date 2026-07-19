@@ -1,31 +1,31 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { BadgeCheck, Coins, MessageCircleMore, Trophy } from "lucide-react";
+import { BarChart3, Building2, Coins, UsersRound } from "lucide-react";
 
 const steps = [
   {
     number: "01",
-    title: "Connect X",
-    body: "Link your wallet. Verify your X.",
-    icon: BadgeCheck
+    title: "A project funds a campaign",
+    body: "The project deposits SOL and defines the campaign.",
+    icon: Building2
   },
   {
     number: "02",
-    title: "Post",
-    body: "Create threads, memes, replies, and content.",
-    icon: MessageCircleMore
+    title: "Verified workers contribute",
+    body: "Workers create content and support the project.",
+    icon: UsersRound
   },
   {
     number: "03",
-    title: "Earn Points",
-    body: "Every eligible $POW post adds to your Proof of Work.",
-    icon: Trophy
+    title: "Proof of Work ranks performance",
+    body: "Social and on-chain activity produce a campaign-specific score.",
+    icon: BarChart3
   },
   {
     number: "04",
-    title: "Earn SOL",
-    body: "Creator fees reward the people creating attention.",
+    title: "The strongest workers earn",
+    body: "SOL is distributed from that campaign's reward pool.",
     icon: Coins
   }
 ];
@@ -39,10 +39,10 @@ export function HowItWorks() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.7 }}
-          className="max-w-3xl"
+          className="max-w-4xl"
         >
           <p className="section-kicker">How it works</p>
-          <h2 className="section-title mt-5">Post. Get seen. Get paid.</h2>
+          <h2 className="section-title mt-5">One system. Every campaign.</h2>
         </motion.div>
 
         <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -56,22 +56,29 @@ export function HowItWorks() {
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: 0.6, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
                 whileHover={{ y: -6 }}
-                className="premium-card group min-h-[280px] p-6 sm:p-8"
+                className="premium-card group min-h-[310px] p-6 sm:p-8"
               >
                 <div className="flex items-start justify-between">
-                  <span className="text-5xl font-black text-white/[0.07] transition group-hover:text-[#1e5eff]/25">
-                    {step.number}
-                  </span>
+                  <span className="text-5xl font-black text-white/[0.07] transition group-hover:text-[#1e5eff]/25">{step.number}</span>
                   <span className="grid h-11 w-11 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-[#76a2ff] transition group-hover:border-[#3b82f6]/40 group-hover:bg-[#1e5eff]/10">
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </span>
                 </div>
-                <h3 className="mt-16 text-2xl font-extrabold text-white">{step.title}</h3>
-                <p className="mt-3 text-base leading-7 text-white/50">{step.body}</p>
+                <h3 className="mt-14 text-2xl font-extrabold leading-tight text-white">{step.title}</h3>
+                <p className="mt-4 text-base leading-7 text-white/50">{step.body}</p>
               </motion.article>
             );
           })}
         </div>
+
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-5 rounded-lg border border-[#5f95ff]/20 bg-[#1e5eff]/10 px-5 py-4 text-sm font-semibold leading-6 text-[#b4ccff]"
+        >
+          The native $POW campaign works the same way, except its reward pool is funded automatically by protocol fees.
+        </motion.p>
       </div>
     </section>
   );

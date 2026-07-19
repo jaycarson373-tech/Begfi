@@ -20,7 +20,7 @@ export const dashboardSnapshot: DashboardSnapshot = {
       key: "current-pool",
       label: "Worker Payroll",
       value: "100%",
-      helper: "Creator fees power the SOL attention flywheel.",
+      helper: "Protocol fees fund the native $POW campaign reward pool.",
       tone: "magenta"
     },
     {

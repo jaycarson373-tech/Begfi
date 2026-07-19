@@ -6,11 +6,12 @@ import { ArrowUpRight, Menu, X } from "lucide-react";
 import { Logo } from "@/components/logo";
 
 const navigation = [
-  { label: "How it works", href: "#how-it-works" },
-  { label: "Leaderboard", href: "#leaderboard" },
-  { label: "Why POW", href: "#why-pow" },
-  { label: "Marketplace (Beta)", href: "/marketplace" },
-  { label: "FAQ", href: "#faq" }
+  { label: "Campaigns", href: "/#campaigns" },
+  { label: "Launch Campaign", href: "/campaigns/create" },
+  { label: "Leaderboard", href: "/#leaderboard" },
+  { label: "How It Works", href: "/#how-it-works" },
+  { label: "Roadmap", href: "/#roadmap" },
+  { label: "Marketplace Beta", href: "/marketplace" },
 ];
 
 const buyUrl = process.env.NEXT_PUBLIC_BUY_URL || "https://pump.fun";
@@ -33,9 +34,9 @@ export function SiteHeader() {
       }`}
     >
       <div className="site-shell flex h-20 items-center justify-between">
-        <Logo />
+        <Logo href="/" />
 
-        <nav className="hidden items-center gap-8 text-sm font-semibold text-white/60 md:flex" aria-label="Primary navigation">
+        <nav className="hidden items-center gap-5 text-[0.8rem] font-semibold text-white/60 lg:flex" aria-label="Primary navigation">
           {navigation.map((item) => (
             <a key={item.href} href={item.href} className="transition hover:text-white">
               {item.label}
@@ -56,7 +57,7 @@ export function SiteHeader() {
           <button
             type="button"
             onClick={() => setOpen((value) => !value)}
-            className="grid h-11 w-11 place-items-center rounded-lg border border-white/10 bg-white/[0.05] text-white md:hidden"
+            className="grid h-11 w-11 place-items-center rounded-lg border border-white/10 bg-white/[0.05] text-white lg:hidden"
             aria-label={open ? "Close navigation" : "Open navigation"}
             aria-expanded={open}
           >
@@ -71,7 +72,7 @@ export function SiteHeader() {
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
-            className="border-t border-white/10 bg-[#05070c]/95 px-4 pb-5 pt-3 backdrop-blur-2xl md:hidden"
+            className="border-t border-white/10 bg-[#05070c]/95 px-4 pb-5 pt-3 backdrop-blur-2xl lg:hidden"
             aria-label="Mobile navigation"
           >
             <div className="site-shell grid gap-1">

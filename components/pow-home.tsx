@@ -1,7 +1,7 @@
 "use client";
 
 import { FaqSection } from "@/components/faq-section";
-import { FutureSection } from "@/components/future-section";
+import { CampaignsSection } from "@/components/campaigns-section";
 import { HeroSection } from "@/components/hero-section";
 import { HowItWorks } from "@/components/how-it-works";
 import { LeaderboardSection } from "@/components/leaderboard-section";
@@ -17,11 +17,11 @@ export function PowHome() {
       <SiteHeader />
       <main>
         <HeroSection />
+        <CampaignsSection />
         <HowItWorks />
         <ProofFlow />
         <LeaderboardSection />
         <WhyPow />
-        <FutureSection />
         <RoadmapSection />
         <FaqSection />
       </main>
