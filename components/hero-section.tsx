@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowDown, ArrowUpRight, UserRoundCheck } from "lucide-react";
 import { AmbientBackground } from "@/components/ambient-background";
+import { ContractAddress } from "@/components/contract-address";
 
 const applicationUrl = `https://x.com/intent/post?text=${encodeURIComponent("$POW #POW application\n\nWallet:")}`;
 
@@ -80,6 +81,15 @@ export function HeroSection() {
           </a>
         </motion.div>
 
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.55 }}
+          className="mt-5 max-w-full"
+        >
+          <ContractAddress />
+        </motion.div>
+
         <motion.a
           href={applicationUrl}
           target="_blank"
@@ -87,7 +97,7 @@ export function HeroSection() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
-          className="mt-7 inline-flex items-center gap-2 text-sm font-bold text-white/[0.45] transition hover:text-white"
+          className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-white/[0.45] transition hover:text-white"
         >
           <UserRoundCheck className="h-4 w-4 text-[#7fa8ff]" aria-hidden="true" />
           Become a Proof of Worker

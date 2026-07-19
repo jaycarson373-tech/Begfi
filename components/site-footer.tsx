@@ -5,7 +5,7 @@ const links = [
   { label: "Campaigns", href: "/#campaigns" },
   { label: "Launch Campaign", href: "/campaigns/create" },
   { label: "Marketplace Beta", href: "/marketplace" },
-  { label: "X", href: process.env.NEXT_PUBLIC_X_URL || "https://x.com" },
+  { label: "X", href: "https://x.com/ProofofWork__" },
   { label: "Buy $POW", href: process.env.NEXT_PUBLIC_BUY_URL || "https://pump.fun" }
 ];
 

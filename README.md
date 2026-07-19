@@ -60,7 +60,6 @@ SUPABASE_URL=<Supabase project URL>
 SUPABASE_SERVICE_ROLE_KEY=<Supabase service_role key>
 NEXT_PUBLIC_SITE_URL=https://your-domain.example
 NEXT_PUBLIC_BUY_URL=<official $POW buy URL>
-NEXT_PUBLIC_X_URL=<official X profile URL>
 NEXT_PUBLIC_TELEGRAM_URL=<official Telegram URL>
 ```
 
