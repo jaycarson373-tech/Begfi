@@ -69,7 +69,7 @@ export const faqs: FaqItem[] = [
   {
     question: "How do I submit?",
     answer:
-      "Hold 1M+ $POW, post the official application format, and include the wallet you want linked to your X account."
+      "Hold 1M+ $POW, then post #POWApplication and your wallet in the official POW X Community."
   },
   {
     question: "How do rewards work?",

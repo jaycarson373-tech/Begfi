@@ -10,6 +10,7 @@ import { SiteHeader } from "@/components/site-header";
 import { getDashboardSnapshot } from "@/lib/protocol-data";
 import type { Campaign, CampaignLeaderboardRow } from "@/data/campaigns";
 import type { DashboardSnapshot } from "@/types/protocol";
+import { powCommunityUrl } from "@/lib/pow-config";
 
 function metricValue(snapshot: DashboardSnapshot, key: string) {
   return snapshot.metrics.find((metric) => metric.key === key)?.value;
@@ -78,8 +79,6 @@ export function CampaignDetail({ campaign }: { campaign: Campaign }) {
     [campaign, snapshot]
   );
 
-  const applicationUrl = `https://x.com/intent/post?text=${encodeURIComponent(`${display.keyword} #POW application\n\nWallet:`)}`;
-
   const metrics = [
     { label: "Funding Pool", value: display.rewardPool, icon: Radio },
     { label: "Verified Workers", value: display.workers, icon: Users },
@@ -130,7 +129,7 @@ export function CampaignDetail({ campaign }: { campaign: Campaign }) {
               <p className="mt-4 text-5xl font-black text-white">{display.rewardPool}</p>
               <p className="mt-3 text-sm text-white/40">{display.fundingSource} · Rewards paid in {display.payoutAsset}</p>
               {display.native ? (
-                <a href={applicationUrl} target="_blank" rel="noreferrer" className="button-primary mt-7 w-full">Join Campaign<ArrowUpRight className="h-4 w-4" /></a>
+                <a href={powCommunityUrl} target="_blank" rel="noreferrer" className="button-primary mt-7 w-full">Apply in X Community<ArrowUpRight className="h-4 w-4" /></a>
               ) : (
                 <button type="button" onClick={() => setPreviewJoined(true)} className="button-primary mt-7 w-full">{previewJoined ? "Preview Joined" : "Join Campaign"}<ArrowUpRight className="h-4 w-4" /></button>
               )}

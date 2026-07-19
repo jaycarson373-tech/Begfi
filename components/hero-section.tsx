@@ -2,11 +2,10 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowDown, ArrowUpRight, UserRoundCheck } from "lucide-react";
+import { ArrowDown, ArrowUpRight, UserRoundCheck, UsersRound } from "lucide-react";
 import { AmbientBackground } from "@/components/ambient-background";
 import { ContractAddress } from "@/components/contract-address";
-
-const applicationUrl = `https://x.com/intent/post?text=${encodeURIComponent("$POW #POW application\n\nWallet:")}`;
+import { powApplicationHashtag, powCommunityUrl } from "@/lib/pow-config";
 
 export function HeroSection() {
   return (
@@ -62,7 +61,7 @@ export function HeroSection() {
           transition={{ duration: 0.7, delay: 0.3 }}
           className="mt-5 max-w-3xl text-sm font-semibold leading-7 text-[#9fbdff] sm:text-base"
         >
-          The native campaign is funded by protocol fees. Any project can fund a campaign in SOL or an SPL token; verified worker payouts are made in $POW.
+          Hold 1M+ $POW to be eligible. Post {powApplicationHashtag} and your wallet in the official X Community.
         </motion.p>
 
         <motion.div
@@ -90,19 +89,23 @@ export function HeroSection() {
           <ContractAddress />
         </motion.div>
 
-        <motion.a
-          href={applicationUrl}
-          target="_blank"
-          rel="noreferrer"
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
-          className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-white/[0.45] transition hover:text-white"
+          className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-3"
         >
-          <UserRoundCheck className="h-4 w-4 text-[#7fa8ff]" aria-hidden="true" />
-          Become a Proof of Worker
-          <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-        </motion.a>
+          <a href={powCommunityUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm font-bold text-white/[0.48] transition hover:text-white">
+            <UserRoundCheck className="h-4 w-4 text-[#7fa8ff]" aria-hidden="true" />
+            Apply with {powApplicationHashtag}
+            <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </a>
+          <a href={powCommunityUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm font-bold text-white/[0.48] transition hover:text-white">
+            <UsersRound className="h-4 w-4 text-[#7fa8ff]" aria-hidden="true" />
+            Join X Community
+            <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </a>
+        </motion.div>
       </div>
     </section>
   );

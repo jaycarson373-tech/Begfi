@@ -29,6 +29,7 @@ import {
   startEpoch as startDbEpoch,
   type WorkerPayoutRow,
 } from "./rewards-db";
+import { powMinimumHolding } from "../lib/pow-config";
 
 type VerifiedWorker = {
   wallet: string;
@@ -222,7 +223,7 @@ const payoutWallet = parsePrivateKey(
 const tokenProgram = new PublicKey(process.env.POW_TOKEN_PROGRAM_ID?.trim() || TOKEN_PROGRAM_ID.toBase58());
 const maxWorkers = integerEnv("MAX_PAYOUT_WORKERS", 100);
 const minScore = numberEnv("MIN_WORKER_SCORE", 1);
-const minWorkerPow = numberEnv("MIN_WORKER_POW_BALANCE", 1_000_000);
+const minWorkerPow = powMinimumHolding;
 const payoutBps = integerEnv("POW_PAYOUT_BALANCE_BPS", 1);
 const maxTransfersPerTx = integerEnv("MAX_TOKEN_TRANSFERS_PER_TX", 4);
 const reserveSol = numberEnv("SOL_FEE_RESERVE", 0.25);

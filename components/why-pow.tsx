@@ -2,8 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-
-const applicationUrl = `https://x.com/intent/post?text=${encodeURIComponent("$POW #POW application\n\nWallet:")}`;
+import { powApplicationHashtag, powCommunityUrl } from "@/lib/pow-config";
 
 export function WhyPow() {
   return (
@@ -31,12 +30,12 @@ export function WhyPow() {
           className="max-w-xl lg:pb-2"
         >
           <p className="text-xl leading-9 text-white/[0.55]">
-            Join any campaign that fits. Each campaign measures your contribution independently and rewards eligible workers in $POW.
+            Hold 1M+ $POW, then post {powApplicationHashtag} and your wallet in the official X Community to become eligible.
           </p>
           <p className="mt-5 text-xl leading-9 text-white/[0.55]">
             Your score in one campaign never changes your rank in another.
           </p>
-          <a href={applicationUrl} target="_blank" rel="noreferrer" className="button-primary mt-8 w-full sm:w-auto">
+          <a href={powCommunityUrl} target="_blank" rel="noreferrer" className="button-primary mt-8 w-full sm:w-auto">
             Become a Proof of Worker
             <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </a>

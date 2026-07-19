@@ -1,6 +1,11 @@
 import "dotenv/config";
 import { createClient } from "@supabase/supabase-js";
 import { Connection, PublicKey } from "@solana/web3.js";
+import {
+  powApplicationHashtag,
+  powCommunityId,
+  powMinimumHolding,
+} from "../lib/pow-config";
 
 type XMetrics = {
   like_count?: number;
@@ -16,6 +21,7 @@ type XTweet = {
   text: string;
   author_id: string;
   created_at?: string;
+  community_id?: string;
   public_metrics?: XMetrics;
 };
 
@@ -98,8 +104,8 @@ const db = createClient(requiredEnv("SUPABASE_URL"), requiredEnv("SUPABASE_SERVI
 const connection = new Connection(requiredEnv("SOLANA_RPC_URL"), "confirmed");
 const xBearerToken = requiredEnv("X_BEARER_TOKEN");
 const powMint = new PublicKey(process.env.POW_TOKEN_MINT?.trim() || requiredEnv("SOURCE_TOKEN_MINT"));
-const minWorkerPow = numberEnv("MIN_WORKER_POW_BALANCE", 1_000_000);
-const applicationQuery = process.env.POW_APPLICATION_QUERY?.trim() || "$POW #POW application -is:retweet";
+const minWorkerPow = powMinimumHolding;
+const applicationQuery = `${powApplicationHashtag} -is:retweet`;
 const workCashtag = process.env.POW_WORK_CASHTAG?.trim() || "$POW";
 const intervalMs = integerEnv("POW_SCANNER_INTERVAL_MS", 5 * 60 * 1000);
 const maxProfileScanWorkers = integerEnv("MAX_PROFILE_SCAN_WORKERS", 100);
@@ -266,7 +272,7 @@ async function searchX(query: string, sinceId?: string) {
     query,
     max_results: "50",
     sort_order: "recency",
-    "tweet.fields": "author_id,created_at,public_metrics",
+    "tweet.fields": "author_id,community_id,created_at,public_metrics",
     expansions: "author_id",
     "user.fields": "username,name",
   });
@@ -361,7 +367,9 @@ async function scanApplications(blacklist: BlacklistIndex) {
       handle: user.username,
     });
 
-    if (accountExclusion) {
+    if (tweet.community_id !== powCommunityId) {
+      rejectionReason = "application must be posted in the official POW X Community";
+    } else if (accountExclusion) {
       rejectionReason = accountExclusion;
     } else if (wallet) {
       const walletExclusion = blacklistReason(blacklist, {

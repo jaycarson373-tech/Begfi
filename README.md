@@ -89,8 +89,6 @@ SUPABASE_SERVICE_ROLE_KEY=<Supabase service_role key>
 SOLANA_RPC_URL=<private production Solana RPC URL>
 POW_TOKEN_MINT=<real $POW mint>
 X_BEARER_TOKEN=<X API v2 bearer token>
-MIN_WORKER_POW_BALANCE=1000000
-POW_APPLICATION_QUERY="$POW #POW application -is:retweet"
 POW_WORK_CASHTAG="$POW"
 POW_SCANNER_INTERVAL_MS=300000
 MAX_PROFILE_SCAN_WORKERS=100
@@ -109,12 +107,10 @@ POW_VOLUME_API_KEY=
 Application format:
 
 ```text
-$POW #POW application
-
-Wallet: <wallet address>
+#POWApplication <wallet address>
 ```
 
-A valid application links the X account and wallet. Accounts below 1M `$POW` appear as pending and cannot receive rewards. The private wallet is used for balance checks and payout construction; the public leaderboard only receives the X account and eligibility result.
+A valid application must be posted inside `https://x.com/i/communities/2029250283063394361` and contain `#POWApplication` plus the wallet. Accounts below 1M `$POW` appear as pending and cannot receive rewards. The private wallet is used for balance checks and payout construction; the public leaderboard only receives the X account and eligibility result.
 
 ## Railway Rewards
 
@@ -142,7 +138,6 @@ SUPABASE_SERVICE_ROLE_KEY=<Supabase service_role key>
 SOLANA_RPC_URL=<private production Solana RPC URL>
 POW_TOKEN_MINT=<real $POW mint>
 POW_PAYOUT_WALLET_PRIVATE_KEY=<base58 secret or JSON byte array>
-MIN_WORKER_POW_BALANCE=1000000
 MIN_WORKER_SCORE=1
 MAX_PAYOUT_WORKERS=100
 SOL_FEE_RESERVE=0.25

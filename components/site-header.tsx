@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { Logo } from "@/components/logo";
+import { powCommunityUrl } from "@/lib/pow-config";
 
 const navigation = [
   { label: "Campaigns", href: "/#campaigns" },
@@ -12,6 +13,7 @@ const navigation = [
   { label: "How It Works", href: "/#how-it-works" },
   { label: "Roadmap", href: "/#roadmap" },
   { label: "Marketplace Beta", href: "/marketplace" },
+  { label: "Community", href: powCommunityUrl },
 ];
 
 const buyUrl = process.env.NEXT_PUBLIC_BUY_URL || "https://pump.fun";
@@ -38,7 +40,13 @@ export function SiteHeader() {
 
         <nav className="hidden items-center gap-5 text-[0.8rem] font-semibold text-white/60 lg:flex" aria-label="Primary navigation">
           {navigation.map((item) => (
-            <a key={item.href} href={item.href} className="transition hover:text-white">
+            <a
+              key={item.href}
+              href={item.href}
+              target={item.href.startsWith("http") ? "_blank" : undefined}
+              rel={item.href.startsWith("http") ? "noreferrer" : undefined}
+              className="transition hover:text-white"
+            >
               {item.label}
             </a>
           ))}
@@ -80,6 +88,8 @@ export function SiteHeader() {
                 <a
                   key={item.href}
                   href={item.href}
+                  target={item.href.startsWith("http") ? "_blank" : undefined}
+                  rel={item.href.startsWith("http") ? "noreferrer" : undefined}
                   onClick={() => setOpen(false)}
                   className="rounded-lg px-3 py-3 text-base font-semibold text-white/75 transition hover:bg-white/[0.06] hover:text-white"
                 >

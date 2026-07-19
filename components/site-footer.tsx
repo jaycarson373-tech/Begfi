@@ -1,10 +1,12 @@
 import { ArrowUpRight } from "lucide-react";
 import { Logo } from "@/components/logo";
+import { powCommunityUrl } from "@/lib/pow-config";
 
 const links = [
   { label: "Campaigns", href: "/#campaigns" },
   { label: "Launch Campaign", href: "/campaigns/create" },
   { label: "Marketplace Beta", href: "/marketplace" },
+  { label: "X Community", href: powCommunityUrl },
   { label: "X", href: "https://x.com/ProofofWork__" },
   { label: "Buy $POW", href: process.env.NEXT_PUBLIC_BUY_URL || "https://pump.fun" }
 ];

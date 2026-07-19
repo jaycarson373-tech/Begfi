@@ -13,7 +13,7 @@ const steps = [
   {
     number: "02",
     title: "Verified workers contribute",
-    body: "Workers create content and support the project.",
+    body: "Hold 1M+ $POW, then post #POWApplication and your wallet in the official X Community.",
     icon: UsersRound
   },
   {

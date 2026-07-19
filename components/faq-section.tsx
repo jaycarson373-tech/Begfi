@@ -6,6 +6,10 @@ import { Plus } from "lucide-react";
 
 const questions = [
   {
+    question: "How do I become a Proof of Worker?",
+    answer: "Hold 1M+ $POW, then post #POWApplication and your wallet in the official POW X Community. Applications posted outside the community are not accepted."
+  },
+  {
     question: "What is a Proof of Work campaign?",
     answer: "A project-defined competition where verified workers contribute, receive a campaign-specific score, and earn $POW from that campaign's payout allocation."
   },

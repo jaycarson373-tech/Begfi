@@ -52,8 +52,8 @@ export const campaigns: Campaign[] = [
     keyword: "$POW",
     schedule: "Continuous campaign",
     eligibility: [
-      "Connect a verified X account to an eligible wallet.",
-      "Hold at least 1M $POW to remain eligible.",
+      "Post #POWApplication and your wallet in the official X Community.",
+      "Hold at least 1M $POW to become and remain eligible.",
       "Use $POW in qualifying public posts.",
       "Pass engagement and wallet-behavior verification."
     ],
