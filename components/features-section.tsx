@@ -6,21 +6,21 @@ import { SectionHeading } from "@/components/section-heading";
 
 const features = [
   {
-    title: "Proof of Work",
+    title: "Apply For Work",
     body:
-      "Post the work: wallet, receipts, raids, threads, memes, and public proof that you are actually pushing.",
+      "Post your wallet with $POW and #POW application. The scanner checks the wallet and adds qualified workers.",
     icon: Trophy
   },
   {
-    title: "$ANSEM Holder Rewards",
+    title: "Score The Work",
     body:
-      "50% of creator fees are used for $ANSEM rewards to eligible $BEG holders.",
+      "Posts with the $POW cashtag earn score from views, likes, replies, reposts, quotes, holdings, hold time, and volume.",
     icon: Coins
   },
   {
-    title: "Bounty Wallet",
+    title: "Creator-Fee Payroll",
     body:
-      "50% goes to a bounty wallet for manual payouts to verified workers and bounties.",
+      "100% of creator fees are distributed as SOL to top workers based on the leaderboard.",
     icon: BadgeCheck
   }
 ];
@@ -30,9 +30,9 @@ export function FeaturesSection() {
     <section id="features" className="relative py-16 sm:py-20">
       <div className="section-shell">
         <SectionHeading
-          eyebrow="POW"
-          title="The new meta is work you can prove."
-          description="Ansem sparked the CT reward meta. POW is not affiliated with him; it turns the grind into a clean 50/50 loop: $ANSEM rewards for eligible $BEG holders and a bounty wallet for verified workers."
+          eyebrow="POW careers"
+          title="LinkedIn for people who actually post."
+          description="AI took your job. POW gives CT one back: public applications, verified wallets, transparent work scores, and SOL payroll from creator fees."
         />
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           {features.map((feature, index) => {
@@ -57,7 +57,7 @@ export function FeaturesSection() {
           })}
         </div>
         <div className="mt-4 rounded-lg border border-beg-purple/[0.28] bg-beg-purple/[0.1] px-4 py-3 text-sm font-black uppercase tracking-[0.12em] text-beg-lime">
-          Hold $BEG to register your on-chain proof.
+          Hold 1M+ $POW to qualify for the worker leaderboard.
         </div>
       </div>
     </section>

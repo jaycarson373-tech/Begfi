@@ -6,30 +6,18 @@ type StartEpochInput = {
   epochId: string;
   mode: "preview" | "execute";
   sourceMint: string;
-  ansemMint: string;
-  rewardWallet?: string | null;
+  rewardAsset: "SOL";
 };
 
 type CompleteEpochInput = {
   eligibleCount: number;
   claimLamports: string;
-  rewardWalletLamports: string;
-  ansemSwapLamports: string;
-  ansemBoughtRaw: string;
-  ansemBought: string;
-  ansemDistributedRaw: string;
-  ansemDistributed: string;
+  distributedLamports: string;
+  distributedSol: string;
   status?: EpochStatus;
 };
 
-type SnapshotRow = {
-  wallet: string;
-  sourceBalanceRaw: string;
-  sourceBalance: string;
-  holderPct: string;
-};
-
-type PayoutRow = {
+export type WorkerPayoutRow = {
   wallet: string;
   rewardAmountRaw: string;
   rewardAmount: string;
@@ -87,11 +75,10 @@ export async function startEpoch(input: StartEpochInput) {
       status: "running",
       mode: input.mode,
       source_mint: input.sourceMint,
-      ansem_mint: input.ansemMint,
-      reward_wallet: input.rewardWallet,
+      reward_asset: input.rewardAsset,
       started_at: input.epochId,
     }),
-    "start POW epoch",
+    "start POW payroll epoch",
   );
 }
 
@@ -106,16 +93,12 @@ export async function completeEpoch(epochId: string, input: CompleteEpochInput) 
         status: input.status ?? "completed",
         eligible_count: input.eligibleCount,
         claim_lamports: input.claimLamports,
-        reward_wallet_lamports: input.rewardWalletLamports,
-        ansem_swap_lamports: input.ansemSwapLamports,
-        ansem_bought_raw: input.ansemBoughtRaw,
-        ansem_bought: input.ansemBought,
-        ansem_distributed_raw: input.ansemDistributedRaw,
-        ansem_distributed: input.ansemDistributed,
+        distributed_lamports: input.distributedLamports,
+        distributed_sol: input.distributedSol,
         completed_at: new Date().toISOString(),
       })
       .eq("epoch_id", epochId),
-    "complete POW epoch",
+    "complete POW payroll epoch",
   );
 }
 
@@ -132,7 +115,7 @@ export async function failEpoch(epochId: string, error: unknown) {
         completed_at: new Date().toISOString(),
       })
       .eq("epoch_id", epochId),
-    "fail POW epoch",
+    "fail POW payroll epoch",
   );
 }
 
@@ -147,82 +130,19 @@ export async function recordClaim(epochId: string, amountLamports: string, txSig
       amount_sol: amountSol(amountLamports),
       tx_sig: txSig,
     }),
-    "record POW claim",
+    "record POW creator-fee claim",
   );
 }
 
-export async function recordRewardWalletTransfer(
-  epochId: string,
-  wallet: string,
-  amountLamports: string,
-  txSig: string | null,
-) {
-  const db = supabase();
-  if (!db) return;
-
-  await assertNoError(
-    await db.from("pow_bounty_wallet_transfers").upsert({
-      epoch_id: epochId,
-      wallet,
-      amount_lamports: amountLamports,
-      amount_sol: amountSol(amountLamports),
-      tx_sig: txSig,
-    }),
-    "record POW bounty wallet transfer",
-  );
-}
-
-export async function recordAnsemSwap(
-  epochId: string,
-  baseSpentLamports: string,
-  ansemReceivedRaw: string,
-  ansemReceived: string,
-  txSig: string | null,
-) {
-  const db = supabase();
-  if (!db) return;
-
-  await assertNoError(
-    await db.from("pow_ansem_swaps").upsert({
-      epoch_id: epochId,
-      base_spent_lamports: baseSpentLamports,
-      base_spent_sol: amountSol(baseSpentLamports),
-      ansem_received_raw: ansemReceivedRaw,
-      ansem_received: ansemReceived,
-      tx_sig: txSig,
-    }),
-    "record POW ansem swap",
-  );
-}
-
-export async function persistSnapshot(epochId: string, rows: SnapshotRow[]) {
-  const db = supabase();
-  if (!db || !rows.length) return;
-
-  await assertNoError(
-    await db.from("pow_snapshots").upsert(
-      rows.map((row) => ({
-        epoch_id: epochId,
-        wallet: row.wallet,
-        source_balance_raw: row.sourceBalanceRaw,
-        source_balance: row.sourceBalance,
-        holder_pct: row.holderPct,
-      })),
-      { onConflict: "epoch_id,wallet" },
-    ),
-    "persist POW snapshot",
-  );
-}
-
-export async function dryRunPayouts(epochId: string, rows: PayoutRow[]) {
-  await upsertPayouts(epochId, rows, "dry_run");
-}
-
-export async function planPayouts(epochId: string, rows: PayoutRow[]) {
+export async function planPayouts(epochId: string, rows: WorkerPayoutRow[]) {
   await upsertPayouts(epochId, rows, "planned");
 }
 
-async function upsertPayouts(epochId: string, rows: PayoutRow[], status: "dry_run" | "planned") {
+export async function dryRunPayouts(epochId: string, rows: WorkerPayoutRow[]) {
+  await upsertPayouts(epochId, rows, "dry_run");
+}
+
+async function upsertPayouts(epochId: string, rows: WorkerPayoutRow[], status: "dry_run" | "planned") {
   const db = supabase();
   if (!db || !rows.length) return;
 
@@ -231,20 +151,20 @@ async function upsertPayouts(epochId: string, rows: PayoutRow[], status: "dry_ru
       rows.map((row) => ({
         epoch_id: epochId,
         wallet: row.wallet,
-        reward_asset: "ANSEM",
+        reward_asset: "SOL",
         reward_amount_raw: row.rewardAmountRaw,
         reward_amount: row.rewardAmount,
-        idempotency_key: `${epochId}:${row.wallet}:ANSEM`,
+        idempotency_key: `${epochId}:${row.wallet}:SOL`,
         status,
         updated_at: new Date().toISOString(),
       })),
       { onConflict: "idempotency_key" },
     ),
-    `${status} POW payouts`,
+    `${status} POW SOL payouts`,
   );
 }
 
-export async function settlePayouts(epochId: string, rows: PayoutRow[], txSig: string) {
+export async function settlePayouts(epochId: string, rows: WorkerPayoutRow[], txSig: string) {
   const db = supabase();
   if (!db || !rows.length) return;
 
@@ -259,13 +179,13 @@ export async function settlePayouts(epochId: string, rows: PayoutRow[], txSig: s
         })
         .eq("epoch_id", epochId)
         .eq("wallet", row.wallet)
-        .eq("reward_asset", "ANSEM"),
-      "settle POW payout",
+        .eq("reward_asset", "SOL"),
+      "settle POW SOL payout",
     );
   }
 }
 
-export async function failPayouts(epochId: string, rows: PayoutRow[], error: unknown) {
+export async function failPayouts(epochId: string, rows: WorkerPayoutRow[], error: unknown) {
   const db = supabase();
   if (!db || !rows.length) return;
 
@@ -280,8 +200,8 @@ export async function failPayouts(epochId: string, rows: PayoutRow[], error: unk
         })
         .eq("epoch_id", epochId)
         .eq("wallet", row.wallet)
-        .eq("reward_asset", "ANSEM"),
-      "fail POW payout",
+        .eq("reward_asset", "SOL"),
+      "fail POW SOL payout",
     );
   }
 }

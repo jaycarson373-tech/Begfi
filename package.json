@@ -13,8 +13,8 @@
     "typecheck": "tsc --noEmit",
     "rewards:preview": "tsx scripts/rewards-run.ts",
     "rewards:execute": "tsx scripts/rewards-run.ts --execute",
-    "rewards:airdrop": "tsx scripts/rewards-run.ts --execute --airdrop-only",
-    "rewards:daemon": "tsx scripts/rewards-daemon.ts"
+    "rewards:daemon": "tsx scripts/rewards-daemon.ts",
+    "pow:scanner": "tsx scripts/pow-scanner.ts"
   },
   "dependencies": {
     "@pump-fun/pump-sdk": "^1.36.0",

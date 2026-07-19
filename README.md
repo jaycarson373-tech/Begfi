@@ -2,6 +2,8 @@
 
 POW is a polished Next.js/Tailwind landing page and dashboard for a CT-native Proof of Work meta on Solana.
 
+AI took your job. Come work for this coin. 100% of creator fees are used to distribute SOL to top workers. Post. Shill. Get paid. The one job you actually want to work.
+
 ## Stack
 
 - Next.js app router
@@ -19,7 +21,7 @@ The feed and dashboard are ready for the X scanner and wallet verification servi
 
 Run `supabase/migrations/001_pow_rewards.sql` in your Supabase SQL editor before enabling live worker writes.
 
-The dashboard reads live epochs, claims, swaps, bounty-wallet transfers, holder payouts, and verified worker rows from Supabase. If Supabase envs are missing, the site falls back to launch placeholders.
+The dashboard reads live epochs, claims, SOL payroll payouts, scored worker posts, applications, and verified worker rows from Supabase. If Supabase envs are missing, the site falls back to launch placeholders.
 
 Required for Railway worker writes:
 
@@ -37,9 +39,50 @@ SUPABASE_SERVICE_ROLE_KEY=<SERVICE_ROLE_KEY>
 
 `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are optional fallbacks for public reads.
 
-## Rewards Worker
+## POW Scanner
 
-The worker can claim Pump creator fees, send 50% of each claim to the POW bounty wallet, swap the other 50% into `$ANSEM`, snapshot eligible `$BEG` holders, and airdrop the `$ANSEM` pro-rata to holders.
+The scanner runs every 5 minutes. It accepts public X applications when the post includes a wallet and the wallet holds at least 1M `$POW`.
+
+Application format:
+
+```text
+$POW #POW application
+
+Wallet:
+Working on:
+Proof of work:
+```
+
+After acceptance, the scanner scores posts from verified workers that use the `$POW` cashtag. Score is based on X engagement, X views, holdings, hold time, and optional wallet volume.
+
+Score inputs:
+
+- `$POW` holdings, with a 1M `$POW` minimum.
+- Hold-time multiplier from the worker acceptance timestamp.
+- X engagement on `$POW` posts: likes, reposts, replies, quotes, bookmarks.
+- X views from post public metrics.
+- Wallet volume, when `POW_VOLUME_API_URL` is configured.
+
+```bash
+pnpm pow:scanner
+```
+
+Required scanner envs:
+
+```bash
+X_BEARER_TOKEN=<X_API_BEARER_TOKEN>
+SUPABASE_URL=<SUPABASE_URL>
+SUPABASE_SERVICE_ROLE_KEY=<SERVICE_ROLE_KEY>
+SOLANA_RPC_URL=<RPC_URL>
+SOURCE_TOKEN_MINT=<POW_TOKEN_MINT>
+MIN_WORKER_POW_BALANCE=1000000
+```
+
+`POW_VOLUME_API_URL` and `POW_VOLUME_API_KEY` are optional. Without a volume indexer, volume score stays at zero instead of showing fake data.
+
+## SOL Payroll Worker
+
+The worker can claim Pump creator fees and distribute 100% of each claim as SOL to top verified workers, pro-rata by leaderboard score.
 
 It is preview-only by default.
 
@@ -49,17 +92,15 @@ pnpm rewards:execute
 pnpm rewards:daemon
 ```
 
-`pnpm rewards:airdrop` can manually distribute the fee wallet's current `$ANSEM` balance to the current holder snapshot.
-
 For Railway, deploy the same repo as a separate worker service with:
 
 ```bash
 pnpm rewards:daemon
 ```
 
-Set `REWARDS_DAEMON_EXECUTE=true` only when the fee wallet, POW bounty wallet, `$BEG` mint, `$ANSEM` mint, RPC, and claim cap are configured. Required envs are listed in `.env.example`.
+Set `REWARDS_DAEMON_EXECUTE=true` only when the fee wallet, `$POW` mint, RPC, Supabase, and claim cap are configured. Required envs are listed in `.env.example`.
 
-`SOURCE_TOKEN_MINT` is the `$BEG` mint used for the holder snapshot. `ANSEM_TOKEN_MINT` is the token bought and airdropped to eligible holders. `POW_REWARD_WALLET` receives the manual bounties and verified-worker side of the split.
+`SOURCE_TOKEN_MINT` is the `$POW` mint used for worker eligibility checks. `MIN_WORKER_SCORE`, `MAX_PAYOUT_WORKERS`, and `MIN_PAYOUT_LAMPORTS` control who gets paid from each SOL payroll epoch.
 
 ## Commands
 

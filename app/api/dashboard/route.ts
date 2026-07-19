@@ -11,19 +11,12 @@ type EpochRow = {
   status: string | null;
   eligible_count: number | null;
   claim_lamports: string | null;
-  reward_wallet_lamports: string | null;
-  ansem_swap_lamports: string | null;
-  ansem_bought: string | number | null;
-  ansem_distributed: string | number | null;
+  distributed_sol: string | number | null;
   started_at: string | null;
   completed_at: string | null;
 };
 
 type ClaimRow = {
-  amount_sol: string | number | null;
-};
-
-type RewardWalletTransferRow = {
   amount_sol: string | number | null;
 };
 
@@ -38,12 +31,27 @@ type PayoutRow = {
 };
 
 type WorkerRow = {
+  x_user_id: string;
+  x_handle: string;
   wallet: string;
   handle: string | null;
   proof_url: string | null;
   category: string | null;
   payout_label: string | null;
   status: string | null;
+  holding_tokens: string | number | null;
+  holding_days: string | number | null;
+  volume_usd: string | number | null;
+  score: string | number | null;
+  engagement_score: string | number | null;
+  holding_score: string | number | null;
+  volume_score: string | number | null;
+  post_count: number | null;
+  like_count: number | null;
+  repost_count: number | null;
+  reply_count: number | null;
+  quote_count: number | null;
+  impression_count: number | null;
   created_at: string | null;
 };
 
@@ -81,9 +89,27 @@ function formatSol(value: number) {
   return `${value.toLocaleString(undefined, { maximumFractionDigits: 4 })} SOL`;
 }
 
-function formatAnsem(value: number) {
-  if (value <= 0) return "Coming soon";
-  return `${value.toLocaleString(undefined, { maximumFractionDigits: 2 })} ANSEM`;
+function formatScore(value: unknown) {
+  return Math.round(toNumber(value)).toLocaleString();
+}
+
+function formatPow(value: unknown) {
+  const amount = toNumber(value);
+  if (amount <= 0) return "1M+ $POW";
+  if (amount >= 1_000_000) return `${(amount / 1_000_000).toLocaleString(undefined, { maximumFractionDigits: 2 })}M $POW`;
+  return `${amount.toLocaleString(undefined, { maximumFractionDigits: 0 })} $POW`;
+}
+
+function formatUsd(value: unknown) {
+  const amount = toNumber(value);
+  if (amount <= 0) return "Volume pending";
+  return `$${amount.toLocaleString(undefined, { maximumFractionDigits: 0 })} volume`;
+}
+
+function formatDays(value: unknown) {
+  const days = toNumber(value);
+  if (days <= 0) return "Hold time pending";
+  return `${days.toLocaleString(undefined, { maximumFractionDigits: 1 })}d held`;
 }
 
 function latestTime(row: Pick<PayoutRow, "updated_at" | "created_at" | "epoch_id">) {
@@ -99,27 +125,33 @@ function verifiedSubmissions(rows: WorkerRow[]): Submission[] {
   return rows.slice(0, 5).map((row, index) => ({
     rank: index + 1,
     wallet: compactWallet(row.wallet),
-    lane: row.category || "verified work",
+    lane: `@${row.x_handle || row.handle || "worker"}`,
     proof: row.proof_url || row.handle || "Verified manually",
-    status: row.status || "verified",
+    status: `${(row.post_count ?? 0).toLocaleString()} posts`,
+    score: `${formatScore(row.score)} pts`,
+    holdings: formatPow(row.holding_tokens),
+    holdTime: formatDays(row.holding_days),
+    volume: formatUsd(row.volume_usd),
+    views: `${(row.impression_count ?? 0).toLocaleString()} views`,
+    engagement: `${formatScore(row.engagement_score)} engagement`,
   }));
 }
 
 function verifiedPayouts(rows: WorkerRow[], fallbackPayouts: PayoutRow[]): PreviousWinner[] {
-  if (rows.length) {
-    return rows.slice(0, 4).map((row, index) => ({
-      round: `${index + 1}`,
+  if (fallbackPayouts.length) {
+    return fallbackPayouts.slice(0, 4).map((row, index) => ({
+      round: epochNumber(row.epoch_id, index),
       wallet: compactWallet(row.wallet),
-      payout: row.payout_label || row.status || "Verified",
-      reason: row.proof_url || row.category || "Manual POW reward",
+      payout: formatSol(toNumber(row.reward_amount)),
+      reason: row.tx_sig ? `Settled SOL payroll: ${row.tx_sig.slice(0, 10)}...` : "Settled SOL payroll",
     }));
   }
 
-  return fallbackPayouts.slice(0, 4).map((row, index) => ({
-    round: epochNumber(row.epoch_id, index),
+  return rows.slice(0, 4).map((row, index) => ({
+    round: `${index + 1}`,
     wallet: compactWallet(row.wallet),
-    payout: formatAnsem(toNumber(row.reward_amount)),
-    reason: row.tx_sig ? `Settled $ANSEM payout: ${row.tx_sig.slice(0, 10)}...` : "Settled $ANSEM payout",
+    payout: row.payout_label || `${formatScore(row.score)} pts`,
+    reason: row.proof_url || row.category || "Awaiting first SOL payroll",
   }));
 }
 
@@ -130,13 +162,11 @@ async function readDashboard(): Promise<DashboardSnapshot> {
   const [
     epochsResult,
     claimsResult,
-    rewardWalletResult,
     payoutsResult,
     workersResult,
   ] = await Promise.all([
     db.from("pow_epochs").select("*").order("started_at", { ascending: false }).limit(25),
     db.from("pow_claims").select("amount_sol").limit(10000),
-    db.from("pow_bounty_wallet_transfers").select("amount_sol").limit(10000),
     db
       .from("pow_payouts")
       .select("epoch_id,wallet,reward_amount,status,tx_sig,updated_at,created_at")
@@ -145,28 +175,28 @@ async function readDashboard(): Promise<DashboardSnapshot> {
       .limit(100),
     db
       .from("pow_verified_workers")
-      .select("wallet,handle,proof_url,category,payout_label,status,created_at")
+      .select("x_user_id,x_handle,wallet,handle,proof_url,category,payout_label,status,holding_tokens,holding_days,volume_usd,score,engagement_score,holding_score,volume_score,post_count,like_count,repost_count,reply_count,quote_count,impression_count,created_at")
       .in("status", ["verified", "paid"])
-      .order("created_at", { ascending: false })
+      .order("score", { ascending: false })
       .limit(20),
   ]);
 
-  for (const result of [epochsResult, claimsResult, rewardWalletResult, payoutsResult, workersResult]) {
+  for (const result of [epochsResult, claimsResult, payoutsResult, workersResult]) {
     if (result.error) throw result.error;
   }
 
   const epochs = (epochsResult.data ?? []) as EpochRow[];
   const claims = (claimsResult.data ?? []) as ClaimRow[];
-  const rewardWalletTransfers = (rewardWalletResult.data ?? []) as RewardWalletTransferRow[];
   const payouts = ((payoutsResult.data ?? []) as PayoutRow[]).sort((a, b) => latestTime(b) - latestTime(a));
   const workers = (workersResult.data ?? []) as WorkerRow[];
 
   const latestEpoch = epochs[0];
   const totalCreatorFees = claims.reduce((sum, row) => sum + toNumber(row.amount_sol), 0);
-  const totalRewardWallet = rewardWalletTransfers.reduce((sum, row) => sum + toNumber(row.amount_sol), 0);
-  const totalAnsemRewards = payouts.reduce((sum, row) => sum + toNumber(row.reward_amount), 0);
+  const totalSolPayroll = payouts.reduce((sum, row) => sum + toNumber(row.reward_amount), 0);
+  const totalWorkerScore = workers.reduce((sum, row) => sum + toNumber(row.score), 0);
+  const totalViews = workers.reduce((sum, row) => sum + (row.impression_count ?? 0), 0);
   const latestPayoutEpoch = payouts[0]?.epoch_id;
-  const latestEpochAnsemRewards = latestPayoutEpoch
+  const latestEpochSolPayroll = latestPayoutEpoch
     ? payouts
         .filter((row) => row.epoch_id === latestPayoutEpoch)
         .reduce((sum, row) => sum + toNumber(row.reward_amount), 0)
@@ -176,9 +206,9 @@ async function readDashboard(): Promise<DashboardSnapshot> {
     round: {
       id: latestEpoch ? `Epoch ${epochNumber(latestEpoch.epoch_id, 0)}` : "Launch round",
       status: latestEpoch?.status || "Waiting for first Supabase epoch",
-      pool: "50%",
-      holderRewardPool: "50%",
-      votingWindow: "10-minute holder drops",
+      pool: "100%",
+      holderRewardPool: "SOL",
+      votingWindow: "5-minute scanner",
     },
     metrics: [
       {
@@ -189,24 +219,24 @@ async function readDashboard(): Promise<DashboardSnapshot> {
         tone: "purple",
       },
       {
-        key: "ansem-holder-rewards",
-        label: "$ANSEM Holder Rewards",
-        value: formatAnsem(latestEpochAnsemRewards),
-        helper: "Latest settled $ANSEM distribution to eligible $BEG holders.",
+        key: "sol-payroll",
+        label: "SOL Payroll",
+        value: formatSol(latestEpochSolPayroll),
+        helper: "Latest settled creator-fee payroll to top workers.",
         tone: "magenta",
       },
       {
-        key: "reward-wallet",
-        label: "Bounty Wallet",
-        value: formatSol(totalRewardWallet),
-        helper: "Manual bounty and verified-worker funding sent to the bounty wallet.",
+        key: "x-views",
+        label: "X Views",
+        value: totalViews ? totalViews.toLocaleString() : "Coming soon",
+        helper: "Views from scored $POW posts.",
         tone: "lime",
       },
       {
         key: "current-round",
-        label: "Eligible Holders",
-        value: latestEpoch?.eligible_count ? latestEpoch.eligible_count.toLocaleString() : "Hold $BEG",
-        helper: "Holding $BEG is the on-chain proof.",
+        label: "Verified Workers",
+        value: workers.length ? workers.length.toLocaleString() : "1M+ $POW",
+        helper: "Workers qualify by posting a wallet and holding 1M+ $POW.",
         tone: "steel",
       },
     ],
@@ -217,22 +247,29 @@ async function readDashboard(): Promise<DashboardSnapshot> {
         key: "verified-work",
         label: "Verified Work",
         value: workers.length ? workers.length.toLocaleString() : "Coming soon",
-        helper: "Manual Supabase rows for verified workers and bounties.",
+        helper: "Accepted X applications on the POW leaderboard.",
         tone: "magenta",
       },
       {
         key: "total-fees",
-        label: "Total Creator Fees Distributed",
+        label: "Total SOL Payroll",
         value: formatSol(totalCreatorFees),
-        helper: "Fees split between $ANSEM rewards and the bounty wallet.",
+        helper: "Creator fees reserved for scored workers.",
         tone: "purple",
       },
       {
         key: "holder-rewards",
-        label: "Total $ANSEM Rewards",
-        value: formatAnsem(totalAnsemRewards),
-        helper: "Settled $ANSEM payouts recorded in Supabase.",
+        label: "Settled SOL Paid",
+        value: formatSol(totalSolPayroll),
+        helper: "Settled SOL payroll recorded in Supabase.",
         tone: "lime",
+      },
+      {
+        key: "worker-score",
+        label: "Total Worker Score",
+        value: totalWorkerScore ? formatScore(totalWorkerScore) : "Coming soon",
+        helper: "Engagement, holding time, and volume-score totals.",
+        tone: "steel",
       },
     ],
   };

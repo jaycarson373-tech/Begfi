@@ -10,8 +10,8 @@ export function FaqSection() {
       <div className="section-shell">
         <SectionHeading
           eyebrow="FAQ"
-          title="Questions from the work desk."
-          description="No official Ansem connection. Just CT output turned into cleaner Proof of Work."
+          title="Questions from HR."
+          description="No official Ansem connection. Just CT output turned into a cleaner Proof of Work payroll."
           icon={<CircleHelp className="h-3.5 w-3.5 text-beg-lime" aria-hidden="true" />}
         />
         <div className="mt-8 grid gap-3">

@@ -40,8 +40,8 @@ export function DashboardSection() {
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <SectionHeading
             eyebrow="Dashboard"
-            title="Live proof dashboard coming after launch."
-            description="The scoreboard turns on after launch: creator fees, $ANSEM holder rewards, bounty-wallet funding, and verified work payouts."
+            title="Live POW leaderboard coming after launch."
+            description="The scoreboard turns on after launch: verified workers, $POW application checks, hold-time multipliers, volume, X views, engagement, and SOL payroll."
             icon={<BarChart3 className="h-3.5 w-3.5 text-beg-lime" aria-hidden="true" />}
           />
           <div className="glass-subtle rounded-lg px-4 py-3 text-sm text-white/[0.62]">
@@ -71,10 +71,10 @@ export function DashboardSection() {
               <div>
                 <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.14em] text-white/[0.45]">
                   <ListChecks className="h-4 w-4 text-beg-lime" aria-hidden="true" />
-                  Verified Work Queue
+                  Verified Worker Leaderboard
                 </div>
                 <p className="mt-2 text-sm text-white/[0.55]">
-                  Verified proof appears here once the feed opens.
+                  Accepted workers rank here once the scanner opens.
                 </p>
               </div>
               <div className="rounded-lg border border-beg-purple/30 bg-beg-purple/10 px-3 py-2 text-sm font-bold text-white">
@@ -83,41 +83,47 @@ export function DashboardSection() {
             </div>
 
             <div className="mt-4 overflow-hidden rounded-lg border border-white/10">
-              <div className="hidden grid-cols-[0.45fr_1fr_0.75fr_2.4fr_0.7fr] border-b border-white/10 bg-white/[0.045] px-4 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white/[0.45] md:grid">
+              <div className="hidden grid-cols-[0.35fr_0.8fr_0.85fr_1fr_1.25fr_0.7fr] border-b border-white/10 bg-white/[0.045] px-4 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white/[0.45] md:grid">
                 <span>Rank</span>
+                <span>X Account</span>
                 <span>Wallet</span>
-                <span>Lane</span>
-                <span>Proof of Work</span>
-                <span className="text-right">Status</span>
+                <span>Holdings</span>
+                <span>Work Metrics</span>
+                <span className="text-right">Score</span>
               </div>
               <div className="divide-y divide-white/10">
                 {snapshot.submissions.length > 0 ? (
                   snapshot.submissions.map((submission) => (
                     <article
                       key={submission.wallet}
-                      className="grid gap-3 bg-white/[0.02] px-4 py-4 md:grid-cols-[0.45fr_1fr_0.75fr_2.4fr_0.7fr] md:items-center"
+                      className="grid gap-3 bg-white/[0.02] px-4 py-4 md:grid-cols-[0.35fr_0.8fr_0.85fr_1fr_1.25fr_0.7fr] md:items-center"
                     >
                       <span className="text-sm font-black text-beg-lime">
                         #{submission.rank}
                       </span>
-                      <span className="font-mono text-sm text-white/[0.78]">
-                        {submission.wallet}
-                      </span>
                       <span className="text-sm font-bold text-white">
                         {submission.lane}
                       </span>
-                      <p className="text-sm leading-6 text-white/[0.62]">
-                        {submission.proof}
-                      </p>
+                      <span className="font-mono text-sm text-white/[0.78]">
+                        {submission.wallet}
+                      </span>
+                      <div className="text-sm leading-6">
+                        <p className="font-black text-white">{submission.holdings ?? "1M+ $POW"}</p>
+                        <p className="text-white/[0.48]">{submission.holdTime ?? "Hold time pending"}</p>
+                      </div>
+                      <div className="grid gap-1 text-xs leading-5 text-white/[0.58]">
+                        <span>{submission.volume ?? "Volume pending"}</span>
+                        <span>{submission.views ?? "Views pending"} / {submission.engagement ?? "Engagement pending"}</span>
+                      </div>
                       <span className="text-left text-sm font-black text-white md:text-right">
-                        {submission.status}
+                        {submission.score ?? submission.status}
                       </span>
                     </article>
                   ))
                 ) : (
                   <div className="bg-white/[0.02] px-4 py-8 text-sm leading-7 text-white/[0.62]">
-                    No verified work yet. After launch, wallet posts with
-                    the official format will show here once eligibility is checked.
+                    No verified workers yet. After launch, X posts with wallet,
+                    #POW application, and 1M+ $POW holdings will show here.
                   </div>
                 )}
               </div>
@@ -128,15 +134,15 @@ export function DashboardSection() {
             <section className="glass-surface rounded-lg p-5">
               <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.14em] text-white/[0.45]">
                 <Clock3 className="h-4 w-4 text-beg-lime" aria-hidden="true" />
-                Fee Split
+                Payroll Split
               </div>
               <div className="mt-5 grid grid-cols-2 gap-3">
                 <div className="rounded-lg border border-white/10 bg-white/[0.045] p-4">
-                  <p className="text-xs text-white/[0.45]">$ANSEM Rewards</p>
+                  <p className="text-xs text-white/[0.45]">Creator Fees</p>
                   <p className="mt-2 text-2xl font-black">{snapshot.round.pool}</p>
                 </div>
                 <div className="rounded-lg border border-white/10 bg-white/[0.045] p-4">
-                  <p className="text-xs text-white/[0.45]">Bounty Wallet</p>
+                  <p className="text-xs text-white/[0.45]">Payroll Asset</p>
                   <p className="mt-2 text-2xl font-black">
                     {snapshot.round.holderRewardPool}
                   </p>
@@ -147,7 +153,7 @@ export function DashboardSection() {
             <section className="glass-surface rounded-lg p-5">
               <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.14em] text-white/[0.45]">
                 <History className="h-4 w-4 text-beg-lime" aria-hidden="true" />
-                Verified Work Payouts
+                SOL Payroll
               </div>
               <div className="mt-5 space-y-3">
                 {snapshot.previousWinners.length > 0 ? (
@@ -174,7 +180,7 @@ export function DashboardSection() {
                   ))
                 ) : (
                   <div className="rounded-lg border border-white/10 bg-white/[0.035] p-4 text-sm leading-7 text-white/[0.58]">
-                    First verified work payout gets immortalized here.
+                    First SOL payroll batch gets immortalized here.
                   </div>
                 )}
               </div>
@@ -182,7 +188,7 @@ export function DashboardSection() {
           </aside>
         </div>
 
-        <div className="mt-4 grid gap-4 md:grid-cols-3">
+        <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {snapshot.totals.map((metric) => (
             <MetricTile key={metric.key} metric={metric} />
           ))}

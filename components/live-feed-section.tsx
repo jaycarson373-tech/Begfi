@@ -7,15 +7,15 @@ import { SectionHeading } from "@/components/section-heading";
 
 const feedLanes = [
   {
-    title: "Public POW Feed",
+    title: "Application Scanner",
     body:
-      "Posts using $BEG and #POW will flow here after launch. Pure CT output, filtered into one clean lane.",
+      "Post $POW, #POW application, and a wallet. The scanner checks for 1M+ $POW and accepts qualified workers.",
     icon: Hash
   },
   {
-    title: "Verified Proof Feed",
+    title: "Work Feed",
     body:
-      "Wallet posts appear here only after the official format, proof, and eligibility checks pass.",
+      "Accepted workers keep posting with the $POW cashtag. Views and engagement flow into the leaderboard.",
     icon: BadgeCheck
   }
 ];
@@ -25,9 +25,9 @@ export function LiveFeedSection() {
     <section id="feed" className="relative py-16 sm:py-20">
       <div className="section-shell">
         <SectionHeading
-          eyebrow="The meta is already live"
-          title="The work tape goes live."
-          description="CT already has the meta. POW turns posts, wallets, and proof into one clean verification lane."
+          eyebrow="Open roles"
+          title="Apply like it is LinkedIn. Work like it is CT."
+          description="AI took your job. Come work for this coin. POW turns public applications and $POW posts into a transparent worker leaderboard."
           icon={<Radio className="h-3.5 w-3.5 text-beg-lime" aria-hidden="true" />}
         />
 
@@ -45,7 +45,7 @@ export function LiveFeedSection() {
                   Social proof
                 </p>
                 <p className="mt-2 text-sm leading-6 text-white/[0.62]">
-                  No partnership implied. Just CT turning the grind into proof.
+                  No partnership implied. Just CT turning public work into payroll.
                 </p>
               </div>
               <a
@@ -61,10 +61,10 @@ export function LiveFeedSection() {
             <div className="rounded-lg border border-white/10 bg-black/25 p-3">
               <blockquote className="twitter-tweet" data-theme="dark">
                 <p lang="en" dir="ltr">
-                  CT already has the meta. POW turns it into a system.
+                  AI took your job. Come work for this coin.
                 </p>
                 <a href="https://x.com/slingoorio/status/2072842134823039454?s=46">
-                  View the Proof of Work meta on X
+                  View the POW meta on X
                 </a>
               </blockquote>
               <Script
@@ -101,7 +101,7 @@ export function LiveFeedSection() {
                     </div>
                   </div>
                   <div className="mt-5 rounded-lg border border-dashed border-white/[0.16] bg-white/[0.025] p-4 text-sm leading-7 text-white/[0.58]">
-                    Feed opens after launch. No fake posts. No phantom volume.
+                    Scanner opens after launch. No fake posts. No phantom volume.
                   </div>
                 </motion.article>
               );
@@ -119,7 +119,7 @@ export function LiveFeedSection() {
                 Official format
               </div>
               <pre className="mt-4 overflow-x-auto rounded-lg border border-white/10 bg-black/30 p-4 text-sm leading-7 text-white/[0.78]">
-{`$BEG #POW
+{`$POW #POW application
 
 Wallet:
 Working on:

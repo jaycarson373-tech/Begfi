@@ -14,6 +14,12 @@ export type Submission = {
   lane: string;
   proof: string;
   status: string;
+  score?: string;
+  holdings?: string;
+  holdTime?: string;
+  volume?: string;
+  views?: string;
+  engagement?: string;
 };
 
 export type PreviousWinner = {

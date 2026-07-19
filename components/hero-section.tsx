@@ -4,9 +4,9 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, BarChart3, ShieldCheck } from "lucide-react";
 
 const statlets = [
-  "Hold $BEG = on-chain proof",
-  "50% $ANSEM holder rewards",
-  "50% bounty wallet"
+  "1M+ $POW minimum",
+  "X work gets scored",
+  "100% fees to workers"
 ];
 
 export function HeroSection() {
@@ -34,15 +34,15 @@ export function HeroSection() {
             Proof of Work for CT
           </div>
           <h1 className="mt-6 max-w-3xl text-5xl font-black leading-[0.95] text-white sm:text-6xl md:text-7xl">
-            Proof of Work.
+            AI took your job.
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-white/[0.72] sm:text-xl">
-            POW turns the Ansem-era grind into a public work tape: hold $BEG,
-            post the work, prove the wallet, and stay eligible for $ANSEM
-            rewards.
+            Come work for this coin. POW turns creator fees into SOL payroll
+            for top workers: post, shill, get views, hold $POW, and climb the
+            Proof of Work leaderboard.
           </p>
           <p className="mt-4 text-sm font-black uppercase tracking-[0.14em] text-beg-lime">
-            Proof of Work, but make it CT. No official connection implied.
+            The one job you actually want to work. No official connection implied.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
@@ -51,14 +51,14 @@ export function HeroSection() {
               rel="noreferrer"
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-black uppercase tracking-[0.08em] text-black transition hover:bg-beg-lime focus:outline-none focus:ring-2 focus:ring-beg-lime/80"
             >
-              Buy $BEG
+              Buy $POW
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </a>
             <a
               href="#dashboard"
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-white/[0.15] bg-white/[0.06] px-5 py-3 text-sm font-black uppercase tracking-[0.08em] text-white transition hover:border-beg-purple/60 hover:bg-white/[0.1] focus:outline-none focus:ring-2 focus:ring-beg-purple/60"
             >
-              View Dashboard
+              View Leaderboard
               <BarChart3 className="h-4 w-4" aria-hidden="true" />
             </a>
           </div>
@@ -85,7 +85,7 @@ export function HeroSection() {
             <div className="grid w-[360px] gap-3">
               <div className="flex items-center justify-between border-b border-white/10 pb-3">
                 <span className="text-xs font-bold uppercase tracking-[0.16em] text-white/[0.45]">
-                  Proof cycle
+                  Worker payroll
                 </span>
                 <span className="text-xs font-bold text-beg-lime">50 / 50</span>
               </div>
@@ -94,22 +94,22 @@ export function HeroSection() {
                   POW
                 </p>
                 <p className="mt-3 text-4xl font-black leading-none text-white">
-                  Post. Prove. Get paid.
+                  Post. Shill. Get paid.
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="rounded-lg border border-white/10 bg-white/[0.045] p-4">
-                  <p className="text-xs text-white/[0.45]">$ANSEM Rewards</p>
-                  <p className="mt-2 text-2xl font-black">50%</p>
+                  <p className="text-xs text-white/[0.45]">Creator Fees</p>
+                  <p className="mt-2 text-2xl font-black">100%</p>
                 </div>
                 <div className="rounded-lg border border-white/10 bg-white/[0.045] p-4">
-                  <p className="text-xs text-white/[0.45]">Bounty Wallet</p>
-                  <p className="mt-2 text-2xl font-black">50%</p>
+                  <p className="text-xs text-white/[0.45]">Paid In</p>
+                  <p className="mt-2 text-2xl font-black">SOL</p>
                 </div>
               </div>
               <div className="rounded-lg border border-beg-purple/[0.25] bg-beg-purple/10 p-4 text-sm leading-6 text-white/70">
-                Half rewards eligible $BEG holders with $ANSEM. Half goes to
-                the bounty wallet for verified workers and live bounties.
+                Workers score from $POW posts, X views, engagement, holdings,
+                hold time, and volume. Creator fees pay the top of the board.
               </div>
             </div>
           </div>

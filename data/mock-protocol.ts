@@ -4,9 +4,9 @@ export const dashboardSnapshot: DashboardSnapshot = {
   round: {
     id: "Launch round",
     status: "Live dashboard coming after launch",
-    pool: "50%",
-    holderRewardPool: "50%",
-    votingWindow: "10-minute holder drops"
+    pool: "100%",
+    holderRewardPool: "SOL",
+    votingWindow: "5-minute scanner"
   },
   metrics: [
     {
@@ -18,23 +18,23 @@ export const dashboardSnapshot: DashboardSnapshot = {
     },
     {
       key: "current-pool",
-      label: "$ANSEM Holder Rewards",
-      value: "50%",
-      helper: "Half of creator fees are reserved for eligible $BEG holders.",
+      label: "Worker Payroll",
+      value: "100%",
+      helper: "Creator fees are reserved for top workers on the leaderboard.",
       tone: "magenta"
     },
     {
       key: "countdown",
-      label: "Drop Cadence",
+      label: "Scanner Cadence",
       value: "After launch",
-      helper: "$ANSEM holder rewards target 10-minute rounds after launch.",
+      helper: "Applications and $POW posts are scanned every 5 minutes.",
       tone: "lime"
     },
     {
       key: "current-round",
       label: "Eligibility",
-      value: "Hold $BEG",
-      helper: "Holding $BEG is the on-chain proof.",
+      value: "1M+ $POW",
+      helper: "Holding $POW is the on-chain proof.",
       tone: "steel"
     }
   ],
@@ -50,16 +50,16 @@ export const dashboardSnapshot: DashboardSnapshot = {
     },
     {
       key: "total-fees",
-      label: "Total Creator Fees Distributed",
+      label: "Total SOL Payroll",
       value: "Coming soon",
-      helper: "Fees split between $ANSEM rewards and the bounty wallet.",
+      helper: "Settled creator-fee payroll paid to top workers.",
       tone: "purple"
     },
     {
       key: "holder-rewards",
-      label: "Total $ANSEM Rewards",
+      label: "Total X Views",
       value: "Coming soon",
-      helper: "Eligible $BEG holders receive the $ANSEM side of the split.",
+      helper: "Views from scored posts using the $POW cashtag.",
       tone: "lime"
     }
   ]
@@ -69,26 +69,26 @@ export const faqs: FaqItem[] = [
   {
     question: "How do I submit?",
     answer:
-      "Hold $BEG, post the official POW format, and include the wallet you want checked."
+      "Hold 1M+ $POW, post the official POW application format, and include the wallet you want checked."
   },
   {
-    question: "How do $ANSEM rewards work?",
+    question: "How do rewards work?",
     answer:
-      "After launch, 50% of creator fees are reserved for $ANSEM rewards to eligible $BEG holders."
+      "After launch, 100% of creator fees are paid as SOL payroll to top verified workers by leaderboard score."
   },
   {
     question: "Minimum holdings?",
     answer:
-      "The public site says hold $BEG to be eligible. The exact minimum can be locked before live claims start."
+      "Verified workers need 1M+ $POW. Holder-reward eligibility can use the same minimum unless you change it before launch."
   },
   {
     question: "When are rewards sent?",
     answer:
-      "The target cadence for $ANSEM holder rewards is every 10 minutes after launch."
+      "The scanner updates every 5 minutes. Payroll cadence can be set before live claims start."
   },
   {
-    question: "What is the bounty wallet?",
+    question: "What counts toward score?",
     answer:
-      "The other 50% of creator fees goes to a bounty wallet for manual verified worker payouts and bounties."
+      "Holdings, hold-time multiplier, volume, $POW post engagement, and X views all feed the worker score."
   }
 ];
