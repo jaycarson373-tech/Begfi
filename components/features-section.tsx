@@ -6,21 +6,21 @@ import { SectionHeading } from "@/components/section-heading";
 
 const features = [
   {
-    title: "On-Chain Begging",
+    title: "Proof of Bagwork",
     body:
-      "Hold $BEG and you are begworking on-chain. Eligibility starts with the wallet, not the resume.",
+      "Post the work: wallet, receipts, raids, threads, memes, and public proof that you are actually pushing.",
     icon: Trophy
   },
   {
-    title: "$ANSEM Rewards",
+    title: "$ANSEM Holder Rewards",
     body:
       "50% of creator fees are used for $ANSEM rewards to eligible $BEG holders.",
     icon: Coins
   },
   {
-    title: "Verified Begworkers",
+    title: "Bounty Wallet",
     body:
-      "50% goes to a reward wallet for manual payouts to verified beggars and bounties.",
+      "50% goes to a bounty wallet for manual payouts to verified bagworkers and bounties.",
     icon: BadgeCheck
   }
 ];
@@ -30,9 +30,9 @@ export function FeaturesSection() {
     <section id="features" className="relative py-16 sm:py-20">
       <div className="section-shell">
         <SectionHeading
-          eyebrow="From bagworking to begworking"
-          title="The new work meta is begging."
-          description="Ansem sparked the airdrop begging meta. Begwork is not affiliated with him; it turns the meme into a clean 50/50 loop: $ANSEM rewards for eligible $BEG holders and a reward wallet for verified beggars."
+          eyebrow="From bags to proof"
+          title="The new meta is work you can prove."
+          description="Ansem sparked the CT reward meta. ProofOfBagwork.fun is not affiliated with him; it turns the grind into a clean 50/50 loop: $ANSEM rewards for eligible $BEG holders and a bounty wallet for verified bagworkers."
         />
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           {features.map((feature, index) => {
@@ -57,7 +57,7 @@ export function FeaturesSection() {
           })}
         </div>
         <div className="mt-4 rounded-lg border border-beg-purple/[0.28] bg-beg-purple/[0.1] px-4 py-3 text-sm font-black uppercase tracking-[0.12em] text-beg-lime">
-          Hold $BEG to be an on-chain beggar.
+          Hold $BEG to register your on-chain proof.
         </div>
       </div>
     </section>

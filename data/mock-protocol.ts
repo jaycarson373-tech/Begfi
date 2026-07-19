@@ -34,7 +34,7 @@ export const dashboardSnapshot: DashboardSnapshot = {
       key: "current-round",
       label: "Eligibility",
       value: "Hold $BEG",
-      helper: "Holding $BEG is on-chain begging.",
+      helper: "Holding $BEG is the on-chain proof.",
       tone: "steel"
     }
   ],
@@ -42,17 +42,17 @@ export const dashboardSnapshot: DashboardSnapshot = {
   previousWinners: [],
   totals: [
     {
-      key: "total-begged",
-      label: "Verified Begwork",
+      key: "total-bagwork",
+      label: "Verified Bagwork",
       value: "Coming soon",
-      helper: "The begwork ledger starts after the first verified payout.",
+      helper: "The proof ledger starts after the first verified payout.",
       tone: "magenta"
     },
     {
       key: "total-fees",
       label: "Total Creator Fees Distributed",
       value: "Coming soon",
-      helper: "Fees split between $ANSEM rewards and the reward wallet.",
+      helper: "Fees split between $ANSEM rewards and the bounty wallet.",
       tone: "purple"
     },
     {
@@ -69,7 +69,7 @@ export const faqs: FaqItem[] = [
   {
     question: "How do I submit?",
     answer:
-      "Hold $BEG, post the official Begwork format, and include the wallet you want checked."
+      "Hold $BEG, post the official Proof of Bagwork format, and include the wallet you want checked."
   },
   {
     question: "How do $ANSEM rewards work?",
@@ -87,8 +87,8 @@ export const faqs: FaqItem[] = [
       "The target cadence for $ANSEM holder rewards is every 10 minutes after launch."
   },
   {
-    question: "What is the reward wallet?",
+    question: "What is the bounty wallet?",
     answer:
-      "The other 50% of creator fees goes to a reward wallet for manual verified beggar payouts and bounties."
+      "The other 50% of creator fees goes to a bounty wallet for manual verified bagworker payouts and bounties."
   }
 ];

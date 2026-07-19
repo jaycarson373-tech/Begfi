@@ -11,9 +11,9 @@ export type ProtocolMetric = {
 export type Submission = {
   rank: number;
   wallet: string;
-  losses: string;
-  story: string;
-  votes: number;
+  lane: string;
+  proof: string;
+  status: string;
 };
 
 export type PreviousWinner = {

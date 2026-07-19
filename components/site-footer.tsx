@@ -26,8 +26,8 @@ export function SiteFooter() {
         <div>
           <Logo />
           <p className="mt-3 max-w-xl text-sm leading-6 text-white/[0.45]">
-            Begwork is not affiliated with Ansem. It just saw CT stop
-            bagworking and start begworking.
+            ProofOfBagwork.fun is not affiliated with Ansem. It just turns CT
+            bagwork into public Proof of Work.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">

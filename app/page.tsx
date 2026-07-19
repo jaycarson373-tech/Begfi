@@ -1,5 +1,5 @@
-import { BegworkHome } from "@/components/begwork-home";
+import { ProofOfBagworkHome } from "@/components/proof-of-bagwork-home";
 
 export default function Page() {
-  return <BegworkHome />;
+  return <ProofOfBagworkHome />;
 }

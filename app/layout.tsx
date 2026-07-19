@@ -2,19 +2,18 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Begwork | It's not bagworking",
+  title: "ProofOfBagwork.fun | Proof of Work",
   description:
-    "Begwork turns CT's Ansem-era begging meta into $ANSEM rewards for eligible $BEG holders.",
-  metadataBase: new URL("https://begwork.vercel.app"),
+    "ProofOfBagwork.fun turns CT bagwork into a Proof of Work loop with $ANSEM rewards for eligible $BEG holders.",
+  metadataBase: new URL("https://proofofbagwork.fun"),
   icons: {
     icon: "/favicon.png",
     apple: "/apple-icon.png"
   },
   openGraph: {
-    title: "Begwork | It's not bagworking",
+    title: "ProofOfBagwork.fun | Proof of Work",
     description:
-      "Hold $BEG, do the begwork, and stay eligible for $ANSEM rewards.",
-    images: ["/images/begfi-hero.png"]
+      "Hold $BEG, do the bagwork, prove it publicly, and stay eligible for $ANSEM rewards."
   }
 };
 

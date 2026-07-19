@@ -30,7 +30,7 @@ export function SiteHeader() {
             className="hidden items-center gap-2 rounded-lg border border-white/[0.12] bg-white/[0.06] px-3 py-2 text-sm font-semibold text-white/80 transition hover:border-white/[0.22] hover:bg-white/[0.1] sm:flex"
           >
             <BarChart3 className="h-4 w-4" aria-hidden="true" />
-            Begwork
+            Proof Board
           </a>
           <a
             href="https://pump.fun"

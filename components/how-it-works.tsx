@@ -5,11 +5,11 @@ import { Route } from "lucide-react";
 import { SectionHeading } from "@/components/section-heading";
 
 const steps = [
-  "Hold $BEG to begwork on-chain.",
+  "Hold $BEG as your on-chain proof.",
   "50% of creator fees fuel $ANSEM rewards for eligible $BEG holders.",
-  "50% of creator fees go to the Begwork reward wallet.",
-  "Post your wallet and begwork in the official format.",
-  "Verified beggars and bounties are paid manually from the reward wallet."
+  "50% of creator fees go to the Proof of Bagwork bounty wallet.",
+  "Post your wallet and proof of work in the official format.",
+  "Verified bagworkers and bounties are paid manually from the bounty wallet."
 ];
 
 export function HowItWorks() {
@@ -18,7 +18,7 @@ export function HowItWorks() {
       <div className="section-shell">
         <SectionHeading
           eyebrow="How it works"
-          title="Beg, post, verify, repeat."
+          title="Work, post, verify, repeat."
           icon={<Route className="h-3.5 w-3.5 text-beg-lime" aria-hidden="true" />}
         />
         <div className="mt-8 grid gap-3">

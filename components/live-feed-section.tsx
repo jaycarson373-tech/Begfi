@@ -7,15 +7,15 @@ import { SectionHeading } from "@/components/section-heading";
 
 const feedLanes = [
   {
-    title: "Public $BEG Feed",
+    title: "Public Bagwork Feed",
     body:
-      "Posts using $BEG and Begwork tags will flow here after launch. Pure CT noise, filtered into one clean lane.",
+      "Posts using $BEG and #ProofOfBagwork will flow here after launch. Pure CT output, filtered into one clean lane.",
     icon: Hash
   },
   {
-    title: "Verified Begworker Feed",
+    title: "Verified Proof Feed",
     body:
-      "Wallet posts appear here only after the official format and eligibility checks pass.",
+      "Wallet posts appear here only after the official format, proof, and eligibility checks pass.",
     icon: BadgeCheck
   }
 ];
@@ -26,8 +26,8 @@ export function LiveFeedSection() {
       <div className="section-shell">
         <SectionHeading
           eyebrow="The meta is already live"
-          title="The meta is already live."
-          description="CT is already begging. Begwork turns it into a system."
+          title="The work tape goes live."
+          description="CT already has the meta. ProofOfBagwork.fun turns posts, wallets, and proof into one clean verification lane."
           icon={<Radio className="h-3.5 w-3.5 text-beg-lime" aria-hidden="true" />}
         />
 
@@ -45,8 +45,7 @@ export function LiveFeedSection() {
                   Social proof
                 </p>
                 <p className="mt-2 text-sm leading-6 text-white/[0.62]">
-                  No partnership implied. Just the begworking meta doing
-                  begworking things.
+                  No partnership implied. Just CT turning the grind into proof.
                 </p>
               </div>
               <a
@@ -62,10 +61,10 @@ export function LiveFeedSection() {
             <div className="rounded-lg border border-white/10 bg-black/25 p-3">
               <blockquote className="twitter-tweet" data-theme="dark">
                 <p lang="en" dir="ltr">
-                  CT is already begging. Begwork turns it into a system.
+                  CT already has the meta. ProofOfBagwork.fun turns it into a system.
                 </p>
                 <a href="https://x.com/slingoorio/status/2072842134823039454?s=46">
-                  View the Begwork meta on X
+                  View the Proof of Bagwork meta on X
                 </a>
               </blockquote>
               <Script
@@ -120,11 +119,11 @@ export function LiveFeedSection() {
                 Official format
               </div>
               <pre className="mt-4 overflow-x-auto rounded-lg border border-white/10 bg-black/30 p-4 text-sm leading-7 text-white/[0.78]">
-{`$BEG #Begwork
+{`$BEG #ProofOfBagwork
 
 Wallet:
-Begworking for:
-Proof:`}
+Bagwork for:
+Proof of work:`}
               </pre>
             </motion.article>
           </div>

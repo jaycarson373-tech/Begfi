@@ -30,6 +30,19 @@ import {
   writeFile,
   type FileHandle,
 } from "fs/promises";
+import {
+  completeEpoch as completeDbEpoch,
+  dryRunPayouts,
+  failEpoch as failDbEpoch,
+  failPayouts,
+  persistSnapshot,
+  planPayouts,
+  recordAnsemSwap,
+  recordClaim,
+  recordRewardWalletTransfer,
+  settlePayouts,
+  startEpoch as startDbEpoch,
+} from "./rewards-db";
 
 type OnlinePumpSdkInstance = {
   collectCoinCreatorFeeV2Instructions(
@@ -56,6 +69,11 @@ type EpochRecord = {
   claimLamports?: string;
   rewardWalletLamports?: string;
   ansemSwapLamports?: string;
+  ansemBoughtRaw?: string;
+  ansemBought?: string;
+  ansemDistributedRaw?: string;
+  ansemDistributed?: string;
+  eligibleCount?: number;
   claimSignature?: string | null;
   rewardWalletSignature?: string | null;
   swapSignature?: string | null;
@@ -78,7 +96,8 @@ const sourceMintText = requiredEnv("SOURCE_TOKEN_MINT");
 const ansemMintText = process.env.ANSEM_TOKEN_MINT?.trim() || process.env.REWARD_TOKEN_MINT?.trim();
 if (!ansemMintText) throw new Error("ANSEM_TOKEN_MINT is required");
 
-const rewardWalletText = process.env.BEGWORK_REWARD_WALLET?.trim();
+const rewardWalletText =
+  process.env.BAGWORK_REWARD_WALLET?.trim() || process.env.BEGWORK_REWARD_WALLET?.trim();
 const maxClaimSol = numberEnv("MAX_CREATOR_FEE_CLAIM_SOL", numberEnv("MAX_SWAP_SOL", 0.02));
 const maxRecipients = integerEnv("MAX_AIRDROP_RECIPIENTS", 50);
 const maxTransfersPerTx = integerEnv("MAX_AIRDROP_TRANSFERS_PER_TX", 4);
@@ -130,6 +149,7 @@ const epochRecord: EpochRecord = {
   rewardWallet: rewardWallet?.toBase58(),
   airdropSignatures: [],
 };
+const epochId = epochRecord.startedAt;
 
 function requiredEnv(name: string) {
   const value = process.env[name]?.trim();
@@ -206,6 +226,28 @@ function formatBps(bps: number) {
   return `${bps / 100}%`;
 }
 
+function holderPct(rawBalance: bigint, rawSupply: bigint) {
+  if (rawSupply <= 0n) return "0";
+  return (Number((rawBalance * 1_000_000n) / rawSupply) / 10_000).toString();
+}
+
+function snapshotRows(recipients: HolderEntry[], sourceDecimals: number, sourceSupply: bigint) {
+  return recipients.map(([wallet, amount]) => ({
+    wallet,
+    sourceBalanceRaw: amount.toString(),
+    sourceBalance: formatRawAmount(amount, sourceDecimals),
+    holderPct: holderPct(amount, sourceSupply),
+  }));
+}
+
+function payoutRows(allocations: readonly (readonly [string, bigint])[], decimals: number) {
+  return allocations.map(([wallet, amount]) => ({
+    wallet,
+    rewardAmountRaw: amount.toString(),
+    rewardAmount: formatRawAmount(amount, decimals),
+  }));
+}
+
 function excludedHolderWallets() {
   const excluded = new Set<string>([wallet.publicKey.toBase58()]);
 
@@ -233,6 +275,16 @@ async function completeEpoch() {
   epochRecord.status = "completed";
   epochRecord.completedAt = new Date().toISOString();
   await writeEpochRecord();
+  await completeDbEpoch(epochId, {
+    eligibleCount: epochRecord.eligibleCount ?? 0,
+    claimLamports: epochRecord.claimLamports ?? "0",
+    rewardWalletLamports: epochRecord.rewardWalletLamports ?? "0",
+    ansemSwapLamports: epochRecord.ansemSwapLamports ?? "0",
+    ansemBoughtRaw: epochRecord.ansemBoughtRaw ?? "0",
+    ansemBought: epochRecord.ansemBought ?? "0",
+    ansemDistributedRaw: epochRecord.ansemDistributedRaw ?? "0",
+    ansemDistributed: epochRecord.ansemDistributed ?? "0",
+  });
 }
 
 async function simulateLegacy(tx: Transaction, label: string) {
@@ -488,7 +540,10 @@ async function distributeAnsem(
     console.log(`  ${owner}: ${formatRawAmount(amount, decimals)} $ANSEM`);
   }
 
+  const dbPayoutRows = payoutRows(allocations, decimals);
+
   if (!execute) {
+    await dryRunPayouts(epochId, dbPayoutRows);
     console.log("$ANSEM airdrop batches: projected only. No transactions were broadcast.");
     return;
   }
@@ -496,8 +551,12 @@ async function distributeAnsem(
   for (let index = 0; index < allocations.length; index += maxTransfersPerTx) {
     const tx = new Transaction();
     const batchNumber = index / maxTransfersPerTx + 1;
+    const batchAllocations = allocations.slice(index, index + maxTransfersPerTx);
+    const batchPayoutRows = payoutRows(batchAllocations, decimals);
 
-    for (const [ownerText, amount] of allocations.slice(index, index + maxTransfersPerTx)) {
+    await planPayouts(epochId, batchPayoutRows);
+
+    for (const [ownerText, amount] of batchAllocations) {
       const owner = new PublicKey(ownerText);
       const destinationAta = getAssociatedTokenAddressSync(
         ansemMint,
@@ -530,19 +589,34 @@ async function distributeAnsem(
     }
 
     console.log(`$ANSEM airdrop batch ${batchNumber}: ${tx.instructions.length} instructions`);
-    const signature = await sendLegacy(tx, `$ANSEM airdrop batch ${batchNumber}`);
-    if (signature) epochRecord.airdropSignatures.push(signature);
+    try {
+      const signature = await sendLegacy(tx, `$ANSEM airdrop batch ${batchNumber}`);
+      if (signature) {
+        epochRecord.airdropSignatures.push(signature);
+        await settlePayouts(epochId, batchPayoutRows, signature);
+      }
+    } catch (error) {
+      await failPayouts(epochId, batchPayoutRows, error);
+      throw error;
+    }
   }
 }
 
 async function sendRewardWalletTransfer(amountLamports: bigint) {
   if (amountLamports <= 0n) return null;
   if (!rewardWallet) {
-    throw new Error("BEGWORK_REWARD_WALLET is required for the reward-wallet split");
+    throw new Error("BAGWORK_REWARD_WALLET is required for the reward-wallet split");
   }
 
   const tx = new Transaction().add(buildSolTransfer(rewardWallet, amountLamports));
-  return sendLegacy(tx, "Begwork reward wallet transfer", { simulateInPreview: false });
+  const signature = await sendLegacy(tx, "Proof of Bagwork bounty wallet transfer", { simulateInPreview: false });
+  await recordRewardWalletTransfer(
+    epochId,
+    rewardWallet.toBase58(),
+    amountLamports.toString(),
+    signature,
+  );
+  return signature;
 }
 
 async function runAirdropOnly(
@@ -560,8 +634,12 @@ async function runAirdropOnly(
   }
 
   const snapshot = await getSnapshot(sourceTokenProgram, sourceDecimals, sourceSupply);
+  epochRecord.eligibleCount = snapshot.length;
+  epochRecord.ansemDistributedRaw = ansemTokenBalance.toString();
+  epochRecord.ansemDistributed = formatRawAmount(ansemTokenBalance, ansemDecimals);
   console.log(`Resuming $ANSEM airdrop with ${formatRawAmount(ansemTokenBalance, ansemDecimals)} tokens`);
   console.log(`Eligible snapshot recipients: ${snapshot.length}`);
+  await persistSnapshot(epochId, snapshotRows(snapshot, sourceDecimals, sourceSupply));
 
   await distributeAnsem(ansemTokenProgram, ansemDecimals, snapshot, ansemTokenBalance);
   await completeEpoch();
@@ -579,7 +657,7 @@ async function runClaimSplitSwapAndAirdrop(
 ) {
   const rewardWalletBps = 10_000 - ansemAirdropBps;
   if (rewardWalletBps > 0 && !rewardWallet) {
-    throw new Error("BEGWORK_REWARD_WALLET is required for the reward-wallet split");
+    throw new Error("BAGWORK_REWARD_WALLET is required for the reward-wallet split");
   }
 
   const walletSol = BigInt(await connection.getBalance(wallet.publicKey, "confirmed"));
@@ -590,7 +668,7 @@ async function runClaimSplitSwapAndAirdrop(
 
   console.log(`Mode: ${execute ? "EXECUTE" : "PREVIEW ONLY"}`);
   console.log(`Fee wallet: ${wallet.publicKey.toBase58()}`);
-  console.log(`Begwork reward wallet: ${rewardWallet?.toBase58() || "not configured"}`);
+  console.log(`Proof of Bagwork bounty wallet: ${rewardWallet?.toBase58() || "not configured"}`);
   console.log(`Holder snapshot mint: ${sourceMint.toBase58()}`);
   console.log(`ANSEM mint: ${ansemMint.toBase58()}`);
   console.log(`Wallet SOL: ${formatLamports(walletSol)}`);
@@ -622,7 +700,7 @@ async function runClaimSplitSwapAndAirdrop(
   console.log(
     `Split: ${formatBps(ansemAirdropBps)} to $ANSEM holder rewards (${formatLamports(
       ansemSwapLamports,
-    )}), ${formatBps(rewardWalletBps)} to reward wallet (${formatLamports(
+    )}), ${formatBps(rewardWalletBps)} to bounty wallet (${formatLamports(
       rewardWalletLamports,
     )})`,
   );
@@ -640,6 +718,7 @@ async function runClaimSplitSwapAndAirdrop(
 
   const claimTx = new Transaction().add(...claimInstructions);
   epochRecord.claimSignature = await sendLegacy(claimTx, "Creator fee claim");
+  await recordClaim(epochId, claimable.toString(), epochRecord.claimSignature);
   epochRecord.rewardWalletSignature = await sendRewardWalletTransfer(rewardWalletLamports);
 
   if (ansemSwapLamports <= 0n) {
@@ -663,6 +742,15 @@ async function runClaimSplitSwapAndAirdrop(
   }
 
   if (claimSplitOnly) {
+    await recordAnsemSwap(
+      epochId,
+      ansemSwapLamports.toString(),
+      quote.outAmount,
+      formatRawAmount(BigInt(quote.outAmount), ansemDecimals),
+      epochRecord.swapSignature ?? null,
+    );
+    epochRecord.ansemBoughtRaw = quote.outAmount;
+    epochRecord.ansemBought = formatRawAmount(BigInt(quote.outAmount), ansemDecimals);
     console.log("Claim/split only mode enabled; skipping $ANSEM holder airdrop.");
     await completeEpoch();
     return;
@@ -673,7 +761,9 @@ async function runClaimSplitSwapAndAirdrop(
   }
 
   const snapshot = await getSnapshot(sourceTokenProgram, sourceDecimals, sourceSupply);
+  epochRecord.eligibleCount = snapshot.length;
   console.log(`Eligible snapshot recipients: ${snapshot.length}`);
+  await persistSnapshot(epochId, snapshotRows(snapshot, sourceDecimals, sourceSupply));
 
   const ansemRewardAmount = execute
     ? BigInt((await connection.getTokenAccountBalance(ansemWalletAta, "confirmed")).value.amount) -
@@ -683,6 +773,18 @@ async function runClaimSplitSwapAndAirdrop(
   if (ansemRewardAmount <= 0n) {
     throw new Error("ANSEM swap did not increase the wallet token balance");
   }
+
+  epochRecord.ansemBoughtRaw = ansemRewardAmount.toString();
+  epochRecord.ansemBought = formatRawAmount(ansemRewardAmount, ansemDecimals);
+  epochRecord.ansemDistributedRaw = ansemRewardAmount.toString();
+  epochRecord.ansemDistributed = formatRawAmount(ansemRewardAmount, ansemDecimals);
+  await recordAnsemSwap(
+    epochId,
+    ansemSwapLamports.toString(),
+    ansemRewardAmount.toString(),
+    formatRawAmount(ansemRewardAmount, ansemDecimals),
+    epochRecord.swapSignature ?? null,
+  );
 
   await distributeAnsem(ansemTokenProgram, ansemDecimals, snapshot, ansemRewardAmount);
 
@@ -709,6 +811,13 @@ async function main() {
 
   try {
     await writeEpochRecord();
+    await startDbEpoch({
+      epochId,
+      mode: execute ? "execute" : "preview",
+      sourceMint: sourceMint.toBase58(),
+      ansemMint: ansemMint.toBase58(),
+      rewardWallet: rewardWallet?.toBase58(),
+    });
 
     const sourceTokenProgram = await getTokenProgram(sourceMint);
     const ansemTokenProgram = await getTokenProgram(ansemMint);
@@ -753,6 +862,7 @@ async function main() {
     epochRecord.completedAt = new Date().toISOString();
     epochRecord.error = error instanceof Error ? error.message : String(error);
     await writeEpochRecord();
+    await failDbEpoch(epochId, error);
     throw error;
   } finally {
     await lock.close();
