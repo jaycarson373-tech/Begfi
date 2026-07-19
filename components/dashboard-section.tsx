@@ -35,7 +35,7 @@ export function DashboardSection() {
 
   return (
     <section id="dashboard" className="relative py-16 sm:py-20">
-      <div className="absolute inset-x-0 top-20 -z-10 h-72 bg-[radial-gradient(circle_at_50%_50%,rgba(155,92,255,0.2),transparent_62%)]" />
+      <div className="absolute inset-x-0 top-20 -z-10 h-72 bg-[radial-gradient(circle_at_50%_50%,rgba(20,104,255,0.24),transparent_62%)]" />
       <div className="section-shell">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <SectionHeading

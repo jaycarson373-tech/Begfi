@@ -16,8 +16,8 @@ export function HeroSection() {
       id="top"
       className="relative isolate flex min-h-[88svh] items-center overflow-hidden pt-24"
     >
-      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_78%_24%,rgba(155,92,255,0.36),transparent_30rem),radial-gradient(circle_at_46%_72%,rgba(224,91,255,0.16),transparent_24rem),linear-gradient(135deg,#030005_0%,#08050d_54%,#030005_100%)]" />
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(3,0,5,0.96)_0%,rgba(3,0,5,0.78)_42%,rgba(3,0,5,0.5)_74%,rgba(3,0,5,0.9)_100%)]" />
+      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_78%_24%,rgba(20,104,255,0.44),transparent_30rem),radial-gradient(circle_at_46%_72%,rgba(74,162,255,0.22),transparent_24rem),linear-gradient(135deg,#01081f_0%,#02133d_54%,#01081f_100%)]" />
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(1,8,31,0.96)_0%,rgba(1,12,44,0.82)_42%,rgba(3,39,118,0.54)_74%,rgba(1,8,31,0.92)_100%)]" />
       <div className="absolute inset-x-0 bottom-0 -z-10 h-44 bg-gradient-to-t from-beg-black to-transparent" />
       <div className="noise-mask" />
       <span className="scanline left-[4%] top-[28%] animate-pulse-line" />

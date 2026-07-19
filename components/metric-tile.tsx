@@ -2,10 +2,10 @@ import clsx from "clsx";
 import type { ProtocolMetric } from "@/types/protocol";
 
 const toneClasses: Record<ProtocolMetric["tone"], string> = {
-  purple: "from-beg-purple/[0.34] to-white/[0.03] text-beg-purple",
-  magenta: "from-beg-magenta/30 to-white/[0.03] text-beg-magenta",
-  lime: "from-beg-lime/[0.26] to-white/[0.03] text-beg-lime",
-  steel: "from-white/[0.16] to-white/[0.03] text-beg-steel"
+  purple: "from-beg-purple/[0.42] to-white/[0.04] text-beg-magenta",
+  magenta: "from-beg-magenta/35 to-white/[0.04] text-white",
+  lime: "from-white/[0.3] to-beg-purple/[0.08] text-white",
+  steel: "from-beg-violet/[0.3] to-white/[0.04] text-beg-steel"
 };
 
 type MetricTileProps = {

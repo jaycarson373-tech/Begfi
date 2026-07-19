@@ -11,20 +11,20 @@ const config = {
     extend: {
       colors: {
         beg: {
-          black: "#030005",
-          ink: "#08050d",
+          black: "#01081f",
+          ink: "#02133d",
           glass: "rgba(255, 255, 255, 0.08)",
           line: "rgba(255, 255, 255, 0.14)",
-          purple: "#9b5cff",
-          violet: "#6f36ff",
-          magenta: "#e05bff",
-          lime: "#bcff6b",
-          steel: "#d7d4e2"
+          purple: "#1468ff",
+          violet: "#003fbf",
+          magenta: "#58a8ff",
+          lime: "#ffffff",
+          steel: "#d9e9ff"
         }
       },
       boxShadow: {
-        glow: "0 0 54px rgba(155, 92, 255, 0.34)",
-        panel: "0 24px 80px rgba(0, 0, 0, 0.42)"
+        glow: "0 0 54px rgba(20, 104, 255, 0.42)",
+        panel: "0 24px 80px rgba(0, 24, 88, 0.42)"
       },
       keyframes: {
         pulseLine: {
