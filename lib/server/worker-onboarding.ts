@@ -1,5 +1,7 @@
 import "server-only";
 
+import { powDefaultBuyUrl } from "@/lib/pow-config";
+
 import { createHash, randomBytes } from "crypto";
 import { PublicKey } from "@solana/web3.js";
 
@@ -39,6 +41,5 @@ export function verificationMessage(nonce: string) {
 }
 
 export function buyUrl() {
-  return process.env.NEXT_PUBLIC_BUY_URL?.trim() || "https://pump.fun";
+  return process.env.NEXT_PUBLIC_BUY_URL?.trim() || powDefaultBuyUrl;
 }
-

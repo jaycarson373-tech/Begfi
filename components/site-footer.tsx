@@ -2,7 +2,7 @@ import { ArrowUpRight } from "lucide-react";
 import { ContractAddress } from "@/components/contract-address";
 import { FooterBrandBanner } from "@/components/footer-brand-banner";
 import { Logo } from "@/components/logo";
-import { powCommunityUrl, powXUrl } from "@/lib/pow-config";
+import { powCommunityUrl, powDefaultBuyUrl, powXUrl } from "@/lib/pow-config";
 
 const links = [
   { label: "Campaigns", href: "/#campaigns" },
@@ -10,7 +10,7 @@ const links = [
   { label: "Marketplace Beta", href: "/marketplace" },
   { label: "X Community", href: powCommunityUrl },
   { label: "X", href: powXUrl },
-  { label: "Buy $POW", href: process.env.NEXT_PUBLIC_BUY_URL || "https://pump.fun" }
+  { label: "Buy $POW", href: process.env.NEXT_PUBLIC_BUY_URL || powDefaultBuyUrl }
 ];
 
 export function SiteFooter() {

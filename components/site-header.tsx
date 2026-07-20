@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, BriefcaseBusiness, ChartNoAxesColumnIncreasing, Check, Copy, Map, Menu, PanelsTopLeft, Store, X } from "lucide-react";
 import { Logo } from "@/components/logo";
-import { powContractAddress, powXUrl } from "@/lib/pow-config";
+import { powContractAddress, powDefaultBuyUrl, powXUrl } from "@/lib/pow-config";
 
 const navigation = [
   { label: "Campaigns", href: "/#campaigns", icon: PanelsTopLeft },
@@ -14,7 +14,7 @@ const navigation = [
   { label: "Marketplace", href: "/marketplace", icon: Store },
 ];
 
-const buyUrl = process.env.NEXT_PUBLIC_BUY_URL || "https://pump.fun";
+const buyUrl = process.env.NEXT_PUBLIC_BUY_URL || powDefaultBuyUrl;
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);

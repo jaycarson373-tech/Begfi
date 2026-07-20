@@ -67,7 +67,7 @@ Add these variables to Production and Preview in Project Settings > Environment 
 SUPABASE_URL=<Supabase project URL>
 SUPABASE_SERVICE_ROLE_KEY=<Supabase service_role key>
 NEXT_PUBLIC_SITE_URL=https://your-domain.example
-NEXT_PUBLIC_BUY_URL=<official $POW buy URL>
+NEXT_PUBLIC_BUY_URL=https://jup.ag/?sell=So11111111111111111111111111111111111111112&buy=GSB16i8W1BvhfdJQBpe6LD9EvLYjXYa6JsmAwxJgpump
 NEXT_PUBLIC_SOLANA_RPC_URL=<optional public Solana RPC URL for wallet-adapter state>
 WORKER_ONBOARD_ENABLED=false
 WORKER_MIN_BALANCE=1000000
