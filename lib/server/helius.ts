@@ -19,6 +19,14 @@ type ParsedTokenAccount = {
   };
 };
 
+type FundingBalance = {
+  amount: number;
+  fetchedAt: string;
+};
+
+const fundingBalanceCache = new Map<string, FundingBalance & { expiresAt: number }>();
+const fundingCacheMs = 5 * 60_000;
+
 function requiredEnv(name: string) {
   const value = process.env[name]?.trim();
   if (!value) throw new Error(`${name} is required`);
@@ -47,9 +55,13 @@ export function powMintAddress() {
 }
 
 export async function getPowBalance(wallet: string) {
+  return getTokenBalance(wallet, powMintAddress());
+}
+
+export async function getTokenBalance(wallet: string, mint: string) {
   const result = await heliusRpc<{ value?: ParsedTokenAccount[] }>("getTokenAccountsByOwner", [
     wallet,
-    { mint: powMintAddress() },
+    { mint },
     { encoding: "jsonParsed", commitment: "confirmed" }
   ]);
 
@@ -57,5 +69,32 @@ export async function getPowBalance(wallet: string) {
     const value = Number(tokenAccount.account?.data?.parsed?.info?.tokenAmount?.uiAmountString ?? 0);
     return sum + (Number.isFinite(value) ? value : 0);
   }, 0);
+}
+
+export async function getSolBalance(wallet: string) {
+  const result = await heliusRpc<{ value?: number }>("getBalance", [wallet, { commitment: "confirmed" }]);
+  const lamports = Number(result.value ?? 0);
+  return Number.isFinite(lamports) ? lamports / 1_000_000_000 : 0;
+}
+
+export async function getFundingBalance(wallet: string, token: string): Promise<FundingBalance> {
+  const normalizedToken = token.trim() === "SOL" ? "SOL" : token.trim();
+  const key = `${wallet}:${normalizedToken}`;
+  const cached = fundingBalanceCache.get(key);
+  if (cached && cached.expiresAt > Date.now()) {
+    return { amount: cached.amount, fetchedAt: cached.fetchedAt };
+  }
+
+  try {
+    const amount = normalizedToken === "SOL"
+      ? await getSolBalance(wallet)
+      : await getTokenBalance(wallet, normalizedToken);
+    const fetchedAt = new Date().toISOString();
+    fundingBalanceCache.set(key, { amount, fetchedAt, expiresAt: Date.now() + fundingCacheMs });
+    return { amount, fetchedAt };
+  } catch (error) {
+    fundingBalanceCache.delete(key);
+    throw error;
+  }
 }
 

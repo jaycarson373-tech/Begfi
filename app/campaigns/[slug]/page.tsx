@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CampaignDetail } from "@/components/campaign/campaign-detail";
-import { campaignBySlug, campaigns } from "@/data/campaigns";
+import { getFundedCampaign } from "@/lib/server/campaign-funding";
 
-export function generateStaticParams() {
-  return campaigns.map((campaign) => ({ slug: campaign.slug }));
-}
+export const dynamic = "force-dynamic";
 
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
-  const campaign = campaignBySlug(params.slug);
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const campaign = await getFundedCampaign(params.slug).catch(() => null);
   if (!campaign) return {};
   return {
     title: `${campaign.name} | POW · PROOF OF WORK`,
@@ -16,8 +14,8 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   };
 }
 
-export default function CampaignPage({ params }: { params: { slug: string } }) {
-  const campaign = campaignBySlug(params.slug);
+export default async function CampaignPage({ params }: { params: { slug: string } }) {
+  const campaign = await getFundedCampaign(params.slug).catch(() => null);
   if (!campaign) notFound();
   return <CampaignDetail campaign={campaign} />;
 }

@@ -12,7 +12,7 @@ export const dashboardSnapshot: DashboardSnapshot = {
     {
       key: "reward-pool",
       label: "$POW Reward Wallet",
-      value: "Coming soon",
+      value: "—",
       helper: "The live balance appears after the first reward preview.",
       tone: "purple"
     },
