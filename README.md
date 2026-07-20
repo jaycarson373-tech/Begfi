@@ -127,7 +127,7 @@ Application format:
 #POWApplication <wallet address>
 ```
 
-A valid application must be posted inside `https://x.com/i/communities/2029250283063394361` and contain `#POWApplication` plus the wallet. Accounts below 1M `$POW` appear as pending and cannot receive rewards. The private wallet is used for balance checks and payout construction; the public leaderboard only receives the X account and eligibility result.
+A valid application must be posted inside `https://x.com/i/communities/2032569869326004522` and contain `#POWApplication` plus the wallet. Accounts below 1M `$POW` appear as pending and cannot receive rewards. The private wallet is used for balance checks and payout construction; the public leaderboard only receives the X account and eligibility result.
 
 ## Railway Rewards
 

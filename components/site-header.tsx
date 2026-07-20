@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, BriefcaseBusiness, ChartNoAxesColumnIncreasing, Map, Menu, PanelsTopLeft, Store, X } from "lucide-react";
+import { ArrowUpRight, BriefcaseBusiness, ChartNoAxesColumnIncreasing, Check, Copy, Map, Menu, PanelsTopLeft, Store, X } from "lucide-react";
 import { Logo } from "@/components/logo";
+import { powContractAddress, powXUrl } from "@/lib/pow-config";
 
 const navigation = [
   { label: "Campaigns", href: "/#campaigns", icon: PanelsTopLeft },
@@ -18,6 +19,7 @@ const buyUrl = process.env.NEXT_PUBLIC_BUY_URL || "https://pump.fun";
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 18);
@@ -25,6 +27,17 @@ export function SiteHeader() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (!copied) return;
+    const timer = window.setTimeout(() => setCopied(false), 1800);
+    return () => window.clearTimeout(timer);
+  }, [copied]);
+
+  async function copyContractAddress() {
+    await navigator.clipboard.writeText(powContractAddress);
+    setCopied(true);
+  }
 
   return (
     <header
@@ -54,6 +67,27 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={copyContractAddress}
+            className="hidden h-10 items-center gap-2 rounded-lg border border-white/10 bg-white/[0.035] px-3 text-xs font-extrabold text-white/60 transition hover:border-[#1f75ff]/40 hover:text-white xl:inline-flex"
+            aria-label={copied ? "Contract address copied" : "Copy contract address"}
+            title={powContractAddress}
+          >
+            <span className="text-[#69a2ff]">CA</span>
+            <span className="font-mono">{powContractAddress.slice(0, 4)}...{powContractAddress.slice(-4)}</span>
+            {copied ? <Check className="h-3.5 w-3.5 text-[#69a2ff]" /> : <Copy className="h-3.5 w-3.5" />}
+          </button>
+          <a
+            href={powXUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-white/10 bg-white/[0.035] text-sm font-black text-white/65 transition hover:border-[#1f75ff]/40 hover:bg-[#075dff]/10 hover:text-white"
+            aria-label="Open POW on X"
+            title="POW on X"
+          >
+            X
+          </a>
           <a
             href={buyUrl}
             target="_blank"
@@ -101,6 +135,16 @@ export function SiteHeader() {
                 </a>
                 );
               })}
+              <button
+                type="button"
+                onClick={copyContractAddress}
+                className="mt-2 flex min-h-12 w-full items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/[0.035] px-4 text-sm font-extrabold text-white/70"
+                aria-label={copied ? "Contract address copied" : "Copy contract address"}
+              >
+                <span className="text-[#69a2ff]">CA</span>
+                <span className="font-mono">{powContractAddress.slice(0, 6)}...{powContractAddress.slice(-6)}</span>
+                {copied ? <Check className="h-4 w-4 text-[#69a2ff]" /> : <Copy className="h-4 w-4" />}
+              </button>
               <a
                 href={buyUrl}
                 target="_blank"
