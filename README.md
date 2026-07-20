@@ -70,7 +70,7 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.example
 NEXT_PUBLIC_BUY_URL=https://jup.ag/?sell=So11111111111111111111111111111111111111112&buy=GSB16i8W1BvhfdJQBpe6LD9EvLYjXYa6JsmAwxJgpump
 NEXT_PUBLIC_SOLANA_RPC_URL=<optional public Solana RPC URL for wallet-adapter state>
 WORKER_ONBOARD_ENABLED=false
-WORKER_MIN_BALANCE=1000000
+WORKER_MIN_BALANCE=500000
 SESSION_SECRET=<at least 32 random characters>
 HELIUS_API_KEY=<server-side Helius key>
 POW_TOKEN_MINT=GSB16i8W1BvhfdJQBpe6LD9EvLYjXYa6JsmAwxJgpump
@@ -105,6 +105,7 @@ SUPABASE_URL=<Supabase project URL>
 SUPABASE_SERVICE_ROLE_KEY=<Supabase service_role key>
 SOLANA_RPC_URL=<private production Solana RPC URL>
 POW_TOKEN_MINT=GSB16i8W1BvhfdJQBpe6LD9EvLYjXYa6JsmAwxJgpump
+WORKER_MIN_BALANCE=500000
 X_BEARER_TOKEN=<X API v2 bearer token>
 POW_WORK_CASHTAG="$POW"
 POW_SCANNER_INTERVAL_MS=300000
@@ -127,7 +128,19 @@ Application format:
 #POWApplication <wallet address>
 ```
 
-A valid application must be posted inside `https://x.com/i/communities/2032569869326004522` and contain `#POWApplication` plus the wallet. Accounts below 1M `$POW` appear as pending and cannot receive rewards. The private wallet is used for balance checks and payout construction; the public leaderboard only receives the X account and eligibility result.
+A valid application must be posted inside `https://x.com/i/communities/2032569869326004522` and contain `#POWApplication` plus the wallet. Accounts below 500K `$POW` appear as pending and cannot receive rewards. The private wallet is used for balance checks and payout construction; the public leaderboard only receives the X account and eligibility result.
+
+### Manual First-Round Submission
+
+Run this as a one-off command in the Railway scanner service for each manually approved worker:
+
+```bash
+pnpm worker:add -- --handle <x-handle> --wallet <solana-wallet> --score <points> --proof-url <x-post-url>
+```
+
+The command resolves the X account, checks the wallet's live `$POW` balance, rejects wallets below `WORKER_MIN_BALANCE`, upserts the private verified-worker row, and rebuilds the public wallet-free leaderboard. `--proof-url` is optional. If X lookup is unavailable, pass the numeric X ID with `--x-user-id <id>`.
+
+Keep payouts in preview mode after adding workers. Run `pnpm rewards:preview` and inspect the planned recipients and amounts before enabling any live transaction.
 
 ## Railway Rewards
 
@@ -154,6 +167,7 @@ SUPABASE_URL=<Supabase project URL>
 SUPABASE_SERVICE_ROLE_KEY=<Supabase service_role key>
 SOLANA_RPC_URL=<private production Solana RPC URL>
 POW_TOKEN_MINT=GSB16i8W1BvhfdJQBpe6LD9EvLYjXYa6JsmAwxJgpump
+WORKER_MIN_BALANCE=500000
 POW_PAYOUT_WALLET_PRIVATE_KEY=<base58 secret or JSON byte array>
 MIN_WORKER_SCORE=1
 MAX_PAYOUT_WORKERS=100

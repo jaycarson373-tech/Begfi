@@ -228,7 +228,7 @@ const payoutWallet = parsePrivateKey(
 const tokenProgram = new PublicKey(process.env.POW_TOKEN_PROGRAM_ID?.trim() || TOKEN_PROGRAM_ID.toBase58());
 const maxWorkers = integerEnv("MAX_PAYOUT_WORKERS", 100);
 const minScore = numberEnv("MIN_WORKER_SCORE", 1);
-const minWorkerPow = powMinimumHolding;
+const minWorkerPow = numberEnv("WORKER_MIN_BALANCE", powMinimumHolding);
 const payoutBps = integerEnv("POW_PAYOUT_BALANCE_BPS", 1);
 const maxTransfersPerTx = integerEnv("MAX_TOKEN_TRANSFERS_PER_TX", 1);
 const reserveSol = numberEnv("SOL_FEE_RESERVE", 0.25);
@@ -236,6 +236,7 @@ const epochMs = integerEnv("REWARDS_EPOCH_MS", 15 * 60 * 1000);
 const stateDirectory = path.resolve(process.env.REWARDS_STATE_DIR?.trim() || "work/rewards-state");
 
 if (maxWorkers < 1 || maxWorkers > 500) throw new Error("MAX_PAYOUT_WORKERS must be from 1 to 500");
+if (minWorkerPow <= 0) throw new Error("WORKER_MIN_BALANCE must be positive");
 if (maxTransfersPerTx < 1 || maxTransfersPerTx > 6) throw new Error("MAX_TOKEN_TRANSFERS_PER_TX must be from 1 to 6");
 if (payoutBps < 1 || payoutBps > 100) throw new Error("POW_PAYOUT_BALANCE_BPS must be from 1 to 100");
 if (epochMs < 60_000) throw new Error("REWARDS_EPOCH_MS must be at least 60000");

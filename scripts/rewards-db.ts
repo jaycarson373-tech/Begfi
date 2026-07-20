@@ -151,14 +151,14 @@ async function insertPayoutAudit(
   if (!db || !rows.length) return;
   const powCampaignId = await campaignId("pow");
   const result = await db.from("payouts").insert(
-    rows.map((row) => ({
+    rows.map((row, index) => ({
       run_id: runId,
       campaign_id: powCampaignId,
       wallet: row.wallet,
       x_handle: row.xHandle,
       amount: row.rewardAmount,
       token: "POW",
-      tx_signature: status === "dry_run" ? `DRYRUN-${runId}` : null,
+      tx_signature: status === "dry_run" ? `DRYRUN-${runId}-${index}` : null,
       status,
     })),
   );

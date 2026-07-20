@@ -1,6 +1,6 @@
 import "server-only";
 
-import { powDefaultBuyUrl } from "@/lib/pow-config";
+import { powDefaultBuyUrl, powMinimumHolding } from "@/lib/pow-config";
 
 import { createHash, randomBytes } from "crypto";
 import { PublicKey } from "@solana/web3.js";
@@ -12,7 +12,7 @@ export function workerOnboardingEnabled() {
 }
 
 export function workerMinimumBalance() {
-  const value = Number(process.env.WORKER_MIN_BALANCE?.trim() || "1000000");
+  const value = Number(process.env.WORKER_MIN_BALANCE?.trim() || powMinimumHolding);
   if (!Number.isFinite(value) || value < 0) throw new Error("WORKER_MIN_BALANCE must be a positive number");
   return value;
 }

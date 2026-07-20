@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { BarChart3, Building2, Coins, UsersRound } from "lucide-react";
 import { protocolFeeRouting } from "@/lib/fee-routing";
+import { powMinimumHoldingLabel } from "@/lib/pow-config";
 
 const steps = [
   {
@@ -14,7 +15,7 @@ const steps = [
   {
     number: "02",
     title: "Verified workers contribute",
-    body: "Hold 1M+ $POW, then post #POWApplication and your wallet in the official X Community.",
+    body: `Hold ${powMinimumHoldingLabel}, then post #POWApplication and your wallet in the official X Community.`,
     icon: UsersRound
   },
   {

@@ -104,7 +104,7 @@ const db = createClient(requiredEnv("SUPABASE_URL"), requiredEnv("SUPABASE_SERVI
 const connection = new Connection(requiredEnv("SOLANA_RPC_URL"), "confirmed");
 const xBearerToken = requiredEnv("X_BEARER_TOKEN");
 const powMint = new PublicKey(process.env.POW_TOKEN_MINT?.trim() || requiredEnv("SOURCE_TOKEN_MINT"));
-const minWorkerPow = powMinimumHolding;
+const minWorkerPow = numberEnv("WORKER_MIN_BALANCE", powMinimumHolding);
 const applicationQuery = `${powApplicationHashtag} -is:retweet`;
 const workCashtag = process.env.POW_WORK_CASHTAG?.trim() || "$POW";
 const intervalMs = integerEnv("POW_SCANNER_INTERVAL_MS", 5 * 60 * 1000);
@@ -115,6 +115,7 @@ const volumeApiKey = process.env.POW_VOLUME_API_KEY?.trim();
 if (maxProfileScanWorkers < 1 || maxProfileScanWorkers > 500) {
   throw new Error("MAX_PROFILE_SCAN_WORKERS must be an integer from 1 to 500");
 }
+if (minWorkerPow <= 0) throw new Error("WORKER_MIN_BALANCE must be positive");
 
 let running = false;
 let cachedDecimals: number | null = null;

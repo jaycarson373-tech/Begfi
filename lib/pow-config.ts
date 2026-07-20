@@ -1,7 +1,9 @@
 export const powCommunityId = "2032569869326004522";
 export const powCommunityUrl = `https://x.com/i/communities/${powCommunityId}`;
 export const powApplicationHashtag = "#POWApplication";
-export const powMinimumHolding = 1_000_000;
+export const powMinimumHolding = 500_000;
+export const powMinimumHoldingAmountLabel = "500K $POW";
+export const powMinimumHoldingLabel = "500K+ $POW";
 export const powContractAddress = "GSB16i8W1BvhfdJQBpe6LD9EvLYjXYa6JsmAwxJgpump";
 export const powDefaultBuyUrl = `https://jup.ag/?sell=So11111111111111111111111111111111111111112&buy=${powContractAddress}`;
 export const powXHandle = "ProofofWork_Sol";

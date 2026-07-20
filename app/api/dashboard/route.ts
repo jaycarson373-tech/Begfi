@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { emptyDashboardSnapshot } from "@/data/empty-protocol";
+import { powMinimumHoldingAmountLabel, powMinimumHoldingLabel } from "@/lib/pow-config";
 import type { DashboardSnapshot, PreviousWinner, Submission } from "@/types/protocol";
 
 export const runtime = "nodejs";
@@ -107,7 +108,7 @@ function publicSubmissions(rows: PublicLeaderboardRow[]): Submission[] {
     eligible: row.meets_minimum,
     eligibility: row.meets_minimum ? "Minimum met" : "Below minimum",
     score: `${formatScore(row.score)} pts`,
-    holdings: row.meets_minimum ? "1M+ $POW verified" : "Below 1M $POW",
+    holdings: row.meets_minimum ? `${powMinimumHoldingLabel} verified` : `Below ${powMinimumHoldingAmountLabel}`,
     views: `${(row.impression_count ?? 0).toLocaleString()} views`,
   }));
 }

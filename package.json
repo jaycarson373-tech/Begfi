@@ -15,7 +15,8 @@
     "rewards:preview": "tsx scripts/rewards-run.ts",
     "rewards:execute": "tsx scripts/rewards-run.ts --execute",
     "rewards:daemon": "tsx scripts/rewards-daemon.ts",
-    "pow:scanner": "tsx scripts/pow-scanner.ts"
+    "pow:scanner": "tsx scripts/pow-scanner.ts",
+    "worker:add": "tsx scripts/manual-worker.ts"
   },
   "dependencies": {
     "@solana/spl-token": "^0.4.14",

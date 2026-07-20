@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Trophy } from "lucide-react";
 import { getDashboardSnapshot } from "@/lib/protocol-data";
+import { powMinimumHoldingLabel } from "@/lib/pow-config";
 import type { DashboardSnapshot } from "@/types/protocol";
 
 function payoutFor(snapshot: DashboardSnapshot, identity: string) {
@@ -115,7 +116,7 @@ export function LeaderboardSection() {
               <div className="px-6 py-16 text-center sm:py-20">
                 <p className="text-xl font-extrabold text-white">The leaderboard starts with the first verified worker.</p>
                 <p className="mx-auto mt-3 max-w-xl text-base leading-7 text-white/[0.45]">
-                  Hold 1M+ $POW, connect your X, and make every post count.
+                  Hold {powMinimumHoldingLabel}, connect your X, and make every post count.
                 </p>
               </div>
             )}

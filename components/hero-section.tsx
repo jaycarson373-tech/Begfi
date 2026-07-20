@@ -14,7 +14,7 @@ import { AmbientBackground } from "@/components/ambient-background";
 import { ContractAddress } from "@/components/contract-address";
 import { FeeRoutingModule } from "@/components/fee-routing-module";
 import { WorkerOnboarding } from "@/components/worker-onboarding/worker-onboarding";
-import { powApplicationHashtag, powCommunityUrl } from "@/lib/pow-config";
+import { powApplicationHashtag, powCommunityUrl, powMinimumHoldingLabel } from "@/lib/pow-config";
 
 const profileSignals = [
   { icon: BriefcaseBusiness, label: "Campaign work", detail: "Tracked by campaign" },
@@ -96,7 +96,7 @@ export function HeroSection({ workerOnboardingEnabled }: { workerOnboardingEnabl
             className="mt-6 flex items-start gap-2 text-sm font-semibold leading-6 text-white/45"
           >
             <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#1f75ff]" aria-hidden="true" />
-            Hold 1M+ $POW and post {powApplicationHashtag} with your wallet in the official X Community.
+            Hold {powMinimumHoldingLabel} and post {powApplicationHashtag} with your wallet in the official X Community.
           </motion.p>
         </div>
 

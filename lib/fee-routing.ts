@@ -1,4 +1,4 @@
-import { powMinimumHolding } from "@/lib/pow-config";
+import { powMinimumHolding, powMinimumHoldingLabel } from "@/lib/pow-config";
 
 export const protocolFeeRouting = {
   holders: {
@@ -15,9 +15,9 @@ export const protocolFeeRouting = {
   },
   eligibleHolder: {
     minimumPow: powMinimumHolding,
-    minimumLabel: "1M+ $POW",
+    minimumLabel: powMinimumHoldingLabel,
     definition:
-      "A verified POW Worker holding 1M+ $POW who passes the existing score and anti-cheat checks at payout time."
+      `A verified POW Worker holding ${powMinimumHoldingLabel} who passes the existing score and anti-cheat checks at payout time.`
   }
 } as const;
 

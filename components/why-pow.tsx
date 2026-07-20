@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { powApplicationHashtag, powCommunityUrl } from "@/lib/pow-config";
+import { powApplicationHashtag, powCommunityUrl, powMinimumHoldingLabel } from "@/lib/pow-config";
 
 export function WhyPow() {
   return (
@@ -30,7 +30,7 @@ export function WhyPow() {
           className="max-w-xl lg:pb-2"
         >
           <p className="text-xl leading-9 text-white/[0.55]">
-            Hold 1M+ $POW, then post {powApplicationHashtag} and your wallet in the official X Community to become eligible.
+            Hold {powMinimumHoldingLabel}, then post {powApplicationHashtag} and your wallet in the official X Community to become eligible.
           </p>
           <p className="mt-5 text-xl leading-9 text-white/[0.55]">
             Your score in one campaign never changes your rank in another.

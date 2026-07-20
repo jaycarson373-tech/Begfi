@@ -4,11 +4,12 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { nativeCampaignFeeCopy, protocolFeeRouting } from "@/lib/fee-routing";
+import { powMinimumHoldingLabel } from "@/lib/pow-config";
 
 const questions = [
   {
     question: "How do I become a POW Worker?",
-    answer: "Hold 1M+ $POW, then post #POWApplication and your wallet in the official POW X Community. Applications posted outside the community are not accepted."
+    answer: `Hold ${powMinimumHoldingLabel}, then post #POWApplication and your wallet in the official POW X Community. Applications posted outside the community are not accepted.`
   },
   {
     question: "What is a PROOF OF WORK campaign?",
