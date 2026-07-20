@@ -10,14 +10,21 @@ import { RoadmapSection } from "@/components/roadmap-section";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { WhyPow } from "@/components/why-pow";
+import type { Campaign } from "@/data/campaigns";
 
-export function PowHome({ workerOnboardingEnabled }: { workerOnboardingEnabled: boolean }) {
+export function PowHome({
+  workerOnboardingEnabled,
+  initialCampaigns
+}: {
+  workerOnboardingEnabled: boolean;
+  initialCampaigns: Campaign[];
+}) {
   return (
     <div className="relative isolate overflow-hidden">
       <SiteHeader />
       <main>
         <HeroSection workerOnboardingEnabled={workerOnboardingEnabled} />
-        <CampaignsSection />
+        <CampaignsSection initialCampaigns={initialCampaigns} />
         <HowItWorks />
         <ProofFlow />
         <LeaderboardSection />

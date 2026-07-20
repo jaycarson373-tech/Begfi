@@ -14,6 +14,10 @@ export type Campaign = {
   logo?: string;
   description: string;
   rewardPool: string;
+  fundingWallet: string;
+  fundingToken: string;
+  fundingBalance: number | null;
+  solscanUrl: string;
   workers: string;
   posts: string;
   timeRemaining: string;
@@ -41,7 +45,11 @@ export const campaigns: Campaign[] = [
     logo: "/images/pow-network-mark.svg",
     description:
       "Protocol fees continuously fund the native POW campaign, rewarding the strongest contributors helping grow $POW.",
-    rewardPool: "Coming soon",
+    rewardPool: "—",
+    fundingWallet: "",
+    fundingToken: "",
+    fundingBalance: null,
+    solscanUrl: "",
     workers: "—",
     posts: "—",
     timeRemaining: "Ongoing",
@@ -72,6 +80,10 @@ export const campaigns: Campaign[] = [
     description:
       "A three-week content and community campaign for a fictional Solana liquidity project.",
     rewardPool: "40 SOL",
+    fundingWallet: "",
+    fundingToken: "SOL",
+    fundingBalance: null,
+    solscanUrl: "",
     workers: "186",
     posts: "1,420",
     timeRemaining: "12 days",
@@ -107,6 +119,10 @@ export const campaigns: Campaign[] = [
     description:
       "A fictional launch campaign rewarding useful threads, replies, and original community content.",
     rewardPool: "2M $ARC",
+    fundingWallet: "",
+    fundingToken: "",
+    fundingBalance: null,
+    solscanUrl: "",
     workers: "94",
     posts: "680",
     timeRemaining: "18 days",

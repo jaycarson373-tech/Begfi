@@ -75,7 +75,7 @@ function formatSol(value: number) {
 
 function formatPow(value: unknown) {
   const amount = toNumber(value);
-  if (amount <= 0) return "Coming soon";
+  if (amount <= 0) return "—";
   return `${amount.toLocaleString(undefined, { maximumFractionDigits: 4 })} $POW`;
 }
 

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, ArrowUpRight, BadgeCheck, Clock3, FileText, Radio, Users } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, BadgeCheck, Clock3, ExternalLink, FileText, Radio, Users } from "lucide-react";
 import { AmbientBackground } from "@/components/ambient-background";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -69,7 +69,6 @@ export function CampaignDetail({ campaign }: { campaign: Campaign }) {
       campaign.native
         ? {
             ...campaign,
-            rewardPool: metricValue(snapshot, "reward-pool") || campaign.rewardPool,
             workers: activeWorkers(snapshot),
             posts: trackedPosts(snapshot),
             engagement: metricValue(snapshot, "x-views") || campaign.engagement,
@@ -128,6 +127,11 @@ export function CampaignDetail({ campaign }: { campaign: Campaign }) {
               <p className="text-xs font-extrabold uppercase text-[#7fa8ff]">Campaign funding</p>
               <p className="mt-4 text-5xl font-black text-white">{display.rewardPool}</p>
               <p className="mt-3 text-sm text-white/40">{display.fundingSource} · Rewards paid in {display.payoutAsset}</p>
+              <p className="mt-5 break-all font-mono text-xs leading-5 text-white/45">{display.fundingWallet}</p>
+              <a href={display.solscanUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-2 text-sm font-extrabold text-[#8ac5ff] transition hover:text-white">
+                {display.native ? "Reward wallet — verify it yourself." : "Verify on Solscan"}
+                <ExternalLink className="h-4 w-4" aria-hidden="true" />
+              </a>
               {display.native ? (
                 <a href={powCommunityUrl} target="_blank" rel="noreferrer" className="button-primary mt-7 w-full">Apply in X Community<ArrowUpRight className="h-4 w-4" /></a>
               ) : (

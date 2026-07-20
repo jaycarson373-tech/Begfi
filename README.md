@@ -20,6 +20,7 @@ Apply these migrations in order:
 2. `supabase/migrations/002_pow_anti_cheat.sql`
 3. `supabase/migrations/003_pow_campaigns_privacy_and_token_rewards.sql`
 4. `supabase/migrations/004_pow_worker_onboarding.sql`
+5. `supabase/migrations/005_pow_campaign_funding_wallets.sql`
 
 The third migration is required. It adds campaign funding records, `$POW` payout accounting, the wallet-free public leaderboard, and removes public access to wallet-bearing tables.
 
@@ -67,10 +68,13 @@ WORKER_ONBOARD_ENABLED=false
 WORKER_MIN_BALANCE=1000000
 SESSION_SECRET=<at least 32 random characters>
 HELIUS_API_KEY=<server-side Helius key>
+POW_REWARD_WALLET=<public address of the pre-funded native $POW reward wallet>
 ```
 
 `SUPABASE_SERVICE_ROLE_KEY` is server-only. Never rename it with a `NEXT_PUBLIC_` prefix.
 `HELIUS_API_KEY` is also server-only. Never expose it as a `NEXT_PUBLIC_` variable.
+
+Only active Supabase campaigns with a valid `funding_wallet` can appear on the public board. A confirmed zero balance is hidden. The native campaign uses `POW_REWARD_WALLET` when set; otherwise it uses the row's `funding_wallet`. Helius success responses are cached for five minutes, and failed refreshes return `—` rather than a database or mock amount.
 
 ## Railway Scanner
 
