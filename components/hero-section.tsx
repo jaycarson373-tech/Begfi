@@ -11,6 +11,7 @@ import {
   UserRoundCheck
 } from "lucide-react";
 import { AmbientBackground } from "@/components/ambient-background";
+import { WorkerOnboarding } from "@/components/worker-onboarding/worker-onboarding";
 import { powApplicationHashtag, powCommunityUrl } from "@/lib/pow-config";
 
 const profileSignals = [
@@ -19,7 +20,7 @@ const profileSignals = [
   { icon: BadgeCheck, label: "Eligibility", detail: "Verified on-chain" }
 ];
 
-export function HeroSection() {
+export function HeroSection({ workerOnboardingEnabled }: { workerOnboardingEnabled: boolean }) {
   return (
     <section id="top" className="relative min-h-[100svh] overflow-hidden border-b border-white/[0.08] pt-20">
       <AmbientBackground />
@@ -72,10 +73,14 @@ export function HeroSection() {
               Explore Campaigns
               <ArrowDown className="h-4 w-4" aria-hidden="true" />
             </a>
-            <a href={powCommunityUrl} target="_blank" rel="noreferrer" className="button-secondary">
-              Become a POW Worker
-              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-            </a>
+            {workerOnboardingEnabled ? (
+              <WorkerOnboarding />
+            ) : (
+              <a href={powCommunityUrl} target="_blank" rel="noreferrer" className="button-secondary">
+                Become a POW Worker
+                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+              </a>
+            )}
           </motion.div>
 
           <motion.p

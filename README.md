@@ -19,6 +19,7 @@ Apply these migrations in order:
 1. `supabase/migrations/001_pow_rewards.sql`
 2. `supabase/migrations/002_pow_anti_cheat.sql`
 3. `supabase/migrations/003_pow_campaigns_privacy_and_token_rewards.sql`
+4. `supabase/migrations/004_pow_worker_onboarding.sql`
 
 The third migration is required. It adds campaign funding records, `$POW` payout accounting, the wallet-free public leaderboard, and removes public access to wallet-bearing tables.
 
@@ -61,9 +62,15 @@ SUPABASE_SERVICE_ROLE_KEY=<Supabase service_role key>
 NEXT_PUBLIC_SITE_URL=https://your-domain.example
 NEXT_PUBLIC_BUY_URL=<official $POW buy URL>
 NEXT_PUBLIC_TELEGRAM_URL=<official Telegram URL>
+NEXT_PUBLIC_SOLANA_RPC_URL=<optional public Solana RPC URL for wallet-adapter state>
+WORKER_ONBOARD_ENABLED=false
+WORKER_MIN_BALANCE=1000000
+SESSION_SECRET=<at least 32 random characters>
+HELIUS_API_KEY=<server-side Helius key>
 ```
 
 `SUPABASE_SERVICE_ROLE_KEY` is server-only. Never rename it with a `NEXT_PUBLIC_` prefix.
+`HELIUS_API_KEY` is also server-only. Never expose it as a `NEXT_PUBLIC_` variable.
 
 ## Railway Scanner
 

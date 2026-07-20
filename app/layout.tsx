@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PowWalletProvider } from "@/components/worker-onboarding/wallet-provider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -37,9 +38,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const content = process.env.WORKER_ONBOARD_ENABLED === "true" ? (
+    <PowWalletProvider>{children}</PowWalletProvider>
+  ) : (
+    children
+  );
+
   return (
     <html lang="en" className="dark">
-      <body>{children}</body>
+      <body>{content}</body>
     </html>
   );
 }

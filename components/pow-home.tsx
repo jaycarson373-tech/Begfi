@@ -11,12 +11,12 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { WhyPow } from "@/components/why-pow";
 
-export function PowHome() {
+export function PowHome({ workerOnboardingEnabled }: { workerOnboardingEnabled: boolean }) {
   return (
     <div className="relative isolate overflow-hidden">
       <SiteHeader />
       <main>
-        <HeroSection />
+        <HeroSection workerOnboardingEnabled={workerOnboardingEnabled} />
         <CampaignsSection />
         <HowItWorks />
         <ProofFlow />
