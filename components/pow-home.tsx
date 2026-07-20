@@ -10,14 +10,18 @@ import { RoadmapSection } from "@/components/roadmap-section";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { WhyPow } from "@/components/why-pow";
+import { RecentPayouts } from "@/components/recent-payouts";
 import type { Campaign } from "@/data/campaigns";
+import type { PayoutFeedData } from "@/types/payouts";
 
 export function PowHome({
   workerOnboardingEnabled,
-  initialCampaigns
+  initialCampaigns,
+  initialPayoutFeed
 }: {
   workerOnboardingEnabled: boolean;
   initialCampaigns: Campaign[];
+  initialPayoutFeed: PayoutFeedData;
 }) {
   return (
     <div className="relative isolate overflow-hidden">
@@ -28,6 +32,7 @@ export function PowHome({
         <HowItWorks />
         <ProofFlow />
         <LeaderboardSection />
+        <RecentPayouts initialData={initialPayoutFeed} />
         <WhyPow />
         <RoadmapSection />
         <FaqSection />

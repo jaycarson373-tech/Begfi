@@ -22,6 +22,7 @@ type CompleteEpochInput = {
 
 export type WorkerPayoutRow = {
   wallet: string;
+  xHandle: string;
   rewardAmountRaw: string;
   rewardAmount: string;
 };
@@ -122,6 +123,81 @@ export async function planPayouts(epochId: string, rewardMint: string, rows: Wor
 
 export async function dryRunPayouts(epochId: string, rewardMint: string, rows: WorkerPayoutRow[]) {
   await upsertPayouts(epochId, rewardMint, rows, "dry_run");
+}
+
+async function campaignId(slug: string) {
+  const db = supabase();
+  if (!db) throw new Error("Supabase is required for payout audit records");
+  const result = await db.from("pow_campaigns").select("id").eq("slug", slug).maybeSingle();
+  if (result.error) throw result.error;
+  if (!result.data?.id) throw new Error(`Campaign ${slug} does not exist`);
+  return result.data.id as string;
+}
+
+export async function planPayoutAudit(runId: string, rows: WorkerPayoutRow[]) {
+  await insertPayoutAudit(runId, rows, "planned");
+}
+
+export async function dryRunPayoutAudit(runId: string, rows: WorkerPayoutRow[]) {
+  await insertPayoutAudit(runId, rows, "dry_run");
+}
+
+async function insertPayoutAudit(
+  runId: string,
+  rows: WorkerPayoutRow[],
+  status: "planned" | "dry_run",
+) {
+  const db = supabase();
+  if (!db || !rows.length) return;
+  const powCampaignId = await campaignId("pow");
+  const result = await db.from("payouts").insert(
+    rows.map((row) => ({
+      run_id: runId,
+      campaign_id: powCampaignId,
+      wallet: row.wallet,
+      x_handle: row.xHandle,
+      amount: row.rewardAmount,
+      token: "POW",
+      tx_signature: status === "dry_run" ? `DRYRUN-${runId}` : null,
+      status,
+    })),
+  );
+  if (result.error?.code === "23505") return;
+  if (result.error) throw result.error;
+}
+
+export async function confirmPayoutAudit(runId: string, wallet: string, txSignature: string) {
+  const db = supabase();
+  if (!db) return;
+  const result = await db
+    .from("payouts")
+    .update({
+      status: "confirmed",
+      tx_signature: txSignature,
+      paid_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("run_id", runId)
+    .eq("wallet", wallet)
+    .eq("status", "planned");
+  if (result.error?.code === "23505") return;
+  if (result.error) throw result.error;
+}
+
+export async function failPayoutAudit(runId: string, wallet: string, error: unknown) {
+  const db = supabase();
+  if (!db) return;
+  const result = await db
+    .from("payouts")
+    .update({
+      status: "failed",
+      error: error instanceof Error ? error.message : String(error),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("run_id", runId)
+    .eq("wallet", wallet)
+    .eq("status", "planned");
+  warnError(result.error, "fail public payout audit");
 }
 
 async function upsertPayouts(
