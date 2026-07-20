@@ -1,5 +1,6 @@
 import "dotenv/config";
 import path from "path";
+import { randomUUID } from "crypto";
 import bs58 from "bs58";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import {
@@ -21,10 +22,14 @@ import {
 import { mkdir, writeFile } from "fs/promises";
 import {
   completeEpoch as completeDbEpoch,
+  confirmPayoutAudit,
+  dryRunPayoutAudit,
   dryRunPayouts,
+  failPayoutAudit,
   failEpoch as failDbEpoch,
   failPayouts,
   planPayouts,
+  planPayoutAudit,
   settlePayouts,
   startEpoch as startDbEpoch,
   type WorkerPayoutRow,
@@ -225,7 +230,7 @@ const maxWorkers = integerEnv("MAX_PAYOUT_WORKERS", 100);
 const minScore = numberEnv("MIN_WORKER_SCORE", 1);
 const minWorkerPow = powMinimumHolding;
 const payoutBps = integerEnv("POW_PAYOUT_BALANCE_BPS", 1);
-const maxTransfersPerTx = integerEnv("MAX_TOKEN_TRANSFERS_PER_TX", 4);
+const maxTransfersPerTx = integerEnv("MAX_TOKEN_TRANSFERS_PER_TX", 1);
 const reserveSol = numberEnv("SOL_FEE_RESERVE", 0.25);
 const epochMs = integerEnv("REWARDS_EPOCH_MS", 15 * 60 * 1000);
 const stateDirectory = path.resolve(process.env.REWARDS_STATE_DIR?.trim() || "work/rewards-state");
@@ -242,9 +247,13 @@ if (execute) {
     "POW_TOKEN_RESERVE",
     "MIN_POW_PAYOUT_TOKENS",
   ]) requiredEnv(name);
+  if (process.env.PAYOUT_ENABLED !== "true") throw new Error("PAYOUT_ENABLED must be true for live payouts");
   if (process.env.ENABLE_POW_PAYOUTS !== "true") throw new Error("ENABLE_POW_PAYOUTS must be true for live payouts");
   if (process.env.POW_PAYOUT_EXECUTION_ACK !== liveExecutionAck) {
     throw new Error(`POW_PAYOUT_EXECUTION_ACK must equal ${liveExecutionAck}`);
+  }
+  if (maxTransfersPerTx !== 1) {
+    throw new Error("MAX_TOKEN_TRANSFERS_PER_TX must be 1 so every public receipt has a unique transaction signature");
   }
 }
 
@@ -252,6 +261,7 @@ const connection = new Connection(rpcUrl, "confirmed");
 const bucketStart = Math.floor(Date.now() / epochMs) * epochMs;
 const startedAt = new Date(bucketStart).toISOString();
 const epochId = `${startedAt}:${execute ? "execute" : "preview"}`;
+const runId = randomUUID();
 const epochRecord: EpochRecord = {
   epochId,
   startedAt,
@@ -353,6 +363,7 @@ function allocationsForWorkers(workers: VerifiedWorker[], totalRaw: bigint, minP
 function payoutRows(allocations: Allocation[], decimals: number): WorkerPayoutRow[] {
   return allocations.map((allocation) => ({
     wallet: allocation.wallet,
+    xHandle: allocation.handle,
     rewardAmountRaw: allocation.amountRaw.toString(),
     rewardAmount: rawToDecimal(allocation.amountRaw, decimals),
   }));
@@ -502,12 +513,14 @@ async function run() {
     plannedRows = payoutRows(allocations, mintInfo.decimals);
     if (!execute) {
       await dryRunPayouts(epochId, powMint.toBase58(), plannedRows);
+      await dryRunPayoutAudit(runId, plannedRows);
       console.log("Preview complete. No transaction was signed and no $POW was sent.");
       await completeEpoch(0n, mintInfo.decimals);
       return;
     }
 
     await planPayouts(epochId, powMint.toBase58(), plannedRows);
+    await planPayoutAudit(runId, plannedRows);
     let distributed = 0n;
     let batchNumber = 0;
     for (const batch of chunk(allocations, maxTransfersPerTx)) {
@@ -519,8 +532,14 @@ async function run() {
         distributed += batch.reduce((sum, allocation) => sum + allocation.amountRaw, 0n);
         epochRecord.payoutSignatures.push(signature);
         await settlePayouts(epochId, batchRows, signature);
+        try {
+          await confirmPayoutAudit(runId, batch[0].wallet, signature);
+        } catch (auditError) {
+          console.error(`Confirmed payout receipt update failed for ${signature}`, auditError);
+        }
       } catch (error) {
         await failPayouts(epochId, batchRows, error);
+        await Promise.all(batch.map((allocation) => failPayoutAudit(runId, allocation.wallet, error)));
         throw error;
       }
     }

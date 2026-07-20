@@ -21,6 +21,7 @@ Apply these migrations in order:
 3. `supabase/migrations/003_pow_campaigns_privacy_and_token_rewards.sql`
 4. `supabase/migrations/004_pow_worker_onboarding.sql`
 5. `supabase/migrations/005_pow_campaign_funding_wallets.sql`
+6. `supabase/migrations/006_pow_payout_receipts.sql`
 
 The third migration is required. It adds campaign funding records, `$POW` payout accounting, the wallet-free public leaderboard, and removes public access to wallet-bearing tables.
 
@@ -157,8 +158,9 @@ POW_PAYOUT_BALANCE_BPS=1
 MAX_POW_PAYOUT_TOKENS_PER_EPOCH=10000
 POW_TOKEN_RESERVE=1000000
 MIN_POW_PAYOUT_TOKENS=100
-MAX_TOKEN_TRANSFERS_PER_TX=4
+MAX_TOKEN_TRANSFERS_PER_TX=1
 REWARDS_DAEMON_EXECUTE=false
+PAYOUT_ENABLED=false
 ENABLE_POW_PAYOUTS=false
 POW_PAYOUT_EXECUTION_ACK=
 ```
@@ -177,11 +179,12 @@ POW_PAYOUT_EXECUTION_ACK=
 
 ```bash
 REWARDS_DAEMON_EXECUTE=true
+PAYOUT_ENABLED=true
 ENABLE_POW_PAYOUTS=true
 POW_PAYOUT_EXECUTION_ACK=I_UNDERSTAND_POW_PAYOUTS_ARE_LIVE
 ```
 
-The worker also uses one database epoch ID per 15-minute window, so a duplicate Railway process cannot intentionally settle the same time bucket twice. Set `REWARDS_DAEMON_EXECUTE=false` and redeploy to stop live payouts.
+The worker also uses one database epoch ID per 15-minute window, so a duplicate Railway process cannot intentionally settle the same time bucket twice. Each live worker receipt uses its own transaction so the public ledger has one unique Solana signature per payout. Set `PAYOUT_ENABLED=false` or `REWARDS_DAEMON_EXECUTE=false` and redeploy to stop live payouts.
 
 ## Campaign Payments For Now
 

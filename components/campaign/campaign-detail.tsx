@@ -7,10 +7,12 @@ import { ArrowLeft, ArrowUpRight, BadgeCheck, Clock3, ExternalLink, FileText, Ra
 import { AmbientBackground } from "@/components/ambient-background";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { RecentPayouts } from "@/components/recent-payouts";
 import { getDashboardSnapshot } from "@/lib/protocol-data";
 import type { Campaign, CampaignLeaderboardRow } from "@/data/campaigns";
 import type { DashboardSnapshot } from "@/types/protocol";
 import { powCommunityUrl } from "@/lib/pow-config";
+import type { PayoutFeedData } from "@/types/payouts";
 
 function metricValue(snapshot: DashboardSnapshot, key: string) {
   return snapshot.metrics.find((metric) => metric.key === key)?.value;
@@ -39,7 +41,13 @@ function nativeRows(snapshot: DashboardSnapshot): CampaignLeaderboardRow[] {
   }));
 }
 
-export function CampaignDetail({ campaign }: { campaign: Campaign }) {
+export function CampaignDetail({
+  campaign,
+  initialPayoutFeed
+}: {
+  campaign: Campaign;
+  initialPayoutFeed: PayoutFeedData;
+}) {
   const [snapshot, setSnapshot] = useState(() => getDashboardSnapshot());
   const [previewJoined, setPreviewJoined] = useState(false);
 
@@ -202,6 +210,7 @@ export function CampaignDetail({ campaign }: { campaign: Campaign }) {
             Workers may participate in multiple campaigns. Social and on-chain activity is scored separately for each campaign, so performance here never changes rank anywhere else.
           </section>
         </div>
+        <RecentPayouts initialData={initialPayoutFeed} campaignSlug={campaign.slug} />
       </main>
       <SiteFooter />
     </div>
