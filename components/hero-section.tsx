@@ -15,7 +15,7 @@ const signals = [
 
 export function HeroSection({ workerOnboardingEnabled }: { workerOnboardingEnabled: boolean }) {
   return (
-    <section id="top" className="border-b border-[#d8dee4] pb-10 pt-20 sm:pb-14 sm:pt-24">
+    <section id="top" className="border-b border-[#d8dee4] pb-10 pt-10 sm:pb-14 sm:pt-14">
       <div className="site-shell grid gap-4 lg:grid-cols-[225px_minmax(0,1fr)_280px] lg:items-start">
         <motion.aside initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="network-card hidden lg:block">
           <div className="work-cover h-16" />
@@ -36,7 +36,7 @@ export function HeroSection({ workerOnboardingEnabled }: { workerOnboardingEnabl
             <div className="work-cover work-dot-grid px-5 py-10 text-white sm:px-8 sm:py-12">
               <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold backdrop-blur-sm"><BadgeCheck className="h-3.5 w-3.5" />THE WORK NETWORK FOR CRYPTO</span>
               <h1 className="mt-6 max-w-2xl text-[2.9rem] font-extrabold leading-[0.98] sm:text-[4.5rem]">I work for this coin.</h1>
-              <p className="mt-5 max-w-xl text-lg font-medium leading-7 text-white/90 sm:text-xl">Post your work. Build a public reputation. Earn $POW when your contribution moves a campaign forward.</p>
+              <p className="mt-5 max-w-xl text-lg font-medium leading-7 text-white/90 sm:text-xl">Join a funded campaign. Post on X. Build a campaign score. Earn $POW when your work gets results.</p>
             </div>
 
             <div className="p-4 sm:p-5">

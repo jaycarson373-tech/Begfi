@@ -38,6 +38,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
 button { font: inherit; }
 ::selection { background: #b7d7f7; color: #10253b; }
 
+.network-status-rail {
+  position: relative;
+  z-index: 20;
+  min-height: 2rem;
+}
+
 @layer components {
   .site-shell {
     width: min(1128px, calc(100% - 24px));

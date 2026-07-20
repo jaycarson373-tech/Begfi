@@ -8,7 +8,7 @@ import { powContractAddress, powDefaultBuyUrl, powXUrl } from "@/lib/pow-config"
 
 const navigation = [
   { label: "Home", href: "/", icon: Home },
-  { label: "Campaigns", href: "/#campaigns", icon: BriefcaseBusiness },
+  { label: "Work board", href: "/#campaigns", icon: BriefcaseBusiness },
   { label: "Workers", href: "/#leaderboard", icon: UsersRound },
   { label: "Payouts", href: "/#payouts", icon: WalletCards },
   { label: "Jobs", href: "/marketplace", icon: Trophy }
@@ -35,11 +35,12 @@ export function SiteHeader() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-[#d8dee4] bg-white/95 backdrop-blur-xl">
       <div className="site-shell flex h-16 items-center gap-3">
         <Logo href="/" />
-        <label className="relative ml-1 hidden min-w-0 flex-1 md:block lg:max-w-[18rem]">
+        <form action="/#campaigns" method="get" className="relative ml-1 hidden min-w-0 flex-1 md:block lg:max-w-[18rem]" role="search">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#62676d]" aria-hidden="true" />
-          <span className="sr-only">Search WORK</span>
-          <input className="h-10 w-full rounded-[5px] bg-[#edf3f8] pl-10 pr-3 text-sm text-[#1f2328] outline-none ring-[#0a66c2] placeholder:text-[#62676d] focus:ring-2" placeholder="Search coins and campaigns" />
-        </label>
+          <label className="sr-only" htmlFor="site-campaign-search">Search WORK</label>
+          <input id="site-campaign-search" name="campaign" className="h-10 w-full rounded-[5px] bg-[#edf3f8] pl-10 pr-10 text-sm text-[#1f2328] outline-none ring-[#0a66c2] placeholder:text-[#62676d] focus:ring-2" placeholder="Search funded campaigns" />
+          <button type="submit" className="absolute right-1 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-[4px] text-[#62676d] hover:bg-white hover:text-[#0a66c2]" aria-label="Search campaigns"><Search className="h-4 w-4" /></button>
+        </form>
 
         <nav className="ml-auto hidden h-full items-stretch lg:flex" aria-label="Primary navigation">
           {navigation.map((item) => {

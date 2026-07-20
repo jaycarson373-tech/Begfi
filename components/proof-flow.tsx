@@ -1,20 +1,20 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, BarChart3, Coins, MessageSquareText, Trophy } from "lucide-react";
+import { ArrowRight, BarChart3, Landmark, MessageSquareText, ReceiptText } from "lucide-react";
 
 const stages = [
-  { label: "Work", detail: "Posts and contribution", icon: MessageSquareText },
-  { label: "Impact", detail: "Social and on-chain signals", icon: BarChart3 },
-  { label: "Rank", detail: "A score for each campaign", icon: Trophy },
-  { label: "Earn", detail: "Confirmed $POW rewards", icon: Coins }
+  { label: "Funds", detail: "A live wallet you can inspect", icon: Landmark },
+  { label: "Work", detail: "Public posts tied to the campaign", icon: MessageSquareText },
+  { label: "Score", detail: "A separate rank for every campaign", icon: BarChart3 },
+  { label: "Pay", detail: "A confirmed on-chain receipt", icon: ReceiptText }
 ];
 
 export function ProofFlow() {
   return (
     <section className="border-b border-[#d8dee4] bg-[#0f2438] py-16 text-white sm:py-20">
       <div className="site-shell">
-        <div className="max-w-3xl"><p className="text-xs font-bold uppercase text-[#8fc5f4]">How reputation is built</p><h2 className="mt-3 text-3xl font-extrabold sm:text-4xl">Turn attention into a work history.</h2><p className="mt-4 text-base leading-7 text-white/70">Every campaign keeps its own score. Your profile shows where you contributed and what happened next.</p></div>
+        <div className="max-w-3xl"><p className="text-xs font-bold uppercase text-[#8fc5f4]">Trust the receipts, not the pitch</p><h2 className="mt-3 text-3xl font-extrabold sm:text-4xl">Every part of the job is checkable.</h2><p className="mt-4 text-base leading-7 text-white/70">Campaign funding, public contribution, campaign-specific ranking, and confirmed payouts stay connected from start to finish.</p></div>
         <div className="mt-10 grid gap-3 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] lg:items-center">
           {stages.map((stage, index) => { const Icon = stage.icon; return (
             <div key={stage.label} className="contents">
