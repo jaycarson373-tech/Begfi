@@ -1,19 +1,21 @@
 import { ArrowUpRight } from "lucide-react";
+import { ContractAddress } from "@/components/contract-address";
+import { FooterBrandBanner } from "@/components/footer-brand-banner";
 import { Logo } from "@/components/logo";
-import { powCommunityUrl } from "@/lib/pow-config";
+import { powCommunityUrl, powXUrl } from "@/lib/pow-config";
 
 const links = [
   { label: "Campaigns", href: "/#campaigns" },
   { label: "Launch Campaign", href: "/campaigns/create" },
   { label: "Marketplace Beta", href: "/marketplace" },
   { label: "X Community", href: powCommunityUrl },
-  { label: "X", href: "https://x.com/ProofofWork__" },
+  { label: "X", href: powXUrl },
   { label: "Buy $POW", href: process.env.NEXT_PUBLIC_BUY_URL || "https://pump.fun" }
 ];
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-white/[0.08] py-10 sm:py-12">
+    <footer className="border-t border-[#1f75ff]/15 pt-10 sm:pt-12">
       <div className="site-shell">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
             <Logo href="/" />
@@ -32,12 +34,16 @@ export function SiteFooter() {
             ))}
           </nav>
         </div>
+        <ContractAddress className="mt-8" />
         <div className="mt-10 flex flex-col gap-3 border-t border-white/[0.08] pt-6 text-xs leading-5 text-white/30 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} POW · PROOF OF WORK.</p>
           <p className="max-w-2xl sm:text-right">
             External projects fund campaigns in SOL or SPL tokens. Worker rewards are paid in $POW from pre-funded allocations. Digital assets involve risk; eligibility and rewards are subject to verification.
           </p>
         </div>
+      </div>
+      <div className="mt-10 sm:mt-12">
+        <FooterBrandBanner />
       </div>
     </footer>
   );

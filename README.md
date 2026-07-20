@@ -4,17 +4,21 @@ PROOF OF WORK links an X account to a private Solana wallet, scans public `$POW`
 
 ## Current Product Boundary
 
-- The native `$POW` campaign is live-ready after Supabase and Railway are configured.
+- The native `$POW` scanner and guarded payout worker are implemented, but they still require a staged dry run and manual funding before live activation.
 - The scanner checks applications every 5 minutes and refreshes worker scores.
 - The public leaderboard contains X handles, score, post totals, views, and minimum-hold status. It never stores or returns a wallet address.
 - The rewards daemon runs every 15 minutes and pays only pre-funded `$POW` from a dedicated payout wallet.
 - External campaign creation is still a frontend preview. It does not accept deposits or launch a real campaign yet.
+- Creator-fee claiming and the displayed 80/20 routing are not automated by this repository yet. The payout wallet must be funded manually.
+- In-app wallet/X onboarding creates a pending review row. Until an approved row is synchronized into `pow_verified_workers`, the X Community `#POWApplication` scanner is the complete leaderboard path.
 - Campaigns may eventually be funded in SOL or any SPL token, but worker payouts are always `$POW`.
 - No automatic SOL/token-to-`$POW` swap is implemented. Convert and fund the payout wallet manually for now.
 
 ## Supabase
 
-Apply these migrations in order:
+For a fresh project using the Supabase SQL Editor, run the complete `supabase/setup_all.sql` file once. It applies all migrations in order.
+
+For the tracked CLI workflow, apply these migrations in order:
 
 1. `supabase/migrations/001_pow_rewards.sql`
 2. `supabase/migrations/002_pow_anti_cheat.sql`
@@ -22,6 +26,7 @@ Apply these migrations in order:
 4. `supabase/migrations/004_pow_worker_onboarding.sql`
 5. `supabase/migrations/005_pow_campaign_funding_wallets.sql`
 6. `supabase/migrations/006_pow_payout_receipts.sql`
+7. `supabase/migrations/007_pow_brand_assets.sql`
 
 The third migration is required. It adds campaign funding records, `$POW` payout accounting, the wallet-free public leaderboard, and removes public access to wallet-bearing tables.
 
@@ -33,7 +38,7 @@ npx supabase link --project-ref YOUR_PROJECT_REF
 npx supabase db push
 ```
 
-For a first-time prototype, the three SQL files can be run in order in the Supabase SQL Editor. Do not run migration 003 before 001 and 002.
+Do not mix manual SQL Editor changes with the tracked CLI workflow on the same production database without repairing migration history. Supabase tracks CLI-applied migrations separately.
 
 Wallet-free leaderboard check:
 
@@ -63,12 +68,12 @@ SUPABASE_URL=<Supabase project URL>
 SUPABASE_SERVICE_ROLE_KEY=<Supabase service_role key>
 NEXT_PUBLIC_SITE_URL=https://your-domain.example
 NEXT_PUBLIC_BUY_URL=<official $POW buy URL>
-NEXT_PUBLIC_TELEGRAM_URL=<official Telegram URL>
 NEXT_PUBLIC_SOLANA_RPC_URL=<optional public Solana RPC URL for wallet-adapter state>
 WORKER_ONBOARD_ENABLED=false
 WORKER_MIN_BALANCE=1000000
 SESSION_SECRET=<at least 32 random characters>
 HELIUS_API_KEY=<server-side Helius key>
+POW_TOKEN_MINT=GSB16i8W1BvhfdJQBpe6LD9EvLYjXYa6JsmAwxJgpump
 POW_REWARD_WALLET=<public address of the pre-funded native $POW reward wallet>
 ```
 
@@ -99,7 +104,7 @@ Scanner variables:
 SUPABASE_URL=<Supabase project URL>
 SUPABASE_SERVICE_ROLE_KEY=<Supabase service_role key>
 SOLANA_RPC_URL=<private production Solana RPC URL>
-POW_TOKEN_MINT=<real $POW mint>
+POW_TOKEN_MINT=GSB16i8W1BvhfdJQBpe6LD9EvLYjXYa6JsmAwxJgpump
 X_BEARER_TOKEN=<X API v2 bearer token>
 POW_WORK_CASHTAG="$POW"
 POW_SCANNER_INTERVAL_MS=300000
@@ -148,7 +153,7 @@ Rewards variables:
 SUPABASE_URL=<Supabase project URL>
 SUPABASE_SERVICE_ROLE_KEY=<Supabase service_role key>
 SOLANA_RPC_URL=<private production Solana RPC URL>
-POW_TOKEN_MINT=<real $POW mint>
+POW_TOKEN_MINT=GSB16i8W1BvhfdJQBpe6LD9EvLYjXYa6JsmAwxJgpump
 POW_PAYOUT_WALLET_PRIVATE_KEY=<base58 secret or JSON byte array>
 MIN_WORKER_SCORE=1
 MAX_PAYOUT_WORKERS=100
@@ -169,7 +174,7 @@ POW_PAYOUT_EXECUTION_ACK=
 
 ### Safe Activation
 
-1. Apply migration 003.
+1. Apply `supabase/setup_all.sql` or all tracked migrations 001-007.
 2. Run both Railway services with rewards in preview mode.
 3. Confirm scanner rows appear in `pow_public_leaderboard` without wallets.
 4. Confirm preview epochs and `dry_run` payouts in Supabase.

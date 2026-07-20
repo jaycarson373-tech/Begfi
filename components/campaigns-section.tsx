@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, Clock3, ExternalLink, FileText, Users } from "lucide-react";
 import type { Campaign } from "@/data/campaigns";
 import { getDashboardSnapshot } from "@/lib/protocol-data";
+import { nativeCampaignFeeCopy } from "@/lib/fee-routing";
 import type { DashboardSnapshot } from "@/types/protocol";
 
 function metricValue(snapshot: DashboardSnapshot, key: string) {
@@ -106,17 +107,17 @@ export function CampaignsSection({ initialCampaigns }: { initialCampaigns: Campa
                 <div>
                   <div className="flex items-start gap-4">
                     {campaign.logo ? (
-                      <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-white/[0.15] bg-[#0a37a4]">
+                      <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-white/[0.15] bg-[#062d86]">
                         <Image src={campaign.logo} alt="" fill sizes="56px" className="object-cover" />
                       </span>
                     ) : (
-                      <span className="grid h-14 w-14 shrink-0 place-items-center rounded-lg border border-[#5f95ff]/25 bg-[#1e5eff]/[0.15] text-xl font-black text-white">
+                      <span className="grid h-14 w-14 shrink-0 place-items-center rounded-lg border border-[#5f95ff]/25 bg-[#0b5cff]/[0.15] text-xl font-black text-white">
                         {campaign.mark}
                       </span>
                     )}
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="rounded-full border border-[#5f95ff]/25 bg-[#1e5eff]/10 px-2.5 py-1 text-[0.65rem] font-black uppercase text-[#9fbdff]">
+                        <span className="rounded-full border border-[#5f95ff]/25 bg-[#0b5cff]/10 px-2.5 py-1 text-[0.65rem] font-black uppercase text-[#9fbdff]">
                           {campaign.native ? "Native Campaign" : "Project Campaign"}
                         </span>
                         <span className="text-xs font-bold text-white/[0.35]">{campaign.status}</span>
@@ -126,9 +127,14 @@ export function CampaignsSection({ initialCampaigns }: { initialCampaigns: Campa
                     </div>
                   </div>
                   <p className="mt-6 max-w-2xl text-base leading-7 text-white/50">{campaign.description}</p>
+                  {campaign.native ? (
+                    <p className="mt-4 max-w-2xl text-sm font-semibold leading-6 text-[#b4ccff]">
+                      {nativeCampaignFeeCopy}
+                    </p>
+                  ) : null}
                   <div className="mt-6 flex flex-wrap items-center gap-3 text-xs font-bold text-white/40">
                     <span className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5">{campaign.fundingSource} · {campaign.fundingAsset}</span>
-                    <a href={campaign.solscanUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-[#8ac5ff] transition hover:text-white">
+                    <a href={campaign.solscanUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-[#b6d2ff] transition hover:text-white">
                       Verify on Solscan <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                     </a>
                   </div>

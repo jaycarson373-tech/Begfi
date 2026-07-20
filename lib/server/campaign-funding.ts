@@ -126,7 +126,7 @@ export async function getFundedCampaigns(): Promise<Campaign[]> {
         name: row.project_name,
         ticker: row.token_ticker,
         mark: row.token_ticker.replace(/^\$/, "").slice(0, 3),
-        logo: row.logo_url || undefined,
+        logo: row.native ? "/images/pow-logo.jpg" : (row.logo_url || undefined),
         description: row.description,
         rewardPool: displayBalance(balance, symbol),
         fundingWallet: wallet,
@@ -161,4 +161,3 @@ export async function getFundedCampaign(slug: string) {
   const campaigns = await getFundedCampaigns();
   return campaigns.find((campaign) => campaign.slug === slug) || null;
 }
-

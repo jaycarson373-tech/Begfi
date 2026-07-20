@@ -7,7 +7,7 @@ import { powApplicationHashtag, powCommunityUrl } from "@/lib/pow-config";
 export function WhyPow() {
   return (
     <section className="section-space relative overflow-hidden border-y border-white/[0.06]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_50%,rgba(30,94,255,0.18),transparent_38%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_50%,rgba(11, 92, 255,0.18),transparent_38%)]" />
       <div className="site-shell relative grid gap-12 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
         <motion.div
           initial={{ opacity: 0, y: 28 }}

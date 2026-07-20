@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { BarChart3, Building2, Coins, UsersRound } from "lucide-react";
+import { protocolFeeRouting } from "@/lib/fee-routing";
 
 const steps = [
   {
@@ -24,8 +25,8 @@ const steps = [
   },
   {
     number: "04",
-    title: "The strongest workers earn",
-    body: "Eligible workers receive $POW from that campaign's funded payout allocation.",
+    title: "The network distributes value",
+    body: `The strongest workers earn campaign rewards. Separately, ${protocolFeeRouting.holders.percent}% of protocol fees goes to eligible $POW holders and ${protocolFeeRouting.verifiedCampaigns.percent}% funds verified campaign reward pools.`,
     icon: Coins
   }
 ];
@@ -59,8 +60,8 @@ export function HowItWorks() {
                 className="premium-card group min-h-[310px] p-6 sm:p-8"
               >
                 <div className="flex items-start justify-between">
-                  <span className="text-5xl font-black text-white/[0.07] transition group-hover:text-[#1e5eff]/25">{step.number}</span>
-                  <span className="grid h-11 w-11 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-[#76a2ff] transition group-hover:border-[#3b82f6]/40 group-hover:bg-[#1e5eff]/10">
+                  <span className="text-5xl font-black text-white/[0.07] transition group-hover:text-[#0b5cff]/25">{step.number}</span>
+                  <span className="grid h-11 w-11 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-[#76a2ff] transition group-hover:border-[#1976ff]/40 group-hover:bg-[#0b5cff]/10">
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </span>
                 </div>
@@ -75,9 +76,9 @@ export function HowItWorks() {
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-5 rounded-lg border border-[#5f95ff]/20 bg-[#1e5eff]/10 px-5 py-4 text-sm font-semibold leading-6 text-[#b4ccff]"
+          className="mt-5 rounded-lg border border-[#5f95ff]/20 bg-[#0b5cff]/10 px-5 py-4 text-sm font-semibold leading-6 text-[#b4ccff]"
         >
-          The native campaign is funded by protocol fees. Its 15-minute worker payout uses only a capped share of a pre-funded $POW reward wallet.
+          Eligible holder means {protocolFeeRouting.eligibleHolder.definition} The campaign allocation is limited to campaigns reviewed and verified by Proof of Work.
         </motion.p>
       </div>
     </section>

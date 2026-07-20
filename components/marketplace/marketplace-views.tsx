@@ -13,6 +13,18 @@ import {
 import { jobs, projects, workers } from "@/components/marketplace/marketplace-data";
 import { PreviewBadge, ScoreBadge, ViewHeading } from "@/components/marketplace/marketplace-ui";
 
+function EmptyMarketplaceList({ title, body }: { title: string; body: string }) {
+  return (
+    <div className="market-panel grid min-h-64 place-items-center p-8 text-center xl:col-span-2">
+      <div>
+        <PreviewBadge>Pre-Beta</PreviewBadge>
+        <p className="mt-5 text-xl font-black text-white">{title}</p>
+        <p className="mt-2 text-sm leading-6 text-white/35">{body}</p>
+      </div>
+    </div>
+  );
+}
+
 export function WorkersView() {
   const [query, setQuery] = useState("");
   const filtered = useMemo(() => {
@@ -46,7 +58,7 @@ export function WorkersView() {
             className="market-panel p-5 sm:p-6"
           >
             <div className="flex items-start gap-4">
-              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-lg border border-[#5f95ff]/25 bg-gradient-to-br from-[#1e5eff]/30 to-white/[0.04] text-sm font-black text-white">
+              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-lg border border-[#5f95ff]/25 bg-gradient-to-br from-[#0b5cff]/30 to-white/[0.04] text-sm font-black text-white">
                 {worker.initials}
               </div>
               <div className="min-w-0 flex-1">
@@ -72,6 +84,12 @@ export function WorkersView() {
             </div>
           </motion.article>
         ))}
+        {!filtered.length ? (
+          <EmptyMarketplaceList
+            title="No verified workers yet."
+            body="Real worker profiles will appear here after the marketplace data connection is live."
+          />
+        ) : null}
       </div>
     </div>
   );
@@ -87,7 +105,7 @@ export function ProjectsView() {
         {projects.map((project, index) => (
           <motion.article key={project.name} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} whileHover={{ y: -4 }} className="market-panel p-6">
             <div className="flex items-start gap-4">
-              <div className="grid h-12 w-12 place-items-center rounded-lg bg-white text-lg font-black text-[#05070c]">{project.mark}</div>
+              <div className="grid h-12 w-12 place-items-center rounded-lg bg-white text-lg font-black text-[#020714]">{project.mark}</div>
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <h2 className="text-xl font-black text-white">{project.name}</h2>
@@ -106,12 +124,18 @@ export function ProjectsView() {
               <button type="button" onClick={() => setSelectedProject(selectedProject === project.name ? null : project.name)} className="ml-auto inline-flex items-center gap-1.5 text-sm font-extrabold text-white/70 transition hover:text-white">{selectedProject === project.name ? "Close Preview" : "View Project"} <ArrowUpRight className="h-4 w-4" /></button>
             </div>
             {selectedProject === project.name && (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="mt-5 overflow-hidden rounded-lg border border-[#5f95ff]/20 bg-[#1e5eff]/10 p-4 text-sm leading-6 text-white/[0.55]">
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="mt-5 overflow-hidden rounded-lg border border-[#5f95ff]/20 bg-[#0b5cff]/10 p-4 text-sm leading-6 text-white/[0.55]">
                 Project profiles, verified team history, and direct hiring actions will open during Marketplace Beta.
               </motion.div>
             )}
           </motion.article>
         ))}
+        {!projects.length ? (
+          <EmptyMarketplaceList
+            title="No verified projects yet."
+            body="Approved project profiles will appear here when Marketplace Beta opens."
+          />
+        ) : null}
       </div>
     </div>
   );
@@ -123,7 +147,7 @@ export function JobsView() {
   const filtered = filter === "All" ? jobs : jobs.filter((job) => job.type === filter);
   return (
     <div className="grid gap-8">
-      <ViewHeading eyebrow="Opportunities · Preview" title="Work worth doing" description="Verified opportunities from crypto teams that care about proof, not pedigree." action={<div className="flex gap-2">{["All", "Full time", "Contract"].map((item) => <button key={item} type="button" onClick={() => setFilter(item)} className={`rounded-lg border px-3 py-2 text-xs font-bold transition ${filter === item ? "border-[#5f95ff]/40 bg-[#1e5eff]/[0.15] text-white" : "border-white/10 text-white/40 hover:text-white"}`}>{item}</button>)}</div>} />
+      <ViewHeading eyebrow="Opportunities · Preview" title="Work worth doing" description="Verified opportunities from crypto teams that care about proof, not pedigree." action={<div className="flex gap-2">{["All", "Full time", "Contract"].map((item) => <button key={item} type="button" onClick={() => setFilter(item)} className={`rounded-lg border px-3 py-2 text-xs font-bold transition ${filter === item ? "border-[#5f95ff]/40 bg-[#0b5cff]/[0.15] text-white" : "border-white/10 text-white/40 hover:text-white"}`}>{item}</button>)}</div>} />
       <div className="grid gap-3">
         {filtered.map((job, index) => (
           <motion.article key={`${job.title}-${job.project}`} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.035 }} className="market-panel grid gap-5 p-5 transition hover:border-[#5f95ff]/30 sm:grid-cols-[1fr_auto] sm:items-center">
@@ -134,10 +158,16 @@ export function JobsView() {
             </div>
             <div className="flex items-center justify-between gap-5 sm:justify-end">
               <div className="sm:text-right"><p className="text-xs text-white/30">Reward</p><p className="mt-1 font-black text-[#9fbdff]">{job.reward}</p></div>
-              <button type="button" onClick={() => setAppliedJob(`${job.title}-${job.project}`)} className="rounded-lg bg-white px-4 py-2.5 text-sm font-black text-[#05070c] transition hover:bg-[#dce8ff]">{appliedJob === `${job.title}-${job.project}` ? "Preview Saved" : "Apply"}</button>
+              <button type="button" onClick={() => setAppliedJob(`${job.title}-${job.project}`)} className="rounded-lg bg-white px-4 py-2.5 text-sm font-black text-[#020714] transition hover:bg-[#dce8ff]">{appliedJob === `${job.title}-${job.project}` ? "Preview Saved" : "Apply"}</button>
             </div>
           </motion.article>
         ))}
+        {!filtered.length ? (
+          <EmptyMarketplaceList
+            title="No opportunities yet."
+            body="Only real, verified opportunities will be listed here."
+          />
+        ) : null}
       </div>
     </div>
   );
@@ -167,7 +197,7 @@ export function EnterpriseView() {
       <section id="early-access" className="market-panel p-7 sm:p-9">
         <div className="grid gap-8 lg:grid-cols-[1fr_0.8fr] lg:items-end">
           <div><p className="text-xs font-extrabold uppercase text-[#7fa8ff]">Waitlist Preview</p><h2 className="mt-3 text-3xl font-black text-white">Build the next crypto team here.</h2><p className="mt-3 max-w-xl text-sm leading-6 text-white/[0.45]">Early access registration will open before the marketplace beta launches.</p></div>
-          {submitted ? <div className="rounded-lg border border-[#5f95ff]/25 bg-[#1e5eff]/10 p-4 text-sm font-bold text-[#b4ccff]">Preview confirmed. Real waitlist registration is coming soon.</div> : <form onSubmit={submit} className="flex flex-col gap-2 sm:flex-row"><label className="sr-only" htmlFor="market-email">Work email</label><input id="market-email" type="email" required placeholder="Work email" className="min-h-12 flex-1 rounded-lg border border-white/10 bg-white/[0.035] px-4 text-sm text-white outline-none placeholder:text-white/25 focus:border-[#5f95ff]/[0.45]" /><button type="submit" className="button-primary">Join Early Access</button></form>}
+          {submitted ? <div className="rounded-lg border border-[#5f95ff]/25 bg-[#0b5cff]/10 p-4 text-sm font-bold text-[#b4ccff]">Preview confirmed. Real waitlist registration is coming soon.</div> : <form onSubmit={submit} className="flex flex-col gap-2 sm:flex-row"><label className="sr-only" htmlFor="market-email">Work email</label><input id="market-email" type="email" required placeholder="Work email" className="min-h-12 flex-1 rounded-lg border border-white/10 bg-white/[0.035] px-4 text-sm text-white outline-none placeholder:text-white/25 focus:border-[#5f95ff]/[0.45]" /><button type="submit" className="button-primary">Join Early Access</button></form>}
         </div>
       </section>
     </div>
@@ -175,7 +205,23 @@ export function EnterpriseView() {
 }
 
 export function AnalyticsView() {
-  return <div className="grid gap-8"><ViewHeading eyebrow="Analytics · Preview" title="See where great work happens" description="A future view of hiring demand, talent supply, and reputation across the network." action={<PreviewBadge>Coming Soon</PreviewBadge>} /><div className="grid gap-4 lg:grid-cols-3">{[["Verified matches", "2,481", 78], ["Median time to hire", "3.8 days", 62], ["Repeat project rate", "71%", 71]].map(([label, value, width], index) => <motion.article key={String(label)} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.06 }} className="market-panel p-6"><PreviewBadge>Demo</PreviewBadge><p className="mt-8 text-3xl font-black text-white">{value}</p><p className="mt-2 text-sm text-white/40">{label}</p><div className="mt-8 h-1.5 rounded-full bg-white/[0.06]"><motion.div initial={{ width: 0 }} animate={{ width: `${width}%` }} className="h-full rounded-full bg-[#4f8cff]" /></div></motion.article>)}</div><div className="market-panel grid min-h-80 place-items-center p-8 text-center"><div><BarChart3 className="mx-auto h-9 w-9 text-[#7fa8ff]" /><h2 className="mt-5 text-2xl font-black text-white">Network analytics preview</h2><p className="mt-3 text-white/40">Advanced reports and exports arrive with Enterprise.</p></div></div></div>;
+  return (
+    <div className="grid gap-8">
+      <ViewHeading
+        eyebrow="Analytics · Preview"
+        title="See where great work happens"
+        description="A future view of hiring demand, talent supply, and reputation across the network."
+        action={<PreviewBadge>Coming Soon</PreviewBadge>}
+      />
+      <div className="market-panel grid min-h-80 place-items-center p-8 text-center">
+        <div>
+          <BarChart3 className="mx-auto h-9 w-9 text-[#7fa8ff]" />
+          <h2 className="mt-5 text-2xl font-black text-white">No analytics data yet.</h2>
+          <p className="mt-3 text-white/40">Real reports will appear after production marketplace activity begins.</p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export function SettingsView() {

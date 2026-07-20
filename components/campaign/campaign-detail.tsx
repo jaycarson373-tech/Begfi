@@ -61,7 +61,7 @@ export function CampaignDetail({
         const nextSnapshot = (await response.json()) as DashboardSnapshot;
         if (active) setSnapshot(nextSnapshot);
       } catch {
-        // The native page keeps launch placeholders until the live API responds.
+        // Keep the last verified state when the live API is unavailable.
       }
     }
     refresh();
@@ -112,15 +112,15 @@ export function CampaignDetail({
             <motion.div initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65 }}>
               <div className="flex items-center gap-4">
                 {display.logo ? (
-                  <span className="relative h-16 w-16 overflow-hidden rounded-lg border border-white/[0.15] bg-[#0a37a4]">
+                  <span className="relative h-16 w-16 overflow-hidden rounded-lg border border-white/[0.15] bg-[#062d86]">
                     <Image src={display.logo} alt="" fill sizes="64px" className="object-cover" />
                   </span>
                 ) : (
-                  <span className="grid h-16 w-16 place-items-center rounded-lg border border-[#5f95ff]/25 bg-[#1e5eff]/[0.15] text-2xl font-black text-white">{display.mark}</span>
+                  <span className="grid h-16 w-16 place-items-center rounded-lg border border-[#5f95ff]/25 bg-[#0b5cff]/[0.15] text-2xl font-black text-white">{display.mark}</span>
                 )}
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-full border border-[#5f95ff]/25 bg-[#1e5eff]/10 px-3 py-1 text-[0.65rem] font-black uppercase text-[#a8c4ff]">{display.native ? "Native Campaign" : "Demo Campaign"}</span>
+                    <span className="rounded-full border border-[#5f95ff]/25 bg-[#0b5cff]/10 px-3 py-1 text-[0.65rem] font-black uppercase text-[#a8c4ff]">{display.native ? "Native Campaign" : "Demo Campaign"}</span>
                     <span className="text-xs font-bold text-white/[0.35]">{display.fundingSource}</span>
                   </div>
                   <p className="mt-2 font-black text-[#8db3ff]">{display.ticker}</p>
@@ -136,7 +136,7 @@ export function CampaignDetail({
               <p className="mt-4 text-5xl font-black text-white">{display.rewardPool}</p>
               <p className="mt-3 text-sm text-white/40">{display.fundingSource} · Rewards paid in {display.payoutAsset}</p>
               <p className="mt-5 break-all font-mono text-xs leading-5 text-white/45">{display.fundingWallet}</p>
-              <a href={display.solscanUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-2 text-sm font-extrabold text-[#8ac5ff] transition hover:text-white">
+              <a href={display.solscanUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-2 text-sm font-extrabold text-[#b6d2ff] transition hover:text-white">
                 {display.native ? "Reward wallet — verify it yourself." : "Verify on Solscan"}
                 <ExternalLink className="h-4 w-4" aria-hidden="true" />
               </a>
@@ -206,7 +206,7 @@ export function CampaignDetail({
             </article>
           </section>
 
-          <section className="mt-8 rounded-lg border border-[#5f95ff]/20 bg-[#1e5eff]/10 px-5 py-5 text-sm leading-7 text-[#b4ccff]">
+          <section className="mt-8 rounded-lg border border-[#5f95ff]/20 bg-[#0b5cff]/10 px-5 py-5 text-sm leading-7 text-[#b4ccff]">
             Workers may participate in multiple campaigns. Social and on-chain activity is scored separately for each campaign, so performance here never changes rank anywhere else.
           </section>
         </div>

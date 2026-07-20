@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   Users
 } from "lucide-react";
+import { FooterBrandBanner } from "@/components/footer-brand-banner";
 import { Logo } from "@/components/logo";
 import { MarketplaceDashboard } from "@/components/marketplace/marketplace-dashboard";
 import {
@@ -58,9 +59,9 @@ export function MarketplaceApp() {
   const activeLabel = navItems.find((item) => item.id === view)?.label || "Dashboard";
 
   return (
-    <div className="marketplace-root min-h-screen bg-[#03050a] text-white">
+    <div className="marketplace-root min-h-screen bg-[#010512] text-white">
       <div className="lg:grid lg:min-h-screen lg:grid-cols-[248px_minmax(0,1fr)]">
-        <aside className="border-b border-white/[0.08] bg-[#050811]/95 lg:sticky lg:top-0 lg:h-screen lg:border-b-0 lg:border-r">
+        <aside className="border-b border-[#1f75ff]/10 bg-[#030919]/95 lg:sticky lg:top-0 lg:h-screen lg:border-b-0 lg:border-r">
           <div className="flex h-full flex-col">
             <div className="flex h-20 items-center justify-between px-4 lg:px-5">
               <div className="flex items-center gap-3">
@@ -85,7 +86,7 @@ export function MarketplaceApp() {
                     type="button"
                     onClick={() => selectView(item.id)}
                     className={`flex min-w-max items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition lg:w-full ${
-                      active ? "bg-[#1e5eff]/[0.15] text-white shadow-[inset_0_0_0_1px_rgba(95,149,255,0.18)]" : "text-white/[0.42] hover:bg-white/[0.04] hover:text-white/75"
+                      active ? "bg-[#0b5cff]/[0.15] text-white shadow-[inset_0_0_0_1px_rgba(95,149,255,0.18)]" : "text-white/[0.42] hover:bg-white/[0.04] hover:text-white/75"
                     }`}
                   >
                     <Icon className={`h-4 w-4 ${active ? "text-[#7fa8ff]" : "text-white/30"}`} aria-hidden="true" />
@@ -99,14 +100,14 @@ export function MarketplaceApp() {
             <div className="mt-auto hidden p-5 lg:block">
               <div className="rounded-lg border border-white/[0.07] bg-white/[0.025] p-4">
                 <p className="text-xs font-bold text-white/60">Product preview</p>
-                <p className="mt-2 text-xs leading-5 text-white/30">Demo data only. No marketplace actions are live.</p>
+                <p className="mt-2 text-xs leading-5 text-white/30">No sample records are displayed. Marketplace actions are not live.</p>
               </div>
             </div>
           </div>
         </aside>
 
         <main className="min-w-0">
-          <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/[0.07] bg-[#03050a]/80 px-4 backdrop-blur-2xl sm:px-6 lg:px-8">
+          <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/[0.07] bg-[#010512]/80 px-4 backdrop-blur-2xl sm:px-6 lg:px-8">
             <div className="flex items-center gap-2 text-sm">
               <span className="text-white/30">Marketplace</span>
               <span className="text-white/[0.15]">/</span>
@@ -140,6 +141,7 @@ export function MarketplaceApp() {
           </div>
         </main>
       </div>
+      <FooterBrandBanner />
     </div>
   );
 }

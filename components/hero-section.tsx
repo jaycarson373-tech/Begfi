@@ -11,6 +11,8 @@ import {
   UserRoundCheck
 } from "lucide-react";
 import { AmbientBackground } from "@/components/ambient-background";
+import { ContractAddress } from "@/components/contract-address";
+import { FeeRoutingModule } from "@/components/fee-routing-module";
 import { WorkerOnboarding } from "@/components/worker-onboarding/worker-onboarding";
 import { powApplicationHashtag, powCommunityUrl } from "@/lib/pow-config";
 
@@ -30,9 +32,9 @@ export function HeroSection({ workerOnboardingEnabled }: { workerOnboardingEnabl
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 rounded-full border border-[#4f9be5]/30 bg-[#0a66c2]/10 px-3 py-1.5 text-xs font-extrabold text-[#83bdf5]"
+            className="inline-flex items-center gap-2 rounded-full border border-[#1f75ff]/30 bg-[#075dff]/10 px-3 py-1.5 text-xs font-extrabold text-[#8fb7ff]"
           >
-            <span className="h-2 w-2 rounded-full bg-[#46a2fa] shadow-[0_0_12px_rgba(70,162,250,0.9)]" />
+            <span className="h-2 w-2 rounded-full bg-[#1f75ff] shadow-[0_0_12px_rgba(31,117,255,0.95)]" />
             THE WORK NETWORK FOR CRYPTO
           </motion.div>
 
@@ -42,7 +44,7 @@ export function HeroSection({ workerOnboardingEnabled }: { workerOnboardingEnabl
             transition={{ duration: 0.72, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
             className="mt-7 max-w-4xl text-[3.8rem] font-black leading-[0.9] text-white sm:text-[5.4rem] lg:text-[6.6rem]"
           >
-            PROOF OF <span className="text-[#46a2fa]">WORK.</span>
+            PROOF OF <span className="text-[#1f75ff] drop-shadow-[0_0_28px_rgba(31,117,255,0.3)]">WORK.</span>
           </motion.h1>
 
           <motion.p
@@ -83,13 +85,17 @@ export function HeroSection({ workerOnboardingEnabled }: { workerOnboardingEnabl
             )}
           </motion.div>
 
+          <ContractAddress className="mt-4 max-w-2xl" />
+
+          <FeeRoutingModule />
+
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.55 }}
             className="mt-6 flex items-start gap-2 text-sm font-semibold leading-6 text-white/45"
           >
-            <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#46a2fa]" aria-hidden="true" />
+            <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#1f75ff]" aria-hidden="true" />
             Hold 1M+ $POW and post {powApplicationHashtag} with your wallet in the official X Community.
           </motion.p>
         </div>
@@ -100,24 +106,24 @@ export function HeroSection({ workerOnboardingEnabled }: { workerOnboardingEnabl
           transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
           className="mx-auto w-full max-w-[31rem]"
         >
-          <div className="network-profile overflow-hidden rounded-lg border border-white/[0.12] bg-[#0d1824]/95 shadow-[0_32px_90px_rgba(0,0,0,0.38)]">
-            <div className="h-28 bg-[linear-gradient(120deg,#0a66c2,#16477a_55%,#081e31)] sm:h-32" />
+          <div className="network-profile overflow-hidden rounded-lg border border-[#1f75ff]/20 bg-[#071126]/95 shadow-[0_32px_90px_rgba(0,0,0,0.44),0_0_70px_rgba(7,93,255,0.08)]">
+            <div className="h-28 bg-[linear-gradient(120deg,#075dff,#07317e_55%,#020817)] sm:h-32" />
             <div className="px-5 pb-5 sm:px-7 sm:pb-7">
               <div className="-mt-12 flex items-end justify-between gap-4">
                 <motion.div
                   animate={{ y: [0, -5, 0] }}
                   transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
-                  className="relative h-24 w-24 overflow-hidden rounded-lg border-4 border-[#0d1824] bg-[#0a66c2] shadow-[0_12px_35px_rgba(0,0,0,0.3)]"
+                  className="relative h-24 w-24 overflow-hidden rounded-lg border-4 border-[#071126] bg-[#020817] shadow-[0_12px_35px_rgba(0,0,0,0.35),0_0_28px_rgba(7,93,255,0.18)]"
                 >
-                  <Image src="/images/pow-network-mark.svg" alt="POW logo" fill priority sizes="96px" />
+                  <Image src="/images/pow-logo.jpg" alt="POW Proof of Work logo" fill priority sizes="96px" className="object-cover" />
                 </motion.div>
-                <span className="mb-1 inline-flex items-center gap-1.5 rounded-full border border-[#46a2fa]/30 bg-[#0a66c2]/10 px-3 py-1.5 text-xs font-extrabold text-[#8ac5ff]">
+                <span className="mb-1 inline-flex items-center gap-1.5 rounded-full border border-[#1f75ff]/30 bg-[#075dff]/10 px-3 py-1.5 text-xs font-extrabold text-[#b6d2ff]">
                   <BadgeCheck className="h-3.5 w-3.5" aria-hidden="true" />
                   VERIFIED WORK
                 </span>
               </div>
 
-              <p className="mt-5 text-xs font-extrabold text-[#69adf0]">POW WORKER PROFILE</p>
+              <p className="mt-5 text-xs font-extrabold text-[#69a2ff]">POW WORKER PROFILE</p>
               <h2 className="mt-2 text-3xl font-black text-white">Your work becomes reputation.</h2>
               <p className="mt-3 text-sm leading-6 text-white/50">
                 One public identity for your campaign contribution, eligibility, and results.
@@ -128,7 +134,7 @@ export function HeroSection({ workerOnboardingEnabled }: { workerOnboardingEnabl
                   const Icon = signal.icon;
                   return (
                     <div key={signal.label} className="flex items-center gap-4 py-4">
-                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#0a66c2]/15 text-[#69adf0]">
+                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#075dff]/15 text-[#69a2ff]">
                         <Icon className="h-5 w-5" aria-hidden="true" />
                       </span>
                       <div className="min-w-0">
@@ -140,7 +146,7 @@ export function HeroSection({ workerOnboardingEnabled }: { workerOnboardingEnabl
                 })}
               </div>
 
-              <a href={powCommunityUrl} target="_blank" rel="noreferrer" className="mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#0a66c2] px-4 text-sm font-extrabold text-white transition hover:bg-[#0b74d1]">
+              <a href={powCommunityUrl} target="_blank" rel="noreferrer" className="mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#075dff] px-4 text-sm font-extrabold text-white shadow-[0_14px_34px_rgba(7,93,255,0.24)] transition hover:bg-[#146cff] hover:shadow-[0_18px_44px_rgba(7,93,255,0.34)]">
                 <UserRoundCheck className="h-4 w-4" aria-hidden="true" />
                 Apply with {powApplicationHashtag}
               </a>

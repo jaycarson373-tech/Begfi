@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { dashboardSnapshot } from "@/data/mock-protocol";
+import { emptyDashboardSnapshot } from "@/data/empty-protocol";
 import type { DashboardSnapshot, PreviousWinner, Submission } from "@/types/protocol";
 
 export const runtime = "nodejs";
@@ -69,7 +69,7 @@ function toNumber(value: unknown) {
 }
 
 function formatSol(value: number) {
-  if (value <= 0) return "Coming soon";
+  if (value <= 0) return "—";
   return `${value.toLocaleString(undefined, { maximumFractionDigits: 4 })} SOL`;
 }
 
@@ -130,7 +130,7 @@ function verifiedPayouts(
 
 async function readDashboard(): Promise<DashboardSnapshot> {
   const db = supabase();
-  if (!db) return dashboardSnapshot;
+  if (!db) return emptyDashboardSnapshot;
 
   const [epochsResult, claimsResult, payoutsResult, identitiesResult, leaderboardResult] = await Promise.all([
     db
@@ -184,11 +184,11 @@ async function readDashboard(): Promise<DashboardSnapshot> {
 
   return {
     round: {
-      id: latestEpoch ? `Epoch ${epochNumber(latestEpoch.epoch_id, 0)}` : "Launch round",
-      status: latestEpoch?.status || "Waiting for first reward epoch",
-      pool: "Capped",
+      id: latestEpoch ? `Epoch ${epochNumber(latestEpoch.epoch_id, 0)}` : "—",
+      status: latestEpoch?.status || "—",
+      pool: latestEpoch ? "Capped" : "—",
       holderRewardPool: "$POW",
-      votingWindow: "15-minute rewards",
+      votingWindow: latestEpoch ? "15-minute rewards" : "—",
     },
     metrics: [
       {
@@ -208,14 +208,14 @@ async function readDashboard(): Promise<DashboardSnapshot> {
       {
         key: "x-views",
         label: "X Views",
-        value: totalViews ? totalViews.toLocaleString() : "Coming soon",
+        value: totalViews ? totalViews.toLocaleString() : "—",
         helper: "Views from profile-scanned public $POW posts.",
         tone: "lime",
       },
       {
         key: "current-round",
         label: "Eligible Workers",
-        value: leaderboard.length ? `${eligibleWorkers.length}/${leaderboard.length}` : "1M+ $POW",
+        value: leaderboard.length ? `${eligibleWorkers.length}/${leaderboard.length}` : "—",
         helper: "The site shows eligibility without exposing linked wallets.",
         tone: "steel",
       },
@@ -226,7 +226,7 @@ async function readDashboard(): Promise<DashboardSnapshot> {
       {
         key: "verified-work",
         label: "Verified Workers",
-        value: leaderboard.length ? leaderboard.length.toLocaleString() : "Coming soon",
+        value: leaderboard.length ? leaderboard.length.toLocaleString() : "—",
         helper: "X accounts accepted into the native campaign scanner.",
         tone: "magenta",
       },
@@ -247,7 +247,7 @@ async function readDashboard(): Promise<DashboardSnapshot> {
       {
         key: "worker-score",
         label: "Total Worker Score",
-        value: totalWorkerScore ? formatScore(totalWorkerScore) : "Coming soon",
+        value: totalWorkerScore ? formatScore(totalWorkerScore) : "—",
         helper: "Campaign score across the public wallet-free leaderboard.",
         tone: "steel",
       },
@@ -260,7 +260,7 @@ export async function GET() {
     const snapshot = await readDashboard();
     return NextResponse.json(snapshot, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
-    console.warn("POW dashboard API fell back to launch placeholders", error);
-    return NextResponse.json(dashboardSnapshot, { headers: { "Cache-Control": "no-store" } });
+    console.warn("POW dashboard API returned an empty state", error);
+    return NextResponse.json(emptyDashboardSnapshot, { headers: { "Cache-Control": "no-store" } });
   }
 }

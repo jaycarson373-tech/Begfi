@@ -10,6 +10,7 @@ import {
   Check,
   ExternalLink,
   Loader2,
+  LogOut,
   ShieldCheck,
   Wallet,
   X
@@ -29,7 +30,7 @@ function shortWallet(value: string) {
 }
 
 export function WorkerOnboarding() {
-  const { wallets, wallet, publicKey, connected, connecting, select, connect, signMessage } = useWallet();
+  const { wallets, wallet, publicKey, connected, connecting, select, connect, disconnect, signMessage } = useWallet();
   const [open, setOpen] = useState(false);
   const [connectAfterSelect, setConnectAfterSelect] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -111,6 +112,24 @@ export function WorkerOnboarding() {
     }
   }
 
+  async function disconnectWallet() {
+    setBusy(true);
+    setError("");
+    try {
+      await fetch("/api/worker-onboarding/logout", { method: "POST" });
+      await disconnect();
+      setProof(null);
+      setProfileUrl("");
+      setPostUrl("");
+      setLinkedHandle("");
+      setBuyUrl("");
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "Wallet could not disconnect");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function linkX() {
     setBusy(true);
     setError("");
@@ -153,11 +172,11 @@ export function WorkerOnboarding() {
               initial={{ opacity: 0, y: 20, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 14, scale: 0.98 }}
-              className="my-8 w-full max-w-xl overflow-hidden rounded-lg border border-white/[0.14] bg-[#0d1824] shadow-[0_30px_100px_rgba(0,0,0,0.55)]"
+              className="my-8 w-full max-w-xl overflow-hidden rounded-lg border border-white/[0.14] bg-[#071126] shadow-[0_30px_100px_rgba(0,0,0,0.55)]"
             >
               <div className="flex items-start justify-between gap-5 border-b border-white/[0.08] p-6 sm:p-7">
                 <div>
-                  <p className="text-xs font-extrabold text-[#69adf0]">POW WORKER ONBOARDING</p>
+                  <p className="text-xs font-extrabold text-[#69a2ff]">POW WORKER ONBOARDING</p>
                   <h2 id="worker-onboard-title" className="mt-2 text-2xl font-black text-white sm:text-3xl">
                     {linkedHandle ? "Application received." : proof ? "Link your X account." : "Verify your wallet."}
                   </h2>
@@ -170,7 +189,7 @@ export function WorkerOnboarding() {
               <div className="p-6 sm:p-7">
                 {linkedHandle ? (
                   <div className="py-5 text-center">
-                    <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-[#0a66c2]/20 text-[#69adf0]">
+                    <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-[#075dff]/20 text-[#69a2ff]">
                       <Check className="h-8 w-8" aria-hidden="true" />
                     </span>
                     <p className="mt-5 text-xl font-black text-white">@{linkedHandle} is pending review</p>
@@ -178,11 +197,11 @@ export function WorkerOnboarding() {
                   </div>
                 ) : proof ? (
                   <div>
-                    <div className="rounded-lg border border-[#46a2fa]/25 bg-[#0a66c2]/10 p-5">
-                      <p className="text-xs font-extrabold text-[#8ac5ff]">YOUR ONE-TIME CODE</p>
+                    <div className="rounded-lg border border-[#1f75ff]/25 bg-[#075dff]/10 p-5">
+                      <p className="text-xs font-extrabold text-[#b6d2ff]">YOUR ONE-TIME CODE</p>
                       <p className="mt-2 font-mono text-3xl font-black text-white">{proof.verificationCode}</p>
                       <p className="mt-3 text-sm leading-6 text-white/50">Post this exact code from the X account you want linked, then paste both URLs below.</p>
-                      <a href={`https://x.com/intent/post?text=${encodeURIComponent(proof.verificationCode)}`} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm font-extrabold text-[#8ac5ff] transition hover:text-white">
+                      <a href={`https://x.com/intent/post?text=${encodeURIComponent(proof.verificationCode)}`} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm font-extrabold text-[#b6d2ff] transition hover:text-white">
                         Post code on X <ExternalLink className="h-4 w-4" aria-hidden="true" />
                       </a>
                     </div>
@@ -206,9 +225,22 @@ export function WorkerOnboarding() {
                       <Step icon={ShieldCheck} title="2. Sign and qualify" body="The server verifies ownership and your live $POW balance." />
                     </div>
                     {connected && publicKey ? (
-                      <div className="mt-6 rounded-lg border border-[#46a2fa]/25 bg-[#0a66c2]/10 p-4">
-                        <p className="text-xs font-bold text-[#8ac5ff]">PHANTOM CONNECTED</p>
-                        <p className="mt-2 font-mono text-sm font-bold text-white">{shortWallet(publicKey.toBase58())}</p>
+                      <div className="mt-6 rounded-lg border border-[#1f75ff]/25 bg-[#075dff]/10 p-4">
+                        <div className="flex items-center justify-between gap-4">
+                          <div>
+                            <p className="text-xs font-bold text-[#b6d2ff]">PHANTOM CONNECTED</p>
+                            <p className="mt-2 font-mono text-sm font-bold text-white">{shortWallet(publicKey.toBase58())}</p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={disconnectWallet}
+                            disabled={busy}
+                            className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-lg border border-white/10 px-3 text-xs font-extrabold text-white/55 transition hover:border-white/20 hover:text-white disabled:opacity-45"
+                          >
+                            <LogOut className="h-4 w-4" aria-hidden="true" />
+                            Disconnect
+                          </button>
+                        </div>
                       </div>
                     ) : (
                       <button type="button" onClick={connectPhantom} disabled={connecting} className="button-primary mt-6 w-full disabled:opacity-45">
@@ -244,10 +276,9 @@ export function WorkerOnboarding() {
 function Step({ icon: Icon, title, body }: { icon: typeof Wallet; title: string; body: string }) {
   return (
     <div className="rounded-lg border border-white/[0.08] bg-white/[0.025] p-4">
-      <Icon className="h-5 w-5 text-[#69adf0]" aria-hidden="true" />
+      <Icon className="h-5 w-5 text-[#69a2ff]" aria-hidden="true" />
       <p className="mt-3 text-sm font-extrabold text-white">{title}</p>
       <p className="mt-1 text-xs leading-5 text-white/40">{body}</p>
     </div>
   );
 }
-

@@ -85,7 +85,7 @@ export function CampaignCreate() {
 
           <div className="mt-10 max-w-4xl">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="rounded-full border border-[#5f95ff]/25 bg-[#1e5eff]/10 px-3 py-1.5 text-[0.65rem] font-black uppercase text-[#a8c4ff]">Frontend Demo</span>
+              <span className="rounded-full border border-[#5f95ff]/25 bg-[#0b5cff]/10 px-3 py-1.5 text-[0.65rem] font-black uppercase text-[#a8c4ff]">Frontend Demo</span>
               <span className="text-xs font-bold text-white/[0.35]">No funds will move</span>
             </div>
             <h1 className="mt-7 text-5xl font-black leading-[0.96] text-white sm:text-7xl">Launch a POW Campaign</h1>
@@ -141,12 +141,12 @@ export function CampaignCreate() {
                 <SummaryRow label="Campaign Duration" value={summary.duration} icon={<CalendarDays className="h-4 w-4" />} />
                 <SummaryRow label="Estimated Winners" value={summary.winners} icon={<ShieldCheck className="h-4 w-4" />} />
               </dl>
-              <div className="mt-7 rounded-lg border border-[#5f95ff]/20 bg-[#1e5eff]/10 p-4 text-sm leading-6 text-[#b4ccff]">
+              <div className="mt-7 rounded-lg border border-[#5f95ff]/20 bg-[#0b5cff]/10 p-4 text-sm leading-6 text-[#b4ccff]">
                 Your project funds the campaign. Before launch, non-$POW deposits must be converted into a pre-funded $POW payout balance; the demo does not swap assets.
               </div>
               <button type="submit" className="button-primary mt-5 w-full">Fund and Launch Campaign<ArrowUpRight className="h-4 w-4" /></button>
               <p className="mt-3 text-center text-xs leading-5 text-white/30">Demo only. No wallet transaction will occur.</p>
-              {submitted && <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-4 rounded-lg border border-[#5f95ff]/25 bg-[#1e5eff]/10 p-4 text-sm font-bold leading-6 text-[#b4ccff]">Campaign preview created. Backend funding and launch actions are not enabled yet.</motion.div>}
+              {submitted && <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-4 rounded-lg border border-[#5f95ff]/25 bg-[#0b5cff]/10 p-4 text-sm font-bold leading-6 text-[#b4ccff]">Campaign preview created. Backend funding and launch actions are not enabled yet.</motion.div>}
             </aside>
           </form>
         </div>

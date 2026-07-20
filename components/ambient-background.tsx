@@ -35,7 +35,7 @@ export function AmbientBackground() {
       {particles.map((particle, index) => (
         <motion.span
           key={`${particle.left}-${particle.top}`}
-          className="absolute rounded-full bg-[#79a5ff] shadow-[0_0_12px_rgba(59,130,246,0.9)]"
+          className="absolute rounded-full bg-[#79a5ff] shadow-[0_0_12px_rgba(25, 118, 255,0.9)]"
           style={{
             left: particle.left,
             top: particle.top,

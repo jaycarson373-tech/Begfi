@@ -8,8 +8,8 @@ export const metadata: Metadata = {
     "Launch contributor campaigns funded in SOL or SPL tokens. PROOF OF WORK ranks performance and rewards eligible workers in $POW.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://pow.fun"),
   icons: {
-    icon: "/images/pow-network-mark.svg",
-    apple: "/images/pow-network-mark.svg"
+    icon: "/images/pow-logo.jpg",
+    apple: "/images/pow-logo.jpg"
   },
   openGraph: {
     title: "POW | PROOF OF WORK",
@@ -18,10 +18,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-campaigns.png",
-        width: 1732,
-        height: 908,
-        alt: "POW campaign platform"
+        url: "/images/pow-footer-banner.jpg",
+        width: 1280,
+        height: 437,
+        alt: "Proof of Work"
       }
     ]
   },
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "POW | PROOF OF WORK",
     description: "Reward the people growing your project.",
-    images: ["/og-campaigns.png"]
+    images: ["/images/pow-footer-banner.jpg"]
   }
 };
 

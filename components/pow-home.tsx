@@ -10,6 +10,7 @@ import { RoadmapSection } from "@/components/roadmap-section";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { WhyPow } from "@/components/why-pow";
+import { WhyWeBuiltThis } from "@/components/why-we-built-this";
 import { RecentPayouts } from "@/components/recent-payouts";
 import type { Campaign } from "@/data/campaigns";
 import type { PayoutFeedData } from "@/types/payouts";
@@ -28,6 +29,7 @@ export function PowHome({
       <SiteHeader />
       <main>
         <HeroSection workerOnboardingEnabled={workerOnboardingEnabled} />
+        <WhyWeBuiltThis />
         <CampaignsSection initialCampaigns={initialCampaigns} />
         <HowItWorks />
         <ProofFlow />

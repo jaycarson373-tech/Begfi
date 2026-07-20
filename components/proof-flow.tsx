@@ -12,7 +12,7 @@ const stages = [
 export function ProofFlow() {
   return (
     <section className="section-space relative overflow-hidden border-y border-white/[0.06]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(30,94,255,0.17),transparent_52%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(11, 92, 255,0.17),transparent_52%)]" />
       <div className="site-shell relative">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -37,10 +37,10 @@ export function ProofFlow() {
           >
             <defs>
               <linearGradient id="pow-flow" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stopColor="#1E5EFF" stopOpacity="0" />
-                <stop offset="0.18" stopColor="#3B82F6" />
+                <stop offset="0" stopColor="#0b5cff" stopOpacity="0" />
+                <stop offset="0.18" stopColor="#1976ff" />
                 <stop offset="0.82" stopColor="#8DB3FF" />
-                <stop offset="1" stopColor="#1E5EFF" stopOpacity="0" />
+                <stop offset="1" stopColor="#0b5cff" stopOpacity="0" />
               </linearGradient>
               <filter id="pow-glow" x="-200%" y="-20%" width="500%" height="140%">
                 <feGaussianBlur stdDeviation="5" result="blur" />
@@ -84,7 +84,7 @@ export function ProofFlow() {
                   <p className="text-sm font-semibold text-[#8db3ff]">{stage.detail}</p>
                   <h3 className="mt-2 text-3xl font-black text-white sm:text-5xl">{stage.label}</h3>
                 </div>
-                <div className="order-2 mx-auto h-4 w-4 rounded-full border-4 border-[#05070c] bg-white shadow-[0_0_28px_rgba(59,130,246,1)]" />
+                <div className="order-2 mx-auto h-4 w-4 rounded-full border-4 border-[#020714] bg-white shadow-[0_0_28px_rgba(25, 118, 255,1)]" />
                 <div className={index % 2 ? "order-1" : "order-3"} />
               </motion.div>
             ))}

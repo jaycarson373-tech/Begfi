@@ -5,10 +5,10 @@ import { ArrowRight, BriefcaseBusiness, Building2, Sparkles, Users } from "lucid
 import { PreviewBadge } from "@/components/marketplace/marketplace-ui";
 
 const metrics = [
-  { label: "Verified Workers", value: "1,248", icon: Users, change: "+84 this month" },
-  { label: "Verified Projects", value: "182", icon: Building2, change: "+16 this month" },
-  { label: "Open Opportunities", value: "417", icon: BriefcaseBusiness, change: "Across 38 skills" },
-  { label: "Matches Today", value: "63", icon: Sparkles, change: "Demo snapshot" }
+  { label: "Verified Workers", value: "—", icon: Users },
+  { label: "Verified Projects", value: "—", icon: Building2 },
+  { label: "Open Opportunities", value: "—", icon: BriefcaseBusiness },
+  { label: "Matches Today", value: "—", icon: Sparkles }
 ];
 
 const revenueCards = [
@@ -22,10 +22,10 @@ export function MarketplaceDashboard({ onExplore, onWaitlist }: { onExplore: () 
   return (
     <div id="marketplace-dashboard" className="grid gap-8">
       <section className="market-hero relative overflow-hidden rounded-lg border border-[#4f8cff]/20 p-6 sm:p-10 lg:p-12">
-        <div className="absolute -right-16 -top-24 h-80 w-80 rounded-full bg-[#1e5eff]/20 blur-3xl" />
+        <div className="absolute -right-16 -top-24 h-80 w-80 rounded-full bg-[#0b5cff]/20 blur-3xl" />
         <div className="relative max-w-4xl">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="rounded-full border border-[#5f95ff]/[0.35] bg-[#1e5eff]/[0.15] px-3 py-1.5 text-[0.68rem] font-black uppercase text-[#b4ccff]">
+            <span className="rounded-full border border-[#5f95ff]/[0.35] bg-[#0b5cff]/[0.15] px-3 py-1.5 text-[0.68rem] font-black uppercase text-[#b4ccff]">
               Pre-Beta
             </span>
             <span className="text-xs font-bold text-white/40">Interactive Product Preview</span>
@@ -49,7 +49,7 @@ export function MarketplaceDashboard({ onExplore, onWaitlist }: { onExplore: () 
             </button>
           </div>
           <p className="mt-6 text-xs leading-5 text-white/30">
-            The marketplace is currently under development. All people, projects, opportunities, and metrics shown here are demo data.
+            The marketplace is currently under development. No people, projects, opportunities, or performance metrics are displayed until real data is connected.
           </p>
         </div>
       </section>
@@ -70,88 +70,30 @@ export function MarketplaceDashboard({ onExplore, onWaitlist }: { onExplore: () 
                 <span className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-[#7fa8ff]">
                   <Icon className="h-5 w-5" aria-hidden="true" />
                 </span>
-                <PreviewBadge>Demo</PreviewBadge>
+                <PreviewBadge>Pre-Beta</PreviewBadge>
               </div>
               <p className="mt-8 text-3xl font-black text-white">{metric.value}</p>
               <p className="mt-1 text-sm font-semibold text-white/[0.65]">{metric.label}</p>
-              <p className="mt-3 text-xs text-white/30">{metric.change}</p>
+              <p className="mt-3 text-xs text-white/30">No live data</p>
             </motion.article>
           );
         })}
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[1.35fr_0.65fr]">
-        <section className="market-panel p-5 sm:p-6">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <p className="text-sm font-extrabold text-white">Talent discovery</p>
-              <p className="mt-1 text-xs text-white/[0.35]">Preview activity · last 12 weeks</p>
-            </div>
-            <PreviewBadge>Preview</PreviewBadge>
-          </div>
-          <div className="mt-8 h-64 w-full">
-            <svg viewBox="0 0 760 260" className="h-full w-full overflow-visible" role="img" aria-label="Demo talent discovery growth chart">
-              <defs>
-                <linearGradient id="market-chart-fill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stopColor="#3B82F6" stopOpacity="0.35" />
-                  <stop offset="1" stopColor="#3B82F6" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              {[40, 95, 150, 205].map((y) => (
-                <line key={y} x1="0" y1={y} x2="760" y2={y} stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
-              ))}
-              <motion.path
-                d="M0 220 C55 208, 74 198, 124 203 S210 166, 268 174 S350 126, 406 139 S490 92, 548 105 S642 55, 760 42 L760 260 L0 260 Z"
-                fill="url(#market-chart-fill)"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8 }}
-              />
-              <motion.path
-                d="M0 220 C55 208, 74 198, 124 203 S210 166, 268 174 S350 126, 406 139 S490 92, 548 105 S642 55, 760 42"
-                fill="none"
-                stroke="#6B9CFF"
-                strokeWidth="3"
-                strokeLinecap="round"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 1.3, ease: "easeInOut" }}
-              />
-            </svg>
+        <section className="market-panel grid min-h-80 place-items-center p-5 text-center sm:p-6">
+          <div>
+            <PreviewBadge>Pre-Beta</PreviewBadge>
+            <p className="mt-5 text-lg font-black text-white">No marketplace activity yet.</p>
+            <p className="mt-2 text-sm text-white/35">Real activity will appear after the marketplace connects to production data.</p>
           </div>
         </section>
 
-        <section className="market-panel p-5 sm:p-6">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <p className="text-sm font-extrabold text-white">Top skills</p>
-              <p className="mt-1 text-xs text-white/[0.35]">Demo worker supply</p>
-            </div>
-            <PreviewBadge>Preview</PreviewBadge>
-          </div>
-          <div className="mt-8 grid gap-5">
-            {[
-              ["Growth", 86],
-              ["Engineering", 74],
-              ["Content", 68],
-              ["Design", 57],
-              ["Community", 49]
-            ].map(([label, value], index) => (
-              <div key={String(label)}>
-                <div className="flex justify-between text-xs font-semibold text-white/[0.45]">
-                  <span>{label}</span>
-                  <span>{value}%</span>
-                </div>
-                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${value}%` }}
-                    transition={{ duration: 0.8, delay: index * 0.08 }}
-                    className="h-full rounded-full bg-gradient-to-r from-[#1e5eff] to-[#76a2ff] shadow-[0_0_12px_rgba(59,130,246,0.45)]"
-                  />
-                </div>
-              </div>
-            ))}
+        <section className="market-panel grid min-h-80 place-items-center p-5 text-center sm:p-6">
+          <div>
+            <PreviewBadge>Pre-Beta</PreviewBadge>
+            <p className="mt-5 text-lg font-black text-white">No verified skills yet.</p>
+            <p className="mt-2 text-sm text-white/35">Skill supply will be calculated from real worker profiles.</p>
           </div>
         </section>
       </div>

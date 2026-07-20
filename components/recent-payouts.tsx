@@ -74,13 +74,13 @@ export function RecentPayouts({
         <div className="mt-12 grid gap-4 lg:grid-cols-[0.72fr_1.28fr]">
           <motion.article initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="premium-card p-6 sm:p-7">
             <div className="flex items-center justify-between gap-4">
-              <span className="grid h-11 w-11 place-items-center rounded-lg bg-[#0a66c2]/15 text-[#69adf0]"><Crown className="h-5 w-5" aria-hidden="true" /></span>
-              <span className="text-xs font-extrabold text-[#8ac5ff]">👑 TOP EARNER</span>
+              <span className="grid h-11 w-11 place-items-center rounded-lg bg-[#075dff]/15 text-[#69a2ff]"><Crown className="h-5 w-5" aria-hidden="true" /></span>
+              <span className="text-xs font-extrabold text-[#b6d2ff]">👑 TOP EARNER</span>
             </div>
             {data.topEarner ? (
               <div className="mt-10">
                 <p className="text-3xl font-black text-white">{data.topEarner.xHandle ? `@${data.topEarner.xHandle}` : data.topEarner.walletLabel}</p>
-                <p className="mt-3 text-2xl font-black text-[#8ac5ff]">{amount(data.topEarner.amount)} $POW</p>
+                <p className="mt-3 text-2xl font-black text-[#b6d2ff]">{amount(data.topEarner.amount)} $POW</p>
                 {data.topEarner.xHandle && <p className="mt-3 font-mono text-xs text-white/35">{data.topEarner.walletLabel}</p>}
               </div>
             ) : (
@@ -93,15 +93,15 @@ export function RecentPayouts({
 
           <motion.article initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.07 }} className="premium-table overflow-hidden">
             <div className="flex items-center justify-between gap-4 border-b border-white/[0.08] px-5 py-5 sm:px-6">
-              <div className="flex items-center gap-3"><ReceiptText className="h-5 w-5 text-[#69adf0]" /><p className="font-black text-white">Confirmed receipts</p></div>
-              <span className="font-mono text-sm font-bold text-[#8ac5ff]">NEXT {countdown(now)}</span>
+              <div className="flex items-center gap-3"><ReceiptText className="h-5 w-5 text-[#69a2ff]" /><p className="font-black text-white">Confirmed receipts</p></div>
+              <span className="font-mono text-sm font-bold text-[#b6d2ff]">NEXT {countdown(now)}</span>
             </div>
             {data.receipts.length ? (
               <div className="divide-y divide-white/[0.07]">
                 {data.receipts.map((receipt, index) => (
                   <motion.div key={receipt.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.03 }} className="grid gap-3 px-5 py-5 sm:grid-cols-[1fr_0.8fr_auto] sm:items-center sm:px-6">
                     <div><p className="font-bold text-white">{receipt.xHandle ? `@${receipt.xHandle}` : receipt.walletLabel}</p><p className="mt-1 font-mono text-xs text-white/35">{receipt.walletLabel}</p></div>
-                    <div><p className="font-black text-[#8ac5ff]">{amount(receipt.amount)} $POW</p><p className="mt-1 text-xs text-white/35">{relativeTime(receipt.paidAt, now)}</p></div>
+                    <div><p className="font-black text-[#b6d2ff]">{amount(receipt.amount)} $POW</p><p className="mt-1 text-xs text-white/35">{relativeTime(receipt.paidAt, now)}</p></div>
                     <a href={receipt.solscanUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-sm font-extrabold text-white/55 transition hover:text-white">tx <ArrowUpRight className="h-4 w-4" /></a>
                   </motion.div>
                 ))}

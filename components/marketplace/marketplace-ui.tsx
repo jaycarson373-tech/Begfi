@@ -3,7 +3,7 @@ import { BadgeCheck } from "lucide-react";
 
 export function PreviewBadge({ children = "Preview" }: { children?: ReactNode }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-[#4f8cff]/25 bg-[#1e5eff]/10 px-2.5 py-1 text-[0.65rem] font-extrabold uppercase text-[#9fbdff]">
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-[#4f8cff]/25 bg-[#0b5cff]/10 px-2.5 py-1 text-[0.65rem] font-extrabold uppercase text-[#9fbdff]">
       <BadgeCheck className="h-3 w-3" aria-hidden="true" />
       {children}
     </span>
@@ -12,7 +12,7 @@ export function PreviewBadge({ children = "Preview" }: { children?: ReactNode })
 
 export function ScoreBadge({ score }: { score: number }) {
   return (
-    <span className="inline-flex items-center rounded-lg border border-[#5f95ff]/30 bg-[#1e5eff]/[0.12] px-3 py-2 text-sm font-black text-[#b4ccff] shadow-[0_0_24px_rgba(30,94,255,0.18)]">
+    <span className="inline-flex items-center rounded-lg border border-[#5f95ff]/30 bg-[#0b5cff]/[0.12] px-3 py-2 text-sm font-black text-[#b4ccff] shadow-[0_0_24px_rgba(11, 92, 255,0.18)]">
       {score} POW
     </span>
   );

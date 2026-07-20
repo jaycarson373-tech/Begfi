@@ -4,10 +4,10 @@
 
 :root {
   color-scheme: dark;
-  --background: #07111b;
+  --background: #020817;
   --foreground: #f7f9ff;
-  --blue: #0a66c2;
-  --blue-light: #46a2fa;
+  --blue: #075dff;
+  --blue-light: #1f75ff;
   --line: rgba(255, 255, 255, 0.1);
 }
 
@@ -26,7 +26,7 @@ body {
   margin: 0;
   overflow-x: hidden;
   background:
-    radial-gradient(circle at 50% -10%, rgba(10, 102, 194, 0.14), transparent 34rem),
+    radial-gradient(circle at 50% -12%, rgba(7, 93, 255, 0.2), transparent 36rem),
     var(--background);
   color: var(--foreground);
   font-family:
@@ -51,7 +51,7 @@ button {
 }
 
 ::selection {
-  background: rgba(30, 94, 255, 0.65);
+  background: rgba(11, 92, 255, 0.65);
   color: white;
 }
 
@@ -66,7 +66,7 @@ button {
   }
 
   .section-kicker {
-    color: #69adf0;
+    color: #69a2ff;
     font-size: 0.75rem;
     font-weight: 800;
     letter-spacing: 0.14em;
@@ -85,12 +85,14 @@ button {
   .premium-card {
     position: relative;
     overflow: hidden;
-    border: 1px solid rgba(157, 190, 219, 0.16);
+    border: 1px solid rgba(31, 117, 255, 0.16);
     border-radius: 8px;
     background:
-      linear-gradient(145deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012) 55%, rgba(10, 102, 194, 0.045)),
-      rgba(13, 24, 36, 0.92);
-    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.28);
+      linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01) 55%, rgba(7, 93, 255, 0.07)),
+      rgba(7, 17, 38, 0.94);
+    box-shadow:
+      0 28px 80px rgba(0, 0, 0, 0.34),
+      inset 0 1px 0 rgba(255, 255, 255, 0.025);
     backdrop-filter: blur(20px);
     transition:
       border-color 300ms ease,
@@ -102,14 +104,16 @@ button {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background: linear-gradient(118deg, transparent 20%, rgba(72, 130, 255, 0.09) 48%, transparent 72%);
+    background: linear-gradient(118deg, transparent 20%, rgba(31, 117, 255, 0.11) 48%, transparent 72%);
     transform: translateX(-110%);
     transition: transform 700ms ease;
   }
 
   .premium-card:hover {
-    border-color: rgba(70, 162, 250, 0.4);
-    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.3);
+    border-color: rgba(31, 117, 255, 0.4);
+    box-shadow:
+      0 28px 80px rgba(0, 0, 0, 0.38),
+      0 0 44px rgba(7, 93, 255, 0.06);
   }
 
   .premium-card:hover::before {
@@ -117,11 +121,11 @@ button {
   }
 
   .premium-table {
-    border: 1px solid rgba(157, 190, 219, 0.16);
+    border: 1px solid rgba(31, 117, 255, 0.16);
     border-radius: 8px;
     background:
       linear-gradient(145deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.015)),
-      rgba(13, 24, 36, 0.94);
+      rgba(7, 17, 38, 0.96);
     box-shadow:
       0 28px 100px rgba(0, 0, 0, 0.34),
       inset 0 1px 0 rgba(255, 255, 255, 0.035);
@@ -147,33 +151,33 @@ button {
   }
 
   .button-primary {
-    border: 1px solid #0a66c2;
-    background: #0a66c2;
+    border: 1px solid #075dff;
+    background: #075dff;
     color: white;
-    box-shadow: 0 12px 38px rgba(10, 102, 194, 0.25);
+    box-shadow: 0 12px 38px rgba(7, 93, 255, 0.25);
   }
 
   .button-primary:hover {
     transform: translateY(-2px);
-    background: #0b74d1;
-    box-shadow: 0 16px 48px rgba(10, 102, 194, 0.35);
+    background: #146cff;
+    box-shadow: 0 16px 48px rgba(7, 93, 255, 0.35);
   }
 
   .button-secondary {
-    border: 1px solid rgba(105, 173, 240, 0.65);
-    background: rgba(10, 102, 194, 0.06);
-    color: #8ac5ff;
+    border: 1px solid rgba(105, 162, 255, 0.65);
+    background: rgba(7, 93, 255, 0.06);
+    color: #b6d2ff;
     backdrop-filter: blur(14px);
   }
 
   .button-secondary:hover {
     transform: translateY(-2px);
-    border-color: rgba(105, 173, 240, 0.9);
-    background: rgba(10, 102, 194, 0.14);
+    border-color: rgba(105, 162, 255, 0.9);
+    background: rgba(7, 93, 255, 0.14);
   }
 
   .text-gradient {
-    background: linear-gradient(100deg, #ffffff 0%, #8ac5ff 48%, #46a2fa 100%);
+    background: linear-gradient(100deg, #ffffff 0%, #b6d2ff 48%, #1f75ff 100%);
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
@@ -199,31 +203,31 @@ button {
   }
 
   .form-input:focus {
-    border-color: rgba(70, 162, 250, 0.6);
+    border-color: rgba(31, 117, 255, 0.6);
     background: rgba(255, 255, 255, 0.05);
-    box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.14);
+    box-shadow: 0 0 0 3px rgba(7, 93, 255, 0.14);
   }
 }
 
 .hero-grid {
-  opacity: 0.13;
+  opacity: 0.16;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    linear-gradient(rgba(105, 162, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(105, 162, 255, 0.035) 1px, transparent 1px);
   background-size: 72px 72px;
   mask-image: radial-gradient(circle at 50% 44%, black, transparent 72%);
 }
 
 .hero-radial {
   background:
-    radial-gradient(circle at 68% 38%, rgba(10, 102, 194, 0.25), transparent 25rem),
-    radial-gradient(circle at 15% 28%, rgba(70, 162, 250, 0.08), transparent 24rem),
-    linear-gradient(180deg, transparent 0%, #07111b 96%);
+    radial-gradient(circle at 68% 38%, rgba(7, 93, 255, 0.25), transparent 25rem),
+    radial-gradient(circle at 15% 28%, rgba(31, 117, 255, 0.08), transparent 24rem),
+    linear-gradient(180deg, transparent 0%, #020817 96%);
 }
 
 .light-beam {
   transform: rotate(20deg);
-  background: linear-gradient(90deg, transparent, rgba(70, 162, 250, 0.13), transparent);
+  background: linear-gradient(90deg, transparent, rgba(31, 117, 255, 0.13), transparent);
   filter: blur(22px);
   mask-image: linear-gradient(to bottom, transparent, black 20%, black 72%, transparent);
 }
@@ -234,26 +238,26 @@ button {
 
 .marketplace-root {
   background:
-    radial-gradient(circle at 78% 4%, rgba(30, 94, 255, 0.1), transparent 26rem),
-    #03050a;
+    radial-gradient(circle at 78% 4%, rgba(11, 92, 255, 0.1), transparent 26rem),
+    #010512;
 }
 
 .market-hero {
   background:
-    linear-gradient(125deg, rgba(30, 94, 255, 0.16), transparent 48%),
+    linear-gradient(125deg, rgba(11, 92, 255, 0.16), transparent 48%),
     linear-gradient(145deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.012)),
-    #070b14;
+    #040a1a;
   box-shadow:
     0 32px 100px rgba(0, 0, 0, 0.34),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .market-panel {
-  border: 1px solid rgba(255, 255, 255, 0.085);
+  border: 1px solid rgba(31, 117, 255, 0.12);
   border-radius: 8px;
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.012)),
-    rgba(7, 11, 20, 0.84);
+    rgba(4, 10, 26, 0.9);
   box-shadow:
     0 24px 70px rgba(0, 0, 0, 0.24),
     inset 0 1px 0 rgba(255, 255, 255, 0.025);
@@ -264,10 +268,10 @@ button {
 }
 
 .market-panel:hover {
-  border-color: rgba(95, 149, 255, 0.2);
+  border-color: rgba(31, 117, 255, 0.28);
   box-shadow:
     0 28px 90px rgba(0, 0, 0, 0.28),
-    0 0 50px rgba(30, 94, 255, 0.04);
+    0 0 50px rgba(11, 92, 255, 0.04);
 }
 
 @media (min-width: 640px) {

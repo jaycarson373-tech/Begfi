@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Plus } from "lucide-react";
+import { nativeCampaignFeeCopy, protocolFeeRouting } from "@/lib/fee-routing";
 
 const questions = [
   {
@@ -15,7 +16,11 @@ const questions = [
   },
   {
     question: "Who funds the native $POW campaign?",
-    answer: "The native POW Campaign is funded automatically from $POW protocol fees. It remains the default campaign on the platform."
+    answer: nativeCampaignFeeCopy
+  },
+  {
+    question: "WHERE DO PROTOCOL FEES GO?",
+    answer: `${protocolFeeRouting.holders.percent}% is distributed to eligible $POW holders. The remaining ${protocolFeeRouting.verifiedCampaigns.percent}% is added to reward pools for campaigns reviewed and verified by Proof of Work.`
   },
   {
     question: "Who funds external campaigns?",

@@ -11,10 +11,10 @@ const config = {
     extend: {
       colors: {
         pow: {
-          blue: "#1E5EFF",
-          glow: "#3B82F6",
-          dark: "#05070C",
-          navy: "#07142E"
+          blue: "#075DFF",
+          glow: "#1F75FF",
+          dark: "#010512",
+          navy: "#020817"
         }
       }
     }

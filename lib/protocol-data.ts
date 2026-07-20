@@ -1,9 +1,5 @@
-import { dashboardSnapshot, faqs } from "@/data/mock-protocol";
+import { emptyDashboardSnapshot } from "@/data/empty-protocol";
 
 export function getDashboardSnapshot() {
-  return dashboardSnapshot;
-}
-
-export function getFaqItems() {
-  return faqs;
+  return emptyDashboardSnapshot;
 }
