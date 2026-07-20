@@ -152,7 +152,7 @@ export function WorkerOnboarding() {
   return (
     <>
       <button type="button" onClick={() => setOpen(true)} className="button-secondary">
-        Become a POW Worker
+        Create your WORK profile
         <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
       </button>
 
@@ -162,7 +162,7 @@ export function WorkerOnboarding() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] grid place-items-center overflow-y-auto bg-[#02070d]/80 p-4 backdrop-blur-md"
+            className="fixed inset-0 z-[100] grid place-items-center overflow-y-auto bg-[#1f2328]/70 p-4 backdrop-blur-sm"
             onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}
           >
             <motion.section
@@ -172,16 +172,16 @@ export function WorkerOnboarding() {
               initial={{ opacity: 0, y: 20, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 14, scale: 0.98 }}
-              className="my-8 w-full max-w-xl overflow-hidden rounded-lg border border-white/[0.14] bg-[#071126] shadow-[0_30px_100px_rgba(0,0,0,0.55)]"
+              className="my-8 w-full max-w-xl overflow-hidden rounded-lg border border-[#d8dee4] bg-white shadow-[0_24px_80px_rgba(0,0,0,0.28)]"
             >
-              <div className="flex items-start justify-between gap-5 border-b border-white/[0.08] p-6 sm:p-7">
+              <div className="flex items-start justify-between gap-5 border-b border-[#e3e7eb] p-6 sm:p-7">
                 <div>
-                  <p className="text-xs font-extrabold text-[#69a2ff]">POW WORKER ONBOARDING</p>
-                  <h2 id="worker-onboard-title" className="mt-2 text-2xl font-black text-white sm:text-3xl">
+                  <p className="text-xs font-extrabold text-[#0a66c2]">CREATE YOUR WORK PROFILE</p>
+                  <h2 id="worker-onboard-title" className="mt-2 text-2xl font-extrabold text-[#1f2328] sm:text-3xl">
                     {linkedHandle ? "Application received." : proof ? "Link your X account." : "Verify your wallet."}
                   </h2>
                 </div>
-                <button type="button" onClick={() => setOpen(false)} className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-white/10 text-white/55 transition hover:text-white" aria-label="Close onboarding">
+                <button type="button" onClick={() => setOpen(false)} className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-[#62676d] transition hover:bg-[#edf3f8] hover:text-[#1f2328]" aria-label="Close onboarding">
                   <X className="h-5 w-5" />
                 </button>
               </div>
@@ -189,27 +189,27 @@ export function WorkerOnboarding() {
               <div className="p-6 sm:p-7">
                 {linkedHandle ? (
                   <div className="py-5 text-center">
-                    <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-[#075dff]/20 text-[#69a2ff]">
+                    <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-[#e7f3ff] text-[#0a66c2]">
                       <Check className="h-8 w-8" aria-hidden="true" />
                     </span>
-                    <p className="mt-5 text-xl font-black text-white">@{linkedHandle} is pending review</p>
-                    <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-white/50">Your wallet and X proof are linked. Manual review will move your profile to verified.</p>
+                    <p className="mt-5 text-xl font-extrabold text-[#1f2328]">@{linkedHandle} is pending review</p>
+                    <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-[#62676d]">Your wallet and X proof are linked. Manual review will move your WORK profile to verified.</p>
                   </div>
                 ) : proof ? (
                   <div>
-                    <div className="rounded-lg border border-[#1f75ff]/25 bg-[#075dff]/10 p-5">
-                      <p className="text-xs font-extrabold text-[#b6d2ff]">YOUR ONE-TIME CODE</p>
-                      <p className="mt-2 font-mono text-3xl font-black text-white">{proof.verificationCode}</p>
-                      <p className="mt-3 text-sm leading-6 text-white/50">Post this exact code from the X account you want linked, then paste both URLs below.</p>
-                      <a href={`https://x.com/intent/post?text=${encodeURIComponent(proof.verificationCode)}`} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm font-extrabold text-[#b6d2ff] transition hover:text-white">
+                    <div className="rounded-lg border border-[#c8def3] bg-[#eef6fd] p-5">
+                      <p className="text-xs font-extrabold text-[#0a66c2]">YOUR ONE-TIME CODE</p>
+                      <p className="mt-2 font-mono text-3xl font-extrabold text-[#1f2328]">{proof.verificationCode}</p>
+                      <p className="mt-3 text-sm leading-6 text-[#62676d]">Post this exact code from the X account you want linked, then paste both URLs below.</p>
+                      <a href={`https://x.com/intent/post?text=${encodeURIComponent(proof.verificationCode)}`} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-[#0a66c2] hover:underline">
                         Post code on X <ExternalLink className="h-4 w-4" aria-hidden="true" />
                       </a>
                     </div>
-                    <label className="mt-6 block text-sm font-bold text-white/70">
+                    <label className="mt-6 block text-sm font-bold text-[#34383c]">
                       X profile URL
                       <input value={profileUrl} onChange={(event) => setProfileUrl(event.target.value)} placeholder="https://x.com/yourhandle" className="form-input mt-2" />
                     </label>
-                    <label className="mt-5 block text-sm font-bold text-white/70">
+                    <label className="mt-5 block text-sm font-bold text-[#34383c]">
                       Verification post URL
                       <input value={postUrl} onChange={(event) => setPostUrl(event.target.value)} placeholder="https://x.com/yourhandle/status/..." className="form-input mt-2" />
                     </label>
@@ -221,21 +221,21 @@ export function WorkerOnboarding() {
                 ) : (
                   <div>
                     <div className="grid gap-3 sm:grid-cols-2">
-                      <Step icon={Wallet} title="1. Connect Phantom" body="Your wallet stays private on the public leaderboard." />
+                      <Step icon={Wallet} title="1. Connect Phantom" body="Your wallet stays private on your public profile." />
                       <Step icon={ShieldCheck} title="2. Sign and qualify" body="The server verifies ownership and your live $POW balance." />
                     </div>
                     {connected && publicKey ? (
-                      <div className="mt-6 rounded-lg border border-[#1f75ff]/25 bg-[#075dff]/10 p-4">
+                      <div className="mt-6 rounded-lg border border-[#c8def3] bg-[#eef6fd] p-4">
                         <div className="flex items-center justify-between gap-4">
                           <div>
-                            <p className="text-xs font-bold text-[#b6d2ff]">PHANTOM CONNECTED</p>
-                            <p className="mt-2 font-mono text-sm font-bold text-white">{shortWallet(publicKey.toBase58())}</p>
+                            <p className="text-xs font-bold text-[#0a66c2]">PHANTOM CONNECTED</p>
+                            <p className="mt-2 font-mono text-sm font-bold text-[#1f2328]">{shortWallet(publicKey.toBase58())}</p>
                           </div>
                           <button
                             type="button"
                             onClick={disconnectWallet}
                             disabled={busy}
-                            className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-lg border border-white/10 px-3 text-xs font-extrabold text-white/55 transition hover:border-white/20 hover:text-white disabled:opacity-45"
+                            className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full border border-[#aeb7c0] px-3 text-xs font-bold text-[#62676d] transition hover:bg-white hover:text-[#1f2328] disabled:opacity-45"
                           >
                             <LogOut className="h-4 w-4" aria-hidden="true" />
                             Disconnect
@@ -258,12 +258,12 @@ export function WorkerOnboarding() {
                 )}
 
                 {error && (
-                  <div className="mt-5 rounded-lg border border-red-400/25 bg-red-400/[0.07] p-4 text-sm leading-6 text-red-100">
+                  <div className="mt-5 rounded-lg border border-[#d98b8b] bg-[#fff1f1] p-4 text-sm leading-6 text-[#8f1d1d]">
                     {error}
-                    {buyUrl && <a href={buyUrl} target="_blank" rel="noreferrer" className="ml-2 font-extrabold text-white underline">Buy $POW</a>}
+                    {buyUrl && <a href={buyUrl} target="_blank" rel="noreferrer" className="ml-2 font-extrabold underline">Buy $POW</a>}
                   </div>
                 )}
-                {!linkedHandle && <p className="mt-6 text-center text-xs leading-5 text-white/35">The original #POWApplication community flow remains available as a fallback.</p>}
+                {!linkedHandle && <p className="mt-6 text-center text-xs leading-5 text-[#747a80]">The original #POWApplication community flow remains available as a fallback.</p>}
               </div>
             </motion.section>
           </motion.div>
@@ -275,10 +275,10 @@ export function WorkerOnboarding() {
 
 function Step({ icon: Icon, title, body }: { icon: typeof Wallet; title: string; body: string }) {
   return (
-    <div className="rounded-lg border border-white/[0.08] bg-white/[0.025] p-4">
-      <Icon className="h-5 w-5 text-[#69a2ff]" aria-hidden="true" />
-      <p className="mt-3 text-sm font-extrabold text-white">{title}</p>
-      <p className="mt-1 text-xs leading-5 text-white/40">{body}</p>
+    <div className="rounded-lg border border-[#d8dee4] bg-[#f8f9fa] p-4">
+      <Icon className="h-5 w-5 text-[#0a66c2]" aria-hidden="true" />
+      <p className="mt-3 text-sm font-extrabold text-[#1f2328]">{title}</p>
+      <p className="mt-1 text-xs leading-5 text-[#62676d]">{body}</p>
     </div>
   );
 }

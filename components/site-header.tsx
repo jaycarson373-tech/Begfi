@@ -2,35 +2,27 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, BriefcaseBusiness, ChartNoAxesColumnIncreasing, Check, Copy, Map, Menu, PanelsTopLeft, Store, X } from "lucide-react";
+import { BriefcaseBusiness, Check, Copy, Home, Menu, Search, Trophy, UsersRound, WalletCards, X } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { powContractAddress, powDefaultBuyUrl, powXUrl } from "@/lib/pow-config";
 
 const navigation = [
-  { label: "Campaigns", href: "/#campaigns", icon: PanelsTopLeft },
-  { label: "Leaderboard", href: "/#leaderboard", icon: ChartNoAxesColumnIncreasing },
-  { label: "Launch", href: "/campaigns/create", icon: BriefcaseBusiness },
-  { label: "Roadmap", href: "/#roadmap", icon: Map },
-  { label: "Marketplace", href: "/marketplace", icon: Store },
+  { label: "Home", href: "/", icon: Home },
+  { label: "Campaigns", href: "/#campaigns", icon: BriefcaseBusiness },
+  { label: "Workers", href: "/#leaderboard", icon: UsersRound },
+  { label: "Payouts", href: "/#payouts", icon: WalletCards },
+  { label: "Jobs", href: "/marketplace", icon: Trophy }
 ];
 
 const buyUrl = process.env.NEXT_PUBLIC_BUY_URL || powDefaultBuyUrl;
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 18);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
     if (!copied) return;
-    const timer = window.setTimeout(() => setCopied(false), 1800);
+    const timer = window.setTimeout(() => setCopied(false), 1600);
     return () => window.clearTimeout(timer);
   }, [copied]);
 
@@ -40,70 +32,36 @@ export function SiteHeader() {
   }
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition duration-300 ${
-        scrolled ? "border-b border-white/10 bg-[#020817]/90 backdrop-blur-2xl" : "bg-transparent"
-      }`}
-    >
-      <div className="site-shell flex h-20 items-center justify-between">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-[#d8dee4] bg-white/95 backdrop-blur-xl">
+      <div className="site-shell flex h-16 items-center gap-3">
         <Logo href="/" />
+        <label className="relative ml-1 hidden min-w-0 flex-1 md:block lg:max-w-[18rem]">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#62676d]" aria-hidden="true" />
+          <span className="sr-only">Search WORK</span>
+          <input className="h-10 w-full rounded-[5px] bg-[#edf3f8] pl-10 pr-3 text-sm text-[#1f2328] outline-none ring-[#0a66c2] placeholder:text-[#62676d] focus:ring-2" placeholder="Search coins and campaigns" />
+        </label>
 
-        <nav className="hidden h-full items-stretch text-[0.72rem] font-semibold text-white/55 lg:flex" aria-label="Primary navigation">
+        <nav className="ml-auto hidden h-full items-stretch lg:flex" aria-label="Primary navigation">
           {navigation.map((item) => {
             const Icon = item.icon;
             return (
-            <a
-              key={item.href}
-              href={item.href}
-              target={item.href.startsWith("http") ? "_blank" : undefined}
-              rel={item.href.startsWith("http") ? "noreferrer" : undefined}
-              className="group flex min-w-[76px] flex-col items-center justify-center gap-1 border-b-2 border-transparent px-2 transition hover:border-[#1f75ff] hover:text-white"
-            >
-              <Icon className="h-[1.15rem] w-[1.15rem] transition group-hover:text-[#69a2ff]" aria-hidden="true" />
-              {item.label}
-            </a>
+              <a key={item.href} href={item.href} className="group flex min-w-[74px] flex-col items-center justify-center gap-0.5 border-b-2 border-transparent px-2 text-[0.7rem] font-medium text-[#62676d] transition hover:border-[#1f2328] hover:text-[#1f2328]">
+                <Icon className="h-[1.2rem] w-[1.2rem]" aria-hidden="true" />
+                {item.label}
+              </a>
             );
           })}
         </nav>
 
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={copyContractAddress}
-            className="hidden h-10 items-center gap-2 rounded-lg border border-white/10 bg-white/[0.035] px-3 text-xs font-extrabold text-white/60 transition hover:border-[#1f75ff]/40 hover:text-white xl:inline-flex"
-            aria-label={copied ? "Contract address copied" : "Copy contract address"}
-            title={powContractAddress}
-          >
-            <span className="text-[#69a2ff]">CA</span>
+        <div className="ml-auto flex items-center gap-2 lg:ml-2">
+          <button type="button" onClick={copyContractAddress} className="hidden h-9 items-center gap-2 rounded-full border border-[#0a66c2] px-3 text-xs font-bold text-[#0a66c2] transition hover:bg-[#eef6fd] sm:inline-flex" title={powContractAddress}>
+            <span>CA</span>
             <span className="font-mono">{powContractAddress.slice(0, 4)}...{powContractAddress.slice(-4)}</span>
-            {copied ? <Check className="h-3.5 w-3.5 text-[#69a2ff]" /> : <Copy className="h-3.5 w-3.5" />}
+            {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
           </button>
-          <a
-            href={powXUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-white/10 bg-white/[0.035] text-sm font-black text-white/65 transition hover:border-[#1f75ff]/40 hover:bg-[#075dff]/10 hover:text-white"
-            aria-label="Open POW on X"
-            title="POW on X"
-          >
-            X
-          </a>
-          <a
-            href={buyUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="hidden items-center gap-2 rounded-full border border-[#69a2ff] px-4 py-2 text-sm font-extrabold text-[#b6d2ff] transition hover:bg-[#075dff]/15 sm:inline-flex"
-          >
-            Buy $POW
-            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-          </a>
-          <button
-            type="button"
-            onClick={() => setOpen((value) => !value)}
-            className="grid h-11 w-11 place-items-center rounded-lg border border-white/10 bg-white/[0.05] text-white lg:hidden"
-            aria-label={open ? "Close navigation" : "Open navigation"}
-            aria-expanded={open}
-          >
+          <a href={powXUrl} target="_blank" rel="noreferrer" className="grid h-9 w-9 place-items-center rounded-full border border-[#aeb7c0] text-sm font-black text-[#1f2328] hover:bg-[#f3f2ef]" aria-label="WORK on X">X</a>
+          <a href={buyUrl} target="_blank" rel="noreferrer" className="work-buy-button hidden h-9 items-center rounded-full bg-[#0a66c2] px-4 text-sm font-bold text-white hover:bg-[#004182] md:inline-flex">Buy $POW</a>
+          <button type="button" onClick={() => setOpen((value) => !value)} className="grid h-10 w-10 place-items-center rounded-full text-[#62676d] hover:bg-[#edf3f8] lg:hidden" aria-label={open ? "Close navigation" : "Open navigation"} aria-expanded={open}>
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
@@ -111,49 +69,13 @@ export function SiteHeader() {
 
       <AnimatePresence>
         {open && (
-          <motion.nav
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            className="border-t border-white/10 bg-[#020817]/95 px-4 pb-5 pt-3 backdrop-blur-2xl lg:hidden"
-            aria-label="Mobile navigation"
-          >
+          <motion.nav initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="border-t border-[#e3e7eb] bg-white px-3 py-3 shadow-lg lg:hidden" aria-label="Mobile navigation">
             <div className="site-shell grid gap-1">
               {navigation.map((item) => {
                 const Icon = item.icon;
-                return (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  target={item.href.startsWith("http") ? "_blank" : undefined}
-                  rel={item.href.startsWith("http") ? "noreferrer" : undefined}
-                  onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 rounded-lg px-3 py-3 text-base font-semibold text-white/75 transition hover:bg-white/[0.06] hover:text-white"
-                >
-                  <Icon className="h-5 w-5 text-[#69a2ff]" aria-hidden="true" />
-                  {item.label}
-                </a>
-                );
+                return <a key={item.href} href={item.href} onClick={() => setOpen(false)} className="flex items-center gap-3 rounded-md px-3 py-3 text-sm font-semibold text-[#34383c] hover:bg-[#edf3f8]"><Icon className="h-5 w-5 text-[#62676d]" />{item.label}</a>;
               })}
-              <button
-                type="button"
-                onClick={copyContractAddress}
-                className="mt-2 flex min-h-12 w-full items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/[0.035] px-4 text-sm font-extrabold text-white/70"
-                aria-label={copied ? "Contract address copied" : "Copy contract address"}
-              >
-                <span className="text-[#69a2ff]">CA</span>
-                <span className="font-mono">{powContractAddress.slice(0, 6)}...{powContractAddress.slice(-6)}</span>
-                {copied ? <Check className="h-4 w-4 text-[#69a2ff]" /> : <Copy className="h-4 w-4" />}
-              </button>
-              <a
-                href={buyUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-2 inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-[#075dff] px-4 text-sm font-extrabold text-white"
-              >
-                Buy $POW
-                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-              </a>
+              <a href={buyUrl} target="_blank" rel="noreferrer" className="button-primary mt-2 w-full">Buy $POW</a>
             </div>
           </motion.nav>
         )}

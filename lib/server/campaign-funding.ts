@@ -123,10 +123,10 @@ export async function getFundedCampaigns(): Promise<Campaign[]> {
       const campaignLeaderboard = leaderboardFor(row.id, leaderboard);
       const campaign: Campaign = {
         slug: row.slug,
-        name: row.project_name,
+        name: row.native ? "WORK Campaign" : row.project_name,
         ticker: row.token_ticker,
         mark: row.token_ticker.replace(/^\$/, "").slice(0, 3),
-        logo: row.native ? "/images/pow-logo.jpg" : (row.logo_url || undefined),
+        logo: row.native ? undefined : (row.logo_url || undefined),
         description: row.description,
         rewardPool: displayBalance(balance, symbol),
         fundingWallet: wallet,

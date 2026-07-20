@@ -3,50 +3,25 @@ import { PowWalletProvider } from "@/components/worker-onboarding/wallet-provide
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "POW | PROOF OF WORK",
-  description:
-    "Launch contributor campaigns funded in SOL or SPL tokens. PROOF OF WORK ranks performance and rewards eligible workers in $POW.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://pow.fun"),
-  icons: {
-    icon: "/images/pow-logo.jpg",
-    apple: "/images/pow-logo.jpg"
-  },
+  title: { default: "WORK | I work for this coin", template: "%s | WORK" },
+  description: "The work network for crypto. Join campaigns, prove your contribution, build reputation, and earn $POW.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://proofofworksol.fun"),
+  icons: { icon: "/icon.svg", apple: "/apple-icon.svg" },
   openGraph: {
-    title: "POW | PROOF OF WORK",
-    description:
-      "Reward the people growing your project with campaign-specific PROOF OF WORK.",
+    title: "WORK | I work for this coin",
+    description: "Post your work. Build a public reputation. Get paid when your contribution moves a coin forward.",
     type: "website",
-    images: [
-      {
-        url: "/images/pow-footer-banner.jpg",
-        width: 1280,
-        height: 437,
-        alt: "Proof of Work"
-      }
-    ]
+    images: [{ url: "/images/work-social.svg", width: 1200, height: 630, alt: "WORK - I work for this coin" }]
   },
   twitter: {
     card: "summary_large_image",
-    title: "POW | PROOF OF WORK",
-    description: "Reward the people growing your project.",
-    images: ["/images/pow-footer-banner.jpg"]
+    title: "WORK | I work for this coin",
+    description: "The work network for crypto.",
+    images: ["/images/work-social.svg"]
   }
 };
 
-export default function RootLayout({
-  children
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  const content = process.env.WORKER_ONBOARD_ENABLED === "true" ? (
-    <PowWalletProvider>{children}</PowWalletProvider>
-  ) : (
-    children
-  );
-
-  return (
-    <html lang="en" className="dark">
-      <body>{content}</body>
-    </html>
-  );
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const content = process.env.WORKER_ONBOARD_ENABLED === "true" ? <PowWalletProvider>{children}</PowWalletProvider> : children;
+  return <html lang="en"><body>{content}</body></html>;
 }

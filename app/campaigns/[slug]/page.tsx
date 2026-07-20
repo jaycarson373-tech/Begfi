@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const campaign = await getFundedCampaign(params.slug).catch(() => null);
   if (!campaign) return {};
   return {
-    title: `${campaign.name} | POW · PROOF OF WORK`,
+    title: `${campaign.native ? "WORK" : campaign.name} Campaign`,
     description: campaign.description
   };
 }

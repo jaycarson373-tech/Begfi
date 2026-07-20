@@ -67,11 +67,11 @@ export function MarketplaceApp() {
               <div className="flex items-center gap-3">
                 <Logo compact href="/" />
                 <div>
-                  <p className="text-sm font-black text-white">Marketplace</p>
+                  <p className="text-sm font-black text-white">WORK Jobs</p>
                   <p className="mt-0.5 text-[0.62rem] font-bold uppercase text-[#7fa8ff]">Pre-Beta</p>
                 </div>
               </div>
-              <a href="/" aria-label="Back to POW, PROOF OF WORK" className="grid h-9 w-9 place-items-center rounded-lg border border-white/10 text-white/40 transition hover:text-white">
+              <a href="/" aria-label="Back to WORK" className="grid h-9 w-9 place-items-center rounded-lg border border-white/10 text-white/40 transition hover:text-white">
                 <ArrowLeft className="h-4 w-4" />
               </a>
             </div>
@@ -100,7 +100,7 @@ export function MarketplaceApp() {
             <div className="mt-auto hidden p-5 lg:block">
               <div className="rounded-lg border border-white/[0.07] bg-white/[0.025] p-4">
                 <p className="text-xs font-bold text-white/60">Product preview</p>
-                <p className="mt-2 text-xs leading-5 text-white/30">No sample records are displayed. Marketplace actions are not live.</p>
+                <p className="mt-2 text-xs leading-5 text-white/30">No sample records are displayed. WORK Jobs actions are not live.</p>
               </div>
             </div>
           </div>
@@ -109,7 +109,7 @@ export function MarketplaceApp() {
         <main className="min-w-0">
           <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/[0.07] bg-[#010512]/80 px-4 backdrop-blur-2xl sm:px-6 lg:px-8">
             <div className="flex items-center gap-2 text-sm">
-              <span className="text-white/30">Marketplace</span>
+              <span className="text-white/30">WORK Jobs</span>
               <span className="text-white/[0.15]">/</span>
               <span className="font-bold text-white/70">{activeLabel}</span>
             </div>

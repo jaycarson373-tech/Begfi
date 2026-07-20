@@ -76,7 +76,7 @@ export function CampaignCreate() {
   }
 
   return (
-    <div className="relative isolate overflow-hidden">
+    <div className="work-page relative min-h-screen overflow-hidden bg-[#f3f2ef]">
       <SiteHeader />
       <main className="relative min-h-screen pb-20 pt-28 sm:pt-32">
         <div className="absolute inset-x-0 top-0 h-[42rem] overflow-hidden"><AmbientBackground /></div>
@@ -88,8 +88,8 @@ export function CampaignCreate() {
               <span className="rounded-full border border-[#5f95ff]/25 bg-[#0b5cff]/10 px-3 py-1.5 text-[0.65rem] font-black uppercase text-[#a8c4ff]">Frontend Demo</span>
               <span className="text-xs font-bold text-white/[0.35]">No funds will move</span>
             </div>
-            <h1 className="mt-7 text-5xl font-black leading-[0.96] text-white sm:text-7xl">Launch a POW Campaign</h1>
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-white/50 sm:text-xl">Fund a campaign in SOL or an SPL token. Eligible workers receive rewards in $POW.</p>
+            <h1 className="mt-7 text-5xl font-black leading-[0.96] text-white sm:text-7xl">Post a WORK campaign</h1>
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-white/50 sm:text-xl">Create a company page for your coin, fund its campaign in SOL or an SPL token, and reward the strongest workers in $POW.</p>
           </div>
 
           <form onSubmit={submit} className="mt-14 grid gap-5 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">

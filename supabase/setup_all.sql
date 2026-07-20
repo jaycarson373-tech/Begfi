@@ -417,9 +417,9 @@ insert into pow_campaigns (
 )
 values (
   'pow',
-  'Proof of Work Campaign',
+  'WORK Campaign',
   '$POW',
-  '/images/pow-logo.png',
+  null,
   'The native campaign rewards verified contributors helping grow $POW.',
   '$POW',
   'sol',
@@ -433,6 +433,8 @@ values (
   true
 )
 on conflict (slug) do update set
+  project_name = 'WORK Campaign',
+  logo_url = null,
   payout_asset = 'POW',
   status = 'active',
   native = true,
@@ -501,8 +503,8 @@ create index if not exists pow_campaigns_public_funding_idx
 
 update pow_campaigns
 set
-  project_name = 'POW Campaign',
-  logo_url = '/images/pow-network-mark.svg',
+  project_name = 'WORK Campaign',
+  logo_url = null,
   funding_token = coalesce(funding_token, payout_mint, funding_mint),
   updated_at = now()
 where slug = 'pow';
@@ -583,8 +585,19 @@ revoke all on table pow_payout_totals from anon, authenticated;
 -- -----------------------------------------------------------------------------
 
 update public.pow_campaigns
-set logo_url = '/images/pow-logo.jpg'
+set logo_url = null
+where native = true;
+
+-- -----------------------------------------------------------------------------
+-- supabase/migrations/008_work_brand.sql
+-- -----------------------------------------------------------------------------
+
+update public.pow_campaigns
+set
+  project_name = 'WORK Campaign',
+  description = 'The native campaign for contributors working to grow $POW.',
+  logo_url = null,
+  updated_at = now()
 where native = true;
 
 commit;
-

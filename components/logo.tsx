@@ -1,29 +1,18 @@
-import Image from "next/image";
-
 type LogoProps = {
   compact?: boolean;
   href?: string;
+  inverse?: boolean;
 };
 
-export function Logo({ compact = false, href = "#top" }: LogoProps) {
+export function Logo({ compact = false, href = "#top", inverse = false }: LogoProps) {
   return (
-    <a href={href} className="group flex items-center gap-3" aria-label="POW, PROOF OF WORK home">
-      <span className="relative h-11 w-11 overflow-hidden rounded-lg border border-[#1f75ff]/25 bg-[#020817] shadow-[0_0_24px_rgba(7,93,255,0.2)] transition duration-300 group-hover:border-[#1f75ff]/55 group-hover:shadow-[0_0_34px_rgba(7,93,255,0.38)]">
-        <Image
-          src="/images/pow-logo.jpg"
-          alt=""
-          fill
-          priority
-          sizes="44px"
-          className="object-cover"
-        />
+    <a href={href} className="group flex shrink-0 items-center gap-2" aria-label="WORK home">
+      <span className="work-mark grid h-9 w-9 place-items-center rounded-[5px] bg-[#0a66c2] text-xl font-black text-white shadow-sm transition group-hover:bg-[#004182]">
+        W
       </span>
       {!compact && (
-        <span className="flex flex-col leading-none">
-          <span className="text-base font-black text-white">POW</span>
-          <span className="mt-1 text-[0.59rem] font-extrabold uppercase text-[#8fb7ff]/70">
-            PROOF OF WORK
-          </span>
+        <span className={`text-xl font-extrabold ${inverse ? "text-white" : "text-[#1f2328]"}`}>
+          WORK
         </span>
       )}
     </a>

@@ -11,13 +11,13 @@ export const protocolFeeRouting = {
     percent: 20,
     basisPoints: 2_000,
     label: "TO VERIFIED CAMPAIGNS",
-    description: "Added to reward pools for approved Proof of Work campaigns."
+    description: "Added to reward pools for approved WORK campaigns."
   },
   eligibleHolder: {
     minimumPow: powMinimumHolding,
     minimumLabel: powMinimumHoldingLabel,
     definition:
-      `A verified POW Worker holding ${powMinimumHoldingLabel} who passes the existing score and anti-cheat checks at payout time.`
+      `A verified WORK profile holding ${powMinimumHoldingLabel} that passes the existing score and anti-cheat checks at payout time.`
   }
 } as const;
 
@@ -36,6 +36,6 @@ function percentageWord(percent: number, capitalize = false) {
 }
 
 export const nativeCampaignFeeCopy =
-  `The native $POW campaign is funded by protocol fees. ` +
+  `The native WORK campaign is funded by protocol fees. ` +
   `${percentageWord(protocolFeeRouting.holders.percent, true)} percent of protocol fees is distributed to eligible $POW holders, ` +
   `while ${percentageWord(protocolFeeRouting.verifiedCampaigns.percent)} percent is allocated to reward pools for verified campaigns.`;

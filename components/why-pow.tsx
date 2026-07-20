@@ -1,44 +1,32 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, BadgeCheck, Globe2, UserRoundSearch } from "lucide-react";
 import { powApplicationHashtag, powCommunityUrl, powMinimumHoldingLabel } from "@/lib/pow-config";
 
 export function WhyPow() {
   return (
-    <section className="section-space relative overflow-hidden border-y border-white/[0.06]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_50%,rgba(11, 92, 255,0.18),transparent_38%)]" />
-      <div className="site-shell relative grid gap-12 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.75 }}
-        >
-          <p className="section-kicker">One worker. Multiple campaigns.</p>
-          <h2 className="mt-6 max-w-5xl text-5xl font-black leading-[0.98] text-white sm:text-7xl lg:text-8xl">
-            Your work travels.
-            <span className="mt-3 block text-gradient">Your score does not.</span>
-          </h2>
+    <section className="section-space border-b border-[#d8dee4] bg-white">
+      <div className="site-shell grid gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+        <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <p className="section-kicker">Your portable work identity</p>
+          <h2 className="section-title mt-3">The coins change. Your reputation stays.</h2>
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-[#62676d]">Join multiple campaigns from one verified profile. Each campaign ranks you independently, while your WORK history shows the projects you helped move.</p>
+          <a href={powCommunityUrl} target="_blank" rel="noreferrer" className="button-primary mt-7">Create your WORK profile<ArrowUpRight className="h-4 w-4" /></a>
+          <p className="mt-3 text-xs text-[#747a80]">Fallback application: {powApplicationHashtag} · Minimum {powMinimumHoldingLabel}</p>
         </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.75, delay: 0.1 }}
-          className="max-w-xl lg:pb-2"
-        >
-          <p className="text-xl leading-9 text-white/[0.55]">
-            Hold {powMinimumHoldingLabel}, then post {powApplicationHashtag} and your wallet in the official X Community to become eligible.
-          </p>
-          <p className="mt-5 text-xl leading-9 text-white/[0.55]">
-            Your score in one campaign never changes your rank in another.
-          </p>
-          <a href={powCommunityUrl} target="_blank" rel="noreferrer" className="button-primary mt-8 w-full sm:w-auto">
-            Become a POW Worker
-            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-          </a>
+        <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="network-card">
+          <div className="work-cover h-24" />
+          <div className="px-5 pb-5">
+            <span className="-mt-10 grid h-20 w-20 place-items-center rounded-full border-4 border-white bg-[#e7f3ff] text-2xl font-black text-[#0a66c2]">YOU</span>
+            <h3 className="mt-4 text-2xl font-extrabold text-[#1f2328]">Verified contributor</h3>
+            <p className="mt-1 text-sm text-[#62676d]">Crypto · Open to campaigns</p>
+            <div className="mt-5 divide-y divide-[#e3e7eb] border-y border-[#e3e7eb]">
+              <div className="flex items-center gap-3 py-3"><BadgeCheck className="h-5 w-5 text-[#0a66c2]" /><span className="text-sm font-semibold text-[#34383c]">Wallet ownership verified</span></div>
+              <div className="flex items-center gap-3 py-3"><Globe2 className="h-5 w-5 text-[#0a66c2]" /><span className="text-sm font-semibold text-[#34383c]">X account linked</span></div>
+              <div className="flex items-center gap-3 py-3"><UserRoundSearch className="h-5 w-5 text-[#0a66c2]" /><span className="text-sm font-semibold text-[#34383c]">Discoverable by projects</span></div>
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>
